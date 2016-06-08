@@ -1,0 +1,150 @@
+$icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/bootstrap/";
+// bower:scss
+@import "bootstrap-sass-official/assets/stylesheets/_bootstrap.scss";
+// endbower
+
+.selectedWeekClass {
+  background-color: #B3E5FC;
+}
+
+.todayWeekClass {
+  font-weight: bold!important;
+}
+
+.browsehappy {
+  margin: 0.2em 0;
+  background: #ccc;
+  color: #000;
+  padding: 0.2em 0;
+}
+
+.panel-group {
+    margin-bottom: 5px;
+}
+
+body {
+  padding: 0;
+}
+table.fixed { table-layout:fixed; }
+table.fixed td { overflow: hidden; }
+/* Everything but the jumbotron gets side spacing for mobile first views */
+.header,
+.marketing,
+.footer {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+/* Custom page header */
+.header {
+  border-bottom: 1px solid #e5e5e5;
+  margin-bottom: 10px;
+
+  /* Make the masthead heading the same height as the navigation */
+  h3 {
+    margin-top: 0;
+    margin-bottom: 0;
+    line-height: 40px;
+    padding-bottom: 19px;
+  }
+}
+
+/* Custom page footer */
+.footer {
+  padding-top: 19px;
+  color: #777;
+  border-top: 1px solid #e5e5e5;
+}
+
+.container-narrow > hr {
+  margin: 30px 0;
+}
+
+/* Main marketing message and sign up button */
+.jumbotron {
+  text-align: center;
+  border-bottom: 1px solid #e5e5e5;
+
+  .btn {
+    font-size: 21px;
+    padding: 14px 24px;
+  }
+}
+
+/* Supporting marketing content */
+.marketing {
+  margin: 40px 0;
+
+  p + h4 {
+    margin-top: 28px;
+  }
+}
+
+.noselect {
+  cursor: pointer;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+table{
+  margin-bottom: 0px;
+  
+}
+tr {
+  width:100%;
+}
+td {
+  overflow:auto;
+}
+
+upperBorderNone {border-top-style: none;}
+upperBorderDotted {border-top-style: dotted;}
+upperBorderDashed {border-top-style: dashed;}
+upperBorderSolid {border-top-style: solid;}
+upperBorderDouble {border-top-style: double;}
+upperBorderGroove {border-top-style: groove;}
+upperBorderRidge {border-top-style: ridge;}
+upperBorderInset {border-top-style: inset;}
+upperBorderOutset {border-top-style: outset;}
+
+.selectBookingSlot {
+  background-color: #ace1fd!important;
+}
+
+
+div{ width:100%;}
+.table-hover>tbody>tr>td:hover, .table-hover>tbody>tr>td:hover{
+        background-color: #CFD8DC!important;
+    }
+.selectedRoom {
+  background-color: #ace1fd!important;
+}
+.table-hover>tbody>tr:hover>td, .table-hover>tbody>tr:hover>th{
+        background-color: #CFD8DC!important;
+    }
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 768px) {
+  .container {
+    max-width: 730px;
+  }
+
+  /* Remove the padding we set earlier */
+  .header,
+  .marketing,
+  .footer {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  /* Space out the masthead */
+  .header {
+    margin-bottom: 30px;
+  }
+  /* Remove the bottom border on the jumbotron for visual effect */
+  .jumbotron {
+    border-bottom: 0;
+  }
+}

@@ -1,0 +1,23 @@
+<div class="col-md-6 col-md-offset-3" ng-init="loginCtrl.initLoginController()">
+    <h2>Login</h2>
+    <form name="form" ng-submit="loginCtrl.login()" role="form">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username" class="form-control" ng-model="username" required />
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" class="form-control" ng-model="loginCtrl.password" required />
+        </div>
+        <div class="form-actions">
+            <button ng-hide="dataLoading === true" type="submit" ng-disabled="form.$invalid || loginCtrl.dataLoading" class="btn btn-primary">Login</button>
+            <img ng-show="dataLoading === true" src="/images/loading.svg" 
+                alt="Authentification en cours..." style="width: 5%; height: 5%"/>
+            <a href="/register" class="btn btn-link">Register</a>
+        </div>
+    </form>
+    <div class="alert alert-danger" ng-show="error !== undefined">
+      <strong>Echec de l'authentification !</strong> {{error}}
+    </div>
+
+</div>
