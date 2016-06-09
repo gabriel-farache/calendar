@@ -8,10 +8,11 @@
  * Controller of the calendarApp
  */
 angular.module('calendarApp')
-  .controller('calendarController', function ($scope, $http, $cookieStore, moment, databaseService, sharedService) {
+  .controller('calendarController', function ($scope, $http, $cookieStore, moment, databaseService, sharedService, authenticationService) {
     moment.locale('fr');
     $scope.guestName = 'Visiteur';
-
+    $scope.colorOfValidatedBooking = '#4caf50';
+    $scope.colorOfValidatedBookingSelected = '#8bc34a';
     $scope.calendar = [];
     $scope.booking = {};
     $scope.authToken = undefined;
@@ -24,17 +25,18 @@ angular.module('calendarApp')
     $scope.currentRoom = undefined;
     $scope.error = undefined;
     $scope.dataLoading = false;
+    $scope.messageAdmin = undefined;
+    $scope.message = undefined;
 
     this.date = moment();
     this.todayMonth = undefined;
     this.todayWeek = this.date.week();
     this.todayYear = this.date.year();
     this.colorOfSelectedBooking = '#FFCDD2';
-    this.myColor = '#FBC02D';
     this.isMouseUp = true;
     this.bookingSlotSelectionIsGoingUp = false;
     this.isNewBookingSelected = false;
-    this.isExistingBookingSelected = false;
+    $scope.isExistingBookingSelected = false;
     this.days = [];
     this.monthWeeks = [];
     this.currIndexOfWeeksArray = 0;
@@ -63,6 +65,7 @@ angular.module('calendarApp')
       if(globalsCookies !== undefined) {
         $scope.authToken = globalsCookies.token;
         $scope.username = globalsCookies.username;
+        $scope.isAdmin = globalsCookies.isAdmin;
       }
       $scope.booking.bookedBy = $scope.username === $scope.guestName ? undefined : $scope.username;
       $scope.week = this.date.week();
@@ -74,7 +77,7 @@ angular.module('calendarApp')
     };
 
     this.initRooms = function() {
-      databaseService.getRoomsDB($scope.authToken).then(function(data)
+      databaseService.getRoomsDB().then(function(data)
       {
         var rooms = data.data;
         $scope.rooms = rooms;
@@ -89,7 +92,7 @@ angular.module('calendarApp')
     };
 
     this.initBookers = function() {
-      databaseService.getBookersDB($scope.authToken).then(function(data)
+      databaseService.getBookersDB().then(function(data)
       {
         $scope.bookerColorsStyles = data.data;
         $scope.error = undefined;
@@ -103,7 +106,7 @@ angular.module('calendarApp')
 
     $scope.initWeekBookings = function() {
       databaseService.getWeekBookingDB($scope.year, $scope.week,
-        $scope.currentRoom, $scope.authToken).then(function(data)
+        $scope.currentRoom).then(function(data)
       {
         $scope.calendar = data.data;
         $scope.error = undefined;
@@ -198,7 +201,7 @@ angular.module('calendarApp')
           $scope.username !== $scope.guestName &&
           this.isMouseUp === true) {	
         this.isNewBookingSelected = true;
-        this.isExistingBookingSelected = false;
+        $scope.isExistingBookingSelected = false;
     		this.isMouseUp = false;
     		this.createLocalBooking(day, week, year, currTime);
     	}
@@ -242,7 +245,7 @@ angular.module('calendarApp')
 
     this.selectBookingInDB = function(id) {
       if(id !== undefined && id >= 0){
-        databaseService.getBookingDB(id, $scope.authToken).then(function (dataDB) {
+        databaseService.getBookingDB(id).then(function (dataDB) {
               var bookingDB = {};
               var data = dataDB.data;
               bookingDB.id             =   data[0].id;
@@ -253,7 +256,7 @@ angular.module('calendarApp')
               bookingDB.week           =   data[0].week;
               bookingDB.year           =   data[0].year;
               bookingDB.bookedBy       =   data[0].bookedBy;
-              bookingDB.isValidated    =   data[0].isValidated;
+              bookingDB.isValidated    =   (data[0].isValidated === '1');
 
               $scope.booking = bookingDB;
               $scope.error = undefined;
@@ -263,7 +266,7 @@ angular.module('calendarApp')
               $scope.error = data.data.error;
           });
         this.isNewBookingSelected = false;
-        this.isExistingBookingSelected = true;
+        $scope.isExistingBookingSelected = true;
       }
     };   
 
@@ -272,21 +275,23 @@ angular.module('calendarApp')
       $scope.booking.scheduleEnd = currTime+0.5+'';
       $scope.booking.scheduleStart = currTime+'';
       $scope.booking.day = day;
+      $scope.booking.isValidated = false;
       $scope.booking.bookedBy = $scope.booking.bookedBy === undefined ? ' ' : $scope.booking.bookedBy;
       this.originCurrTime = parseFloat(currTime);
-      return false;
     };
 
     this.applyBookingColor = function(bookingForSchedule) {
-      var split = bookingForSchedule.split('$');
-      var color = this.getBookerColor(split[0]);
-      if(split.length >= 2) {
-        var bookingID = split[1];
+      var bookedByAndBookingID = bookingForSchedule.split('$');
+      var color = this.getBookerColor(bookedByAndBookingID[0]);
+      if(bookedByAndBookingID.length >= 2 ) {
+        var bookingID = parseInt(bookedByAndBookingID[1]);
+        var isValidated = this.isBookingValidated(bookingID);
         if($scope.booking !== undefined &&
+          $scope.booking !== undefined &&
           $scope.booking.id !== undefined &&
-          $scope.booking.id === bookingID) {
-          color = this.colorOfSelectedBooking;
-        }
+          parseInt($scope.booking.id) === bookingID ) {          
+            color = isValidated ? $scope.colorOfValidatedBookingSelected : this.colorOfSelectedBooking;
+        } 
       }
       return color;
     };
@@ -376,6 +381,9 @@ angular.module('calendarApp')
         },function(data, status){
           console.log(status);
           console.log(data);
+          if(data.data.errorCode === -1) {
+            authenticationService.ClearCredentials();
+          }
           $scope.dataLoading = false;
           $scope.error = data.data.error;
         });
@@ -385,7 +393,89 @@ angular.module('calendarApp')
     };
 
     this.validateBooking = function () {
-		  this.validateBookingDB();
+      var bookingToValidate = $scope.booking;
+      var year = $scope.year;
+      var week = $scope.week;
+      var currentRoom = $scope.currentRoom;
+          console.log($scope.authToken);
+
+		  databaseService.validateBookingDB(bookingToValidate.id, $scope.authToken).then(function () {
+        $scope.messageAdmin = "Réservation validé.";
+        bookingToValidate.isValidated = true;
+          //remove booking on the sharing a slot with the validated booking
+          var bookingsSharingSlot = $scope.getBookingsSharingSlot(bookingToValidate);
+          if(bookingsSharingSlot !== false) {
+            var bookingToValidateID = parseInt(bookingToValidate.id);
+            var bookingToRemoveIds= [];
+            for (var i = 0; i < bookingsSharingSlot.length; i++){
+              var bookingsSharingSlotID = parseInt(bookingsSharingSlot[i].id);
+              if(bookingToValidateID !== bookingsSharingSlotID){
+                bookingToRemoveIds.push(bookingsSharingSlot[i].id);
+              }
+            }
+            databaseService.deleteBookingsDB(bookingToRemoveIds, $scope.authToken)
+              .then(function (){
+                $scope.initWeekBookings();
+              }, function (data) {
+                  console.log(data);
+                  $scope.error = data.data.error;
+              });
+          }
+        },function(data, status){
+          console.log(status);
+          console.log(data);
+          if(data.data.errorCode === -1) {
+            authenticationService.ClearCredentials();
+          }
+          $scope.dataLoading = false;
+          $scope.error = data.data.error;
+        });
     };
+
+    $scope.getBookingsSharingSlot = function (booking) {
+      var bookingsSharingSlot = false;
+      if($scope.calendar !== undefined && booking !== undefined) {
+        var start = parseFloat(booking.scheduleStart);
+        var bookingID = parseInt(booking.id);
+        var end = parseFloat(booking.scheduleEnd);
+        for (var i = 0; i < $scope.calendar.length; i++) {
+          var detail = $scope.calendar[i];
+          var dStart = detail.scheduleStart;
+          var dEnd = parseFloat(detail.scheduleEnd);
+          if(bookingID !== parseInt(detail.id) &&
+            booking.day === detail.day &&
+            parseInt(booking.year) === parseInt(detail.year) &&
+            dStart < end && start < dEnd) {
+            if(bookingsSharingSlot === false){
+              bookingsSharingSlot = [];
+            }
+            bookingsSharingSlot.push(angular.copy(detail));
+          }
+        }
+      }
+      return bookingsSharingSlot;
+    };
+
+    this.isBookingValidated = function(bookingId){
+      var isValidated = false;
+      var id = parseInt(bookingId);
+      for(var i = 0; i < $scope.calendar.length; i++){
+        if(parseInt($scope.calendar[i].id) === id) {
+          isValidated = ($scope.calendar[i].isValidated === '1');
+          break;
+        }
+      }
+      return isValidated;
+    };
+
+    this.deleteBooking = function() {
+      databaseService.deleteBookingDB($scope.booking.id, $scope.username, $scope.authToken)
+      .then( function(data){
+        $scope.initWeekBookings();
+        $scope.message = "Réservation supprimée."
+      }, function(data){
+        $scope.error = data.data;
+      });
+    }
 
   });

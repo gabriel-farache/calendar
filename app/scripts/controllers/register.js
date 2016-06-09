@@ -6,8 +6,7 @@
 function RegisterController($scope, databaseService, authenticationService, $location) {
     this.username = '';
     this.password = '';
-    this.lastName = '';
-    this.firstName = '';
+    this.email = '';
     this.adminToken = '';
     $scope.dataLoading = false;
     $scope.error = undefined;
@@ -17,7 +16,7 @@ function RegisterController($scope, databaseService, authenticationService, $loc
     };
     this.register = function() {
         $scope.dataLoading = true;
-        databaseService.register(this.username, 
+        databaseService.register(this.email, this.username, 
             authenticationService.encodeDecode.encode(this.password), this.adminToken)
             .then(function (response) {
                     console.log(response);

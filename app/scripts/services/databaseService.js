@@ -1,11 +1,10 @@
 'use strict';
 function DatabaseService($http) {
   var serverAddr = 'http://localhost/';
-	function getBookingDB(index, authToken) {
+	function getBookingDB(index) {
       var URL = serverAddr+'CRUD.php?action=get_booking';
       var params = {
         'id'        : index,
-        'authToken' : authToken
       };
         return ($http.post(URL,params));
     }
@@ -13,18 +12,16 @@ function DatabaseService($http) {
     function getAllBookingDB() {
       var URL = serverAddr+'CRUD.php?action=get_all_booking';
       var params = {
-        'authToken' : authToken
       };
       return ($http.get(URL, params));
     }
 
-    function getWeekBookingDB(year, week, currentRoom, authToken) {
+    function getWeekBookingDB(year, week, currentRoom) {
       var URL = serverAddr+'CRUD.php?action=get_week_booking';
       var params = {
                 'year'      : year,
                 'week'      : week,
-                'room'      : currentRoom,
-                'authToken' : authToken
+                'room'      : currentRoom
             };
       return ($http.post(URL,params));
     }
@@ -45,9 +42,9 @@ function DatabaseService($http) {
     }
  
  
-    function deleteBookingDB(index, authToken) {  
+    function deleteBookingDB(index, username, authToken) {  
  		var URL = serverAddr+'CRUD.php?action=delete_booking';
- 		var params = {'id' : index, 'authToken' : authToken};
+ 		var params = {'id' : index, 'authToken' : authToken, 'username' : username};
       return ($http.post(URL,params));
     }
   
@@ -78,37 +75,55 @@ function DatabaseService($http) {
       return ($http.post(URL,params));
     }
 
-    function getBookersDB(authToken) {
+    function deleteBookingsDB(bookingsToRemoveIds, authToken){
+      var idsString = "";
+      for (var i = 0; i < bookingsToRemoveIds.length; i++){
+        if(i === 0){
+          idsString = bookingsToRemoveIds[i];
+        } else {
+          idsString = idsString + ',' + bookingsToRemoveIds[i];
+        }
+      }
+      var URL = serverAddr+'CRUD.php?action=delete_bookings';
+      var params = {
+        'bookingsIds' : idsString, 
+        'authToken'   : authToken
+      };
+      console.log(params);
+      return ($http.post(URL, params));
+    }
+
+    function getBookersDB() {
       var URL = serverAddr+'CRUD.php?action=get_bookers';
       var params = {
-        'authToken' : authToken
+        
       };
       return ($http.get(URL, params));
     }
 
-    function getRoomsDB(authToken) {
+    function getRoomsDB() {
       var URL = serverAddr+'CRUD.php?action=get_rooms';
       var params = {
-        'authToken' : authToken
+        
       };
       return ($http.get(URL, params));
     }
 
-    function authenticate(username, encodedPassword, authToken){
+    function authenticate(username, encodedPassword){
 		var URL = serverAddr+'CRUD.php?action=authenticate';
     	var params = {
                       'username'            : username,
                       'encodedPassword'   	: encodedPassword,
-                      'authToken'           : authToken
                   };
       return ($http.post(URL,params));
     }
-    function register(username, encodedPassword, adminToken){
+    function register(email, username, encodedPassword, generatedAdminToken){
 		var URL = serverAddr+'CRUD.php?action=register';
     	var params = {
+                      'email'               : email,
                       'username'            : username,
                       'encodedPassword'   	: encodedPassword,
-                      'adminToken'          : adminToken
+                      'adminToken'          : generatedAdminToken
                   };
       return ($http.post(URL,params));
     }
@@ -120,7 +135,7 @@ function DatabaseService($http) {
       return serverAddr;
     }
 
-    function generateAdminToken(adminAuthToken, authToken) {
+    function generateAdminToken(adminAuthToken) {
     var URL = serverAddr+'CRUD.php?action=generateAdminToken';
       var params = {'adminAuthToken'   : adminAuthToken};
       return ($http.post(URL,params));
@@ -141,6 +156,7 @@ function DatabaseService($http) {
     service.setServerAddress = setServerAddress;
     service.getServerAddress = getServerAddress;
     service.generateAdminToken = generateAdminToken;
+    service.deleteBookingsDB = deleteBookingsDB;
 
     return service;
  }

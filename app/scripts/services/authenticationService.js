@@ -13,7 +13,7 @@ function AuthenticationService($http, $cookieStore, $rootScope, $timeout, databa
         var credentials = {
             'token': token,
             'username': username,
-            'isAdmin' : isAdmin
+            'isAdmin' : (isAdmin === '1')
         };
         $rootScope.globals = credentials;
         sharedService.prepForBroadcast(credentials);
