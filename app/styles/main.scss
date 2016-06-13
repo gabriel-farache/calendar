@@ -3,11 +3,11 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/boots
 @import "bootstrap-sass-official/assets/stylesheets/_bootstrap.scss";
 // endbower
 
-.selectedWeekClass {
+.selectedClass {
   background-color: #B3E5FC;
 }
 
-.todayWeekClass {
+.todayClass {
   font-weight: bold!important;
 }
 
@@ -55,7 +55,7 @@ table.fixed td { overflow: hidden; }
     width: 83%;
     /*-webkit-overflow-scrolling: touch;*/    
 }
-innerInfoPage{
+.innerInfoPage{
     margin: 0;
     padding: 0;
     height: 82%;
@@ -171,9 +171,7 @@ div{ width:100%;}
 .selectedRoom {
   background-color: #ace1fd!important;
 }
-.table-hover>tbody>tr:hover>td, .table-hover>tbody>tr:hover>th{
-        background-color: #CFD8DC!important;
-    }
+
 
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {

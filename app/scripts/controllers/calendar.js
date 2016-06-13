@@ -29,7 +29,7 @@ angular.module('calendarApp')
     $scope.message = undefined;
 
     this.date = moment();
-    this.todayMonth = undefined;
+    this.todayMonth = this.date.month();
     this.todayWeek = this.date.week();
     this.todayYear = this.date.year();
     this.colorOfSelectedBooking = '#FFCDD2';
@@ -127,7 +127,6 @@ angular.module('calendarApp')
     };
 
     this.initWeek = function() {
-      this.todayMonth = this.date.month();
       this.initWeekData(this.todayMonth, this.todayYear);
       this.setWeek(this.currIndexOfWeeksArray);
     };

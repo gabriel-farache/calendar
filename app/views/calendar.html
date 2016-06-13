@@ -57,7 +57,7 @@
             </th>
          </tr>
          <tr ng-repeat="monthWeek in calendarCtrl.monthWeeks track by $index" ng-click="calendarCtrl.setWeek($index)" align="center">
-            <th ng-class="{selectedWeekClass: week === monthWeek.week, todayWeekClass:monthWeek.week===calendarCtrl.todayWeek}" ng-repeat="monthDay in monthWeek.monthDays track by $index" 
+            <th ng-class="{selectedClass: week === monthWeek.week  && monthWeek.year===calendarCtrl.todayYear, todayClass:monthWeek.week===calendarCtrl.todayWeek && monthWeek.year===calendarCtrl.todayYear}" ng-repeat="monthDay in monthWeek.monthDays track by $index" 
                style="margin: 5px;padding:2px;font-weight: normal;text-align:center;" >
                {{monthDay.day}}
             </th>

@@ -16,14 +16,17 @@ angular.module('calendarApp')
   $scope.year = '';
 
   this.date = moment();
-	this.day = undefined;
 	this.scheduleStart = undefined;
 	this.scheduleEnd = undefined;
-  this.todayMonth = undefined;
+  this.todayDate = this.date.date();
   this.todayWeek = this.date.week();
+  this.todayMonth = this.date.month();
   this.todayYear = this.date.year();
   this.monthWeeks = [];
-  this.currIndexOfWeeksArray = 0;
+  this.selectedDay = this.todayDate;
+  this.selectedMonth = this.todayMonth
+  this.selectedYear = this.todayYear;
+  this.day = this.date.format('ddd DD-MM-YYYY');
 
 	this.schedulesLabels = ['0', '0:30', '1', '1:30', '2', '2:30', '3', '3:30', '4','4:30', '5', '5:30',
   	 '6', '6:30', '7', '7:30', '8', '8:30','9', '9:30', '10', '10:30', '11', '11:30', '12', '12:30',
@@ -46,7 +49,6 @@ angular.module('calendarApp')
 
 
     this.initWeek = function() {
-      this.todayMonth = this.date.month();
       this.initWeekData(this.todayMonth, this.todayYear);
       this.setWeek(this.currIndexOfWeeksArray);
     };
@@ -107,7 +109,10 @@ angular.module('calendarApp')
     	});
     };
 
-    this.selectDay = function(monthDay){
+    this.selectDay = function(monthDay, year){
+      this.selectedDay = monthDay.day;
+      this.selectedMonth = monthDay.month;
+      this.selectedYear = year;
       this.day = this.date.month(monthDay.month).date(monthDay.day).format('ddd DD-MM-YYYY');
     };
 
