@@ -1,13 +1,66 @@
-<div class="col-md-6 col-md-offset-3">
-    <h2>G&eacute;n&eacute;rer clef administrative</h2>
-    <a ng-click="adminConsoleCtrl.generateAdminToken()">
-        <button type="button" class="btn btn-info" style="margin: 8px;" >
-            G&eacute;n&eacute;rer
-        </button>
-    </a>
-    <p>Clef : {{adminToken}}</p>
-    <p>Fin de validit&eacute; : {{adminTokenEndTime}}</p>
-    <div class="alert alert-danger" ng-show="error !== undefined">
-      <strong>Echec de l'authentification !</strong> {{error}}
+<div class="col-md-6 col-md-offset-3 container-fluid" ng-init="initRooms()">
+    <div class="alert alert-danger" ng-show="error !== undefined" style="padding:2px;margin-bottom:2px;">
+         {{error}}
+   </div>
+   <div class="alert alert-success" ng-show="message !== undefined" style="padding:2px;margin-bottom:2px;">
+         {{message}}
+   </div>
+   <div class="alert alert-success" ng-show="messageAdmin !== undefined" style="padding:2px;margin-bottom:2px;">
+         {{messageAdmin}}
+   </div>
+   <ul class="nav nav-pills">
+      <li class="active"><a data-toggle="pill" href="#adminAuthKeyGenerator">G&eacute;n&eacute;ration clef administrative</a></li>
+      <li><a data-toggle="pill" href="#metrics">M&eacute;trique</a></li>
+      <li><a data-toggle="pill" href="#roomManagement">Gestion des salles</a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="adminAuthKeyGenerator" class="tab-pane fade in active">
+            <h2>G&eacute;n&eacute;rer clef administrative</h2>
+            <a ng-click="adminConsoleCtrl.generateAdminToken()">
+                <button type="button" class="btn btn-info" style="margin: 8px;" >
+                    G&eacute;n&eacute;rer
+                </button>
+            </a>
+            <p>Clef : {{adminToken}}</p>
+            <p>Fin de validit&eacute; : {{adminTokenEndTime}}</p>
+        </div>
+        <div id="metrics" class="tab-pane fade">
+            <h2>ElasticSearch</h2>
+        </div>
+        <div id="roomManagement" class="tab-pane fade">
+            <ul id="roomList" class="list-group">
+                <li class="list-group-item" ng-repeat="room in rooms">
+                    <input type="text" 
+                    style="width:65%"
+                    ng-model="room.name" 
+                    ng-disabled="room.isNew === false && room.oldName === undefined" required />
+                    <a ng-click="adminConsoleCtrl.deleteRoomDB(room)"
+                    style="float: right;margin-left:5px;">
+                        <button class="btn btn-danger">
+                            Supprimer
+                        </button>
+                    </a>
+                    <a ng-click="adminConsoleCtrl.modifyRoom(room)" ng-show="room.oldName === undefined"
+                    style="float: right;margin-left:5px;">
+                        <button class="btn btn-warning" 
+                            ng-show="room.isNew === false && room.oldName === undefined">
+                            Modifier
+                        </button>
+                    </a>
+                    <a ng-click="adminConsoleCtrl.updateRoomInDB(room)"  ng-show="room.oldName !== undefined"
+                    style="float: right;margin-left:5px;">
+                        <button class="btn btn-success" ng-show="room.isNew === true || room.oldName !== undefined">
+                            Valider
+                        </button>
+                    </a>
+                    
+                </li>
+            </ul>
+            <a ng-click="adminConsoleCtrl.addNewRoom()">
+                <button class="btn btn-info">
+                    Ajouter une salle
+                </button>
+            </a>
+        </div>
     </div>
 </div>
