@@ -41,6 +41,7 @@ angular.module('calendarApp')
     this.monthWeeks = [];
     this.currIndexOfWeeksArray = 0;
     this.originCurrTime = undefined;
+    this.aleardyDisplayedBookings = [];
 
   	this.schedulesLabels = ['0', '0:30', '1', '1:30', '2', '2:30', '3', '3:30', '4','4:30', '5', '5:30',
   	 '6', '6:30', '7', '7:30', '8', '8:30','9', '9:30', '10', '10:30', '11', '11:30', '12', '12:30',
@@ -215,29 +216,25 @@ angular.module('calendarApp')
     this.mouseEnter = function (currTime, day) {
       if($scope.username !== undefined &&
           $scope.username !== $scope.guestName && 
-          this.isMouseUp === false) {
-        if($scope.booking!== undefined &&
-          day === $scope.booking.day &&
-          this.isMouseUp === false) {       
+          this.isMouseUp === false && $scope.booking.day === day) {     
 
-          if(parseFloat(currTime) >= $scope.booking.scheduleStart &&
-                  this.bookingSlotSelectionIsGoingUp === false){
+        if(parseFloat(currTime) >= $scope.booking.scheduleStart &&
+                this.bookingSlotSelectionIsGoingUp === false){
+          $scope.booking.scheduleEnd = (parseFloat(currTime)+0.5)+'';
+        }
+        else {
+          if (this.originCurrTime < parseFloat(currTime)){
+              this.bookingSlotSelectionIsGoingUp = false;
+            $scope.booking.scheduleStart = this.originCurrTime+'';
             $scope.booking.scheduleEnd = (parseFloat(currTime)+0.5)+'';
           }
           else {
-            if (this.originCurrTime < parseFloat(currTime)){
-                this.bookingSlotSelectionIsGoingUp = false;
-              $scope.booking.scheduleStart = this.originCurrTime+'';
-              $scope.booking.scheduleEnd = (parseFloat(currTime)+0.5)+'';
-            }
-            else {
-              if(this.bookingSlotSelectionIsGoingUp === false ||
-                  $scope.booking.scheduleEnd === undefined) {
-                $scope.booking.scheduleEnd = this.originCurrTime+0.5+'';
-              }        
-              $scope.booking.scheduleStart = (parseFloat(currTime))+'';
-              this.bookingSlotSelectionIsGoingUp = true;
-            }
+            if(this.bookingSlotSelectionIsGoingUp === false ||
+                $scope.booking.scheduleEnd === undefined) {
+              $scope.booking.scheduleEnd = this.originCurrTime+0.5+'';
+            }        
+            $scope.booking.scheduleStart = (parseFloat(currTime))+'';
+            this.bookingSlotSelectionIsGoingUp = true;
           }
         }
       }
@@ -314,9 +311,12 @@ angular.module('calendarApp')
       var bookings = this.getBooking(day, week, year, currTime);
       if(bookings !== false){
         for(var i = 0; i < bookings.length; i++){
-          if(bookings[i].bookedBy !== undefined){
+          if(bookings[i].bookedBy !== undefined ){
             var b = bookings[i];
-            bookedBy.push(b.bookedBy+'$'+b.id);
+            var nbSlots = (parseFloat(b.scheduleEnd) - parseFloat(b.scheduleStart)) * 2.0;
+            var bookedByString = b.bookedBy+'$'+b.id+'$'+nbSlots;
+            bookedBy.push(bookedByString);
+            
           }
         }
       }
@@ -394,11 +394,6 @@ angular.module('calendarApp')
 
     this.validateBooking = function () {
       var bookingToValidate = $scope.booking;
-      var year = $scope.year;
-      var week = $scope.week;
-      var currentRoom = $scope.currentRoom;
-          console.log($scope.authToken);
-
 		  databaseService.validateBookingDB(bookingToValidate.id, $scope.authToken).then(function () {
         $scope.messageAdmin = "Réservation validé.";
         bookingToValidate.isValidated = true;
@@ -470,12 +465,16 @@ angular.module('calendarApp')
 
     this.deleteBooking = function() {
       databaseService.deleteBookingDB($scope.booking.id, $scope.username, $scope.authToken)
-      .then( function(data){
+      .then( function(){
         $scope.initWeekBookings();
-        $scope.message = "Réservation supprimée."
+        $scope.message = "Réservation supprimée.";
       }, function(data){
         $scope.error = data.data;
       });
-    }
+    };
 
+
+    this.getRowspanIntValue = function(rowspanString){
+      return parseInt(rowspanString);
+    };
   });

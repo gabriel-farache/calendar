@@ -1,23 +1,27 @@
 <div class="container-fluid table-responsive" ng-init="calendarCtrl.initCalendar()">
-<div class="alert alert-danger" ng-show="error !== undefined" style="padding:2px;margin-bottom:2px;">
-      {{error}}
-</div>
-<div class="alert alert-success" ng-show="message !== undefined" style="padding:2px;margin-bottom:2px;">
-      {{message}}
-</div>
-<div class="alert alert-success" ng-show="messageAdmin !== undefined" style="padding:2px;margin-bottom:2px;">
-      {{messageAdmin}}
-</div>
-   <ul class="nav nav-tabs" style="margin-bottom: 10px;">
+   <div class="alert alert-danger" ng-show="error !== undefined" style="padding:2px;margin-bottom:2px;">
+         {{error}}
+   </div>
+   <div class="alert alert-success" ng-show="message !== undefined" style="padding:2px;margin-bottom:2px;">
+         {{message}}
+   </div>
+   <div class="alert alert-success" ng-show="messageAdmin !== undefined" style="padding:2px;margin-bottom:2px;">
+         {{messageAdmin}}
+   </div>
+   <ul class="nav nav-pills" style="margin-bottom: 5px;padding:0px;">
       <li ng-repeat="room in rooms track by $index" 
          ng-class="{active: room.room === currentRoom}"
+         style="margin-bottom: 0px;padding:0px;"
          >
-         <a data-toggle="tab" style="padding:7px;" ng-click="calendarCtrl.selectRoom($index)">{{room.room}}</a>
+         <a data-toggle="tab"
+         style="padding:5px;margin:0px;" 
+         ng-click="calendarCtrl.selectRoom($index)">{{room.room}}</a>
       </li>
    </ul> 
-   <div   class="container-fluid" style="overflow-y:auto;overflow-x: hidden;height: 600px !important;font-size:12px;margin: 0;padding:0px;width:14.5%;float: left;">
+   <div class="innerInfoPage" >
+   <div   class="container-fluid innerInfoContent" style="overflow-y:scroll;overflow-x: hidden;font-size:12px;margin: 0px;padding:0px;float: left;">
       <table class="table-responsive table-hover" 
-         style="margin-left: 4px;margin-bottom:5px;padding:0px;width:18%;" align="center">
+         style="margin-left: 2px;margin-bottom:5px;padding:0px;" align="center">
          <tr>
             <td >
               <button ng-click="calendarCtrl.initWeekData(calendarCtrl.date.month()-1)"><</button>
@@ -103,21 +107,20 @@
                         <input type="checkbox" name="isValidated" ng-checked="booking.isValidated === true" disabled/>
                          Valid&eacute;e
                      </div>
-                     <input class="btn btn-success" ng-hide="dataLoading === true || booking.bookedBy === username" type="submit" value="R&eacute;server" style="margin: 3px;" required/>
-
-                     <a ng-click="calendarCtrl.deleteBooking()" style="padding:0px;">
-                           <button ng-show="booking.bookedBy === username && dataLoading !== true" 
-                           class="btn btn-danger" style="white-space: normal;padding:5px;margin:0px;margin-top:3px;margin-bottom:3px" >
-                              Supprimer la r&eacute;servation
-                           </button>
-                     </a>
+                     <input class="btn btn-success" ng-hide="dataLoading === true || booking.bookedBy === username && booking.isValidated === true" type="submit" value="R&eacute;server" style="margin: 3px;" required/>                  
                      <img ng-show="dataLoading === true" src="/images/loading.svg" 
                         alt="Authentification en cours..." style="width: 5%; height: 5%"/>
                      <a ng-click="calendarCtrl.validateBooking()" style="padding:0px;">
                         <button ng-show="isAdmin === true && isExistingBookingSelected === true && booking.isValidated === false"
                         class="btn btn-info" style="white-space: normal;margin: 3px;" >
-                           Valider la r&eacute;servation
+                           Valider r&eacute;servation
                         </button>
+                     </a>
+                     <a ng-click="calendarCtrl.deleteBooking()" style="padding:0px;margin:0px;">
+                           <button ng-show="booking.bookedBy === username && dataLoading !== true" 
+                           class="btn btn-danger" style="white-space: normal;padding:4px;margin:0px;margin-top:3px;margin-bottom:3px" >
+                              Supprimer r&eacute;servation
+                           </button>
                      </a>
                   </form>
                </div>
@@ -148,8 +151,8 @@
       </div>
 
    </div>
-
-   <div style="margin: 0;margin-bottom:10px;height: 600px !important;width:85%;float: right;" >
+   </div>
+   <div style="margin: 0;margin-bottom:10px;width:85%;float: right;" >
         <p>
           {{weekStartEndDates}}
           <button ng-click="calendarCtrl.initWeekData(calendarCtrl.todayMonth, calendarCtrl.todayYear)">
@@ -157,8 +160,8 @@
           </button>
         </p>
         
-      <div>
-         <table class="table-responsive table-bordered table-hover" style="margin: 0;width:98.5%;" border>
+      <div >
+         <table class="table-responsive table-bordered table-hover" style="margin: 0px;width:98.5%;" border>
             <tr class="active" >
                <th style="width:2%;"></th>
                <th style="text-align: center;width:14%;" ng-repeat="day in calendarCtrl.days track by $index">{{ day }}</th>
@@ -167,8 +170,10 @@
          <div style="height:10px;">
          </div>
       </div>
-      <div style="margin: 0;overflow: auto;height: 510px !important;border-bottom: 1px solid #e5e5e5;border-top: 1px solid #e5e5e5;">
-         <table id="bookingsSlotsTable" class="table-responsive table-bordered table-hover" style="margin: 0;width:100%;" border>
+      <div class="innerCalendarPage" >
+      <div class="innerCalendarContent"
+      style="margin: 0;overflow: auto;border-bottom: 1px solid #e5e5e5;border-top: 1px solid #e5e5e5;">
+         <table id="bookingsSlotsTable" class="table-responsive table-bordered table-hover" style="margin: 0;width:100%;">
             <tbody style="border-top: none;">
                <tr ng-repeat="schedule in calendarCtrl.schedules track by $index">
                   <td style="width:2%;text-align: center;" rowspan = "2" 
@@ -182,12 +187,13 @@
                      ng-class="{selectBookingSlot: calendarCtrl.isSelectBookingSlotClass(schedule, day)}">
                      <div style="width:92%;height: 20px; max-height:20px;float: left;">
                         <table id="bookingsTable" style="margin-bottom: 0px;" class="table noselect">
-                           <tbody style="border-top: none;">
+                           <tbody>
                               <tr>
                                  <td ng-repeat="bookingForSchedule in calendarCtrl.getScheduleBookedBy(day, week, year, schedule) track by $index"
                                     ng-click="calendarCtrl.selectBookingInDB(bookingForSchedule.split('$')[1])"
                                     ng-class="{validatedBooking: calendarCtrl.isBookingValidated(bookingForSchedule.split('$')[1])}"
                                     style="height: 20px; max-height:20px;padding:0px;overflow:auto;word-break: break-all;"
+                                    ng-mouseup="calendarCtrl.mouseUp()"
                                     class="noselect"
                                     bgcolor="{{calendarCtrl.applyBookingColor(bookingForSchedule)}}"
                                     id="{{bookingForSchedule.split('$')[1]}}">
@@ -196,28 +202,25 @@
                                  <td ng-show="calendarCtrl.hasBookingForSlot(day, week, year, schedule) === false"
                                  style="height: 20px; max-height:20px;padding:0px;overflow:hidden;border-top:none;word-break: break-all;"
                                  ng-mouseenter="calendarCtrl.mouseEnter(schedule, day)"
+                                 ng-mousedown="calendarCtrl.mouseDown(day, week, year, schedule)"
                                  ng-mouseup="calendarCtrl.mouseUp()"
-                                 ng-mousedown="calendarCtrl.mouseDown(day, week, year, schedule)" >
+                                  >
                                  </td>
                               </tr>
                            </tbody>
                         </table>
                      </div >
-                     <div ng-mouseenter="calendarCtrl.mouseEnter( schedule, day)" 
-                     ng-mouseup="calendarCtrl.mouseUp()" 
+                     <div style="width:8%;height: 20px; max-height:20px;float: right;"
+                     ng-mouseenter="calendarCtrl.mouseEnter( schedule, day)" 
                      ng-mousedown="calendarCtrl.mouseDown(day, week, year, schedule)" 
-                     style="width:8%;height: 20px; max-height:20px;float: right;">
+                     ng-mouseup="calendarCtrl.mouseUp()" 
+                     >
                      </div>                     
                   </td>
                </tr>
             </tbody>
          </table>
       </div>
-   </div>
-   <div ng-model="booking">
-      <h1>{{booking}}</h1>
-   </div>
-   <div ng-repeat="booking in calendar track by $index">
-      {{booking}}
+      </div>
    </div>
 </div>

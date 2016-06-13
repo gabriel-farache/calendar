@@ -26,8 +26,10 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/boots
   font-weight: bold!important;
 }
 
-body {
-  padding: 0;
+html, body{
+    height:100%;
+    margin:0;
+    padding:0;
 }
 table.fixed { table-layout:fixed; }
 table.fixed td { overflow: hidden; }
@@ -37,6 +39,49 @@ table.fixed td { overflow: hidden; }
 .footer {
   padding-left: 15px;
   padding-right: 15px;
+}
+
+.innerCalendarPage{
+    margin: 0;
+    padding: 0;
+    height: 73%;
+    display: block;
+}
+.innerCalendarContent{
+    padding:0;
+    position:absolute;
+    overflow: scroll; overflow-x:hidden;
+    height:73%;
+    width: 83%;
+    /*-webkit-overflow-scrolling: touch;*/    
+}
+innerInfoPage{
+    margin: 0;
+    padding: 0;
+    height: 82%;
+    display: block;
+}
+.innerInfoContent{
+    padding:0;
+    position:absolute;
+    overflow: scroll; overflow-x:hidden;
+    height:82%;
+    width: 14.5%;
+    /*-webkit-overflow-scrolling: touch;*/    
+}
+span{
+     padding:4em 0 0 0;
+    display:inline-block
+}
+.nav.nav-pills > li.active a {
+    border: 0;
+}
+.nav.nav-pills li:not(:last-child) a {
+    border-right: 1px solid #ccc;
+}
+
+.nav.nav-pills li a {
+  border-radius: 0; /* avoid curved divisor corner */
 }
 
 /* Custom page header */
