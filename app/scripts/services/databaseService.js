@@ -109,6 +109,25 @@ function DatabaseService($http) {
       return ($http.get(URL, params));
     }
 
+    function updateRoomDB(room, authToken) {
+      var URL = serverAddr+'CRUD.php?action=update_room';
+      var params = {
+        newName: room.name,
+        oldName: room.oldName ,
+        authToken: authToken       
+      };
+      return ($http.post(URL, params));
+    }
+
+    function deleteRoomDB(room, authToken) {
+      var URL = serverAddr+'CRUD.php?action=delete_room';
+      var params = {
+        roomName: room.name,
+        authToken: authToken
+      };
+      return ($http.post(URL, params));
+    }
+
     function authenticate(username, encodedPassword){
 		var URL = serverAddr+'CRUD.php?action=authenticate';
     	var params = {
@@ -141,6 +160,16 @@ function DatabaseService($http) {
       return ($http.post(URL,params));
     }
 
+    function getFreeRoomsForSlot(day, scheduleStart, scheduleEnd){
+      var URL = serverAddr+'CRUD.php?action=get_free_rooms_for_slot';
+      var params = {
+        'day'           : day,
+        'scheduleStart' : scheduleStart,
+        'scheduleEnd'   : scheduleEnd
+      };
+      return ($http.post(URL,params));
+    }
+
     var service = {};
     service.getBookingDB = getBookingDB;
     service.getAllBookingDB = getAllBookingDB;
@@ -157,6 +186,9 @@ function DatabaseService($http) {
     service.getServerAddress = getServerAddress;
     service.generateAdminToken = generateAdminToken;
     service.deleteBookingsDB = deleteBookingsDB;
+    service.updateRoomDB = updateRoomDB;
+    service.deleteRoomDB = deleteRoomDB;
+    service.getFreeRoomsForSlot = getFreeRoomsForSlot;
 
     return service;
  }
