@@ -34,6 +34,10 @@ angular
         templateUrl: 'views/adminConsole.html',
         controller: 'adminConsoleController',
         controllerAs: 'adminConsoleCtrl'
+      }).when('/searchFreeSlot', {
+        templateUrl: 'views/freeSlot.html',
+        controller: 'freeSlotController',
+        controllerAs: 'freeSlotCtrl'
       }).when('/', {
         templateUrl: 'views/calendar.html',
         controller: 'calendarController',

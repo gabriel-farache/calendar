@@ -1,0 +1,89 @@
+<div class="container-fluid table-responsive" ng-init="freeSlotCtrl.initSearch()">
+   <div class="alert alert-danger" ng-show="error !== undefined" style="padding:2px;margin-bottom:2px;">
+         {{error}}
+   </div>
+   <div class="alert alert-success" ng-show="message !== undefined" style="padding:2px;margin-bottom:2px;">
+         {{message}}
+   </div>
+   <div class="alert alert-success" ng-show="messageAdmin !== undefined" style="padding:2px;margin-bottom:2px;">
+         {{messageAdmin}}
+   </div>
+
+<div id="calendarDays" class="container-fluid" >
+	        <table class="table-responsive table-hover" 
+         style="margin-left: 2px;margin-bottom:5px;padding:0px;" align="center">
+		         <tr>
+		            <td >
+		              <button ng-click="freeSlotCtrl.initWeekData(freeSlotCtrl.date.month()-1)"><</button>
+		            </td>
+		            <td colspan="5" style="text-align:center;padding:2px;">
+		               {{freeSlotCtrl.date.format("MMMM YYYY")}}
+		            </td>
+		            <td colspan="2">
+		              <button ng-click="freeSlotCtrl.initWeekData(freeSlotCtrl.date.month()+1)">></button>
+		            </td>
+		         </tr>
+		         <tr>
+		            <th style="text-align:center;padding:2px;margin-right:5px;">
+		               lu.
+		            </th>
+		            <th style="text-align:center;padding:2px;margin-right:5px;">
+		               ma.
+		            </th>
+		            <th style="text-align:center;padding:2px;margin-right:5px;">
+		               me.
+		            </th>
+		            <th style="text-align:center;padding:2px;margin-right:5px;">
+		               je.
+		            </th>
+		            <th style="text-align:center;padding:2px;margin-right:5px;">
+		               ve.
+		            </th>
+		            <th style="text-align:center;padding:2px;margin-right:5px;">
+		               sa.
+		            </th>
+		            <th style="text-align:center;padding:2px;margin-right:5px;">
+		               di.
+		            </th>
+		         </tr>
+		         <tr ng-repeat="monthWeek in freeSlotCtrl.monthWeeks track by $index" align="center">
+		            <td ng-class="{selectedWeekClass: week === monthWeek.week, todayWeekClass:monthWeek.week===freeSlotCtrl.todayWeek}" ng-repeat="monthDay in monthWeek.monthDays track by $index" ng-click="freeSlotCtrl.selectDay(monthDay)" 
+		               style="margin: 5px;padding:2px;font-weight: normal;text-align:center;" >
+		               {{monthDay.day}}
+		            </td>
+		         </tr>
+		      </table>
+	     </div>
+	     <div>
+	     	<p>Le : {{freeSlotCtrl.day}}<p>
+	     </div>
+   <form name="searchFreeSlotForm"
+	     ng-submit="searchFreeSlotForm.$valid && freeSlotCtrl.searchFreeSlot()" novalidate>
+	     <div class="input-group">
+	        <div  style="width:50%;float: left;">
+	           <label style="">De :</label>
+	           <select ng-model="freeSlotCtrl.scheduleStart">
+	              <option ng-repeat="timeStart in freeSlotCtrl.schedules track by $index" value="{{timeStart}}">{{freeSlotCtrl.schedulesLabels[$index]}}</option>
+	           </select>
+	        </div>
+	        <div style="width:50%;float: right;">
+	           <label>&Agrave; :</label><br>
+	           <select ng-model="freeSlotCtrl.scheduleEnd">
+	              <option ng-repeat="timeEnd in freeSlotCtrl.schedules track by $index" value="{{timeEnd}}">{{freeSlotCtrl.schedulesLabels[$index]}}</option>
+	           </select>
+	        </div>
+	     </div>
+	     <input class="btn btn-success" ng-hide="dataLoading === true" type="submit" value="Chercher" style="margin: 3px;" required/>                  
+	     <img ng-show="dataLoading === true" src="/images/loading.svg" 
+	        alt="Recherche en cours..." style="width: 5%; height: 5%"/>
+	</form>
+	<div id="listFreeRoomsForSlot" ng-show="availableRooms !== undefined && dataLoading === false">
+		<p ng-show="availableRooms.length <= 0"> Pas de salles de libre pour ce créneaux</p>
+		<ul class="list-group" ng-show="availableRooms.length > 0">
+			<li class="list-group-item" ng-repeat="availableRoom in availableRooms">
+				{{availableRoom}}
+			</li>
+		</ul>
+	</div>
+
+</div>
