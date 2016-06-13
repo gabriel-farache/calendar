@@ -170,24 +170,25 @@ function get_week_booking($con) {
     //print_r('SELECT * FROM Booking WHERE week = '.$week.' and year = '.$year);
     if($qry_res === FALSE) { 
         header("HTTP/1.1 418 I am a teapot");
-        die($conn->error); // TODO: better error handling
+        print_r($conn->error); // TODO: better error handling
+    } else {
+        $data = array();
+        while($rows = mysqli_fetch_array($qry_res))
+        {
+            $data[] = array(
+                        "id"            => $rows["id"],
+                        "room"          => $rows["room"],
+                        "scheduleStart" => $rows["scheduleStart"],
+                        "scheduleEnd"   => $rows["scheduleEnd"],
+                        "day"           => $rows["day"],
+                        "week"          => $rows["week"],
+                        "year"          => $rows["year"],
+                        "bookedBy"      => $rows["bookedBy"],
+                        "isValidated"   => $rows["isValidated"]
+                        );
+        }
+        print_r(json_encode($data));
     }
-    $data = array();
-    while($rows = mysqli_fetch_array($qry_res))
-    {
-        $data[] = array(
-                    "id"            => $rows["id"],
-                    "room"          => $rows["room"],
-                    "scheduleStart" => $rows["scheduleStart"],
-                    "scheduleEnd"   => $rows["scheduleEnd"],
-                    "day"           => $rows["day"],
-                    "week"          => $rows["week"],
-                    "year"          => $rows["year"],
-                    "bookedBy"      => $rows["bookedBy"],
-                    "isValidated"   => $rows["isValidated"]
-                    );
-    }
-    print_r(json_encode($data));
 }
  
 /**  Function qui supprime un produit en base de donnée mysql  **/
