@@ -8,7 +8,7 @@
  * Controller of the calendarApp
  */
 angular.module('calendarApp')
-  .controller('freeSlotController', function ($scope, $http, $cookieStore, moment, databaseService) {
+  .controller('freeSlotController', function ($scope, $http, $cookieStore, moment, databaseService, sharedService) {
 	moment.locale('fr');
   $scope.availableRooms = undefined;
 	$scope.dataLoading = false;
@@ -37,7 +37,20 @@ angular.module('calendarApp')
 	   10.5, 11, 11.5, 12, 12.5, 13, 13.5, 14, 14.5, 15, 15.5, 16, 16.5, 17, 17.5, 18, 18.5, 19, 19.5, 
 	   20, 20.5, 21, 21.5, 22, 22.5, 23, 23.5, 24];
 
+     $scope.$on('handleBroadcast', function() {
+          var message = sharedService.message;
+          $scope.username = message.username;
+          $scope.isAdmin = message.isAdmin;
+          $scope.authToken = message.token;
+      });
+
 	this.initSearch = function() {
+    var globalsCookies = $cookieStore.get('globals');
+      if(globalsCookies !== undefined) {
+        $scope.authToken = globalsCookies.token;
+        $scope.username = globalsCookies.username;
+        $scope.isAdmin = globalsCookies.isAdmin;
+      }
 		this.initCalendar();
 	};
 

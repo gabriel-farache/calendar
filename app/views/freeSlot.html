@@ -10,7 +10,7 @@
     </div>
     <div id="calendarDays" class="container-fluid" style="float:left;width:20%;">
         <table class="table-responsive table-hover" 
-            style="margin-left: 2px;margin-bottom:5px;padding:0px;" align="center">
+            style="margin-left: 2px;margin-bottom:5px;padding:0px;width:100%;" align="center">
             <tr>
                 <td >
                     <button ng-click="freeSlotCtrl.initWeekData(freeSlotCtrl.date.month()-1)"><</button>
@@ -55,7 +55,7 @@
             </tr>
         </table>
     
-	    <div id="comonInfo" style="margin-bottom:20px;">
+	    <div id="comonInfo" style="margin-bottom:20px;width:100%;">
 	    	<p>
 	    		<button ng-click="freeSlotCtrl.initWeekData(freeSlotCtrl.todayMonth, freeSlotCtrl.todayYear)">
         			Aujourd'hui
@@ -64,6 +64,7 @@
 	        <p>Le : {{freeSlotCtrl.day}}</p>
 	    </div>
 	    <form name="searchFreeSlotForm"
+	    style="width:100%;"
 	        ng-submit="searchFreeSlotForm.$valid && freeSlotCtrl.searchFreeSlot()" novalidate>
 	        <div class="input-group">
 	            <div  style="width:50%;float: left;margin-bottom:20px;">
@@ -92,7 +93,15 @@
 	        <p ng-show="availableRooms.length > 0"> Salles libres :</p>
 	        <ul class="list-group" ng-show="availableRooms.length > 0">
 	            <li class="list-group-item" ng-repeat="availableRoom in availableRooms">
-	                {{availableRoom}}
+	                <p>{{availableRoom}}
+	                <a ng-click=""
+	                	ng-show="username !== undefined"
+                    	style="float: right;margin-left:5px;">
+                        <button class="btn btn-info" style="vertical-align:middle;">
+                            R&eacute;server
+                        </button>
+                    </a>
+                	</p>
 	            </li>
 	        </ul>
 	    </div>
