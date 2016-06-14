@@ -136,11 +136,13 @@ angular.module('calendarApp')
       date.year(newYear);
       var firstMonthWeek = date.startOf('month').week();
       this.monthWeeks = [];
+      //create the week before the month, the 4 weeks of the month and the week after the month
       for(var i = 0; i < 6; i++){
         var monthDays =  [];
         var week = moment().week(firstMonthWeek + i);
         var weekNumber = week.week();
         week.startOf('week').date();
+        //create the days of the week
         for(var j = 0; j < 7; j++){
           var day = week.date();
           var month = week.format('MMM');
@@ -182,6 +184,7 @@ angular.module('calendarApp')
       if($scope.calendar !== undefined) {
     		for (var i = 0; i < $scope.calendar.length; i++) {
        		var detail = $scope.calendar[i];
+          //add the booking to the list if the slot match the current booking
     			if(day === detail.day &&
     				year === parseInt(detail.year) &&
     				currTime >= parseFloat(detail.scheduleStart) &&
@@ -196,42 +199,65 @@ angular.module('calendarApp')
   		return currTimeBooking;
     };    
 
+    this.createLocalBooking = function(day, week, year, currTime){
+      $scope.booking.id = undefined;
+      $scope.booking.scheduleEnd = currTime+0.5+'';
+      $scope.booking.scheduleStart = currTime+'';
+      $scope.booking.day = day;
+      $scope.booking.isValidated = false;
+      $scope.booking.bookedBy = $scope.booking.bookedBy === undefined ? ' ' : $scope.booking.bookedBy;
+      //store the origin slot time selected to know if the selection direction
+      this.originCurrTime = parseFloat(currTime);
+    };
+
     this.mouseDown = function(day, week, year, currTime){
+      //if the user is authenticated and the user clicks on a slot
     	if($scope.username !== undefined &&
           $scope.username !== $scope.guestName &&
           this.isMouseUp === true) {	
+        //the user is creating a new booking
         this.isNewBookingSelected = true;
         $scope.isExistingBookingSelected = false;
+        //the mouse is not up
     		this.isMouseUp = false;
+        //create the new booking with the first slot selected
     		this.createLocalBooking(day, week, year, currTime);
     	}
     };
 
     this.mouseUp = function() {
+      //the mouse is up, stop the new booking schedules
       this.isMouseUp = true;
       this.bookingSlotSelectionIsGoingUp = false;
     };
 
     this.mouseEnter = function (currTime, day) {
+      //if the user is authenticated and a creation of booking is in progress
       if($scope.username !== undefined &&
           $scope.username !== $scope.guestName && 
           this.isMouseUp === false && $scope.booking.day === day) {     
-
+        //check if the slot selected is after the schedule start
+        // and that the selection is going downwards
         if(parseFloat(currTime) >= $scope.booking.scheduleStart &&
                 this.bookingSlotSelectionIsGoingUp === false){
+          //set the new end of schedule
           $scope.booking.scheduleEnd = (parseFloat(currTime)+0.5)+'';
         }
+        //the selection is currently going upwards
         else {
+          //check is the selection direction has not gone from  upwards to downwards
           if (this.originCurrTime < parseFloat(currTime)){
               this.bookingSlotSelectionIsGoingUp = false;
             $scope.booking.scheduleStart = this.originCurrTime+'';
             $scope.booking.scheduleEnd = (parseFloat(currTime)+0.5)+'';
           }
           else {
+            //check if the direction has just changed
             if(this.bookingSlotSelectionIsGoingUp === false ||
                 $scope.booking.scheduleEnd === undefined) {
               $scope.booking.scheduleEnd = this.originCurrTime+0.5+'';
-            }        
+            }   
+            //set the new start of schedule
             $scope.booking.scheduleStart = (parseFloat(currTime))+'';
             this.bookingSlotSelectionIsGoingUp = true;
           }
@@ -265,16 +291,6 @@ angular.module('calendarApp')
         $scope.isExistingBookingSelected = true;
       }
     };   
-
-    this.createLocalBooking = function(day, week, year, currTime){
-      $scope.booking.id = undefined;
-      $scope.booking.scheduleEnd = currTime+0.5+'';
-      $scope.booking.scheduleStart = currTime+'';
-      $scope.booking.day = day;
-      $scope.booking.isValidated = false;
-      $scope.booking.bookedBy = $scope.booking.bookedBy === undefined ? ' ' : $scope.booking.bookedBy;
-      this.originCurrTime = parseFloat(currTime);
-    };
 
     this.applyBookingColor = function(bookingForSchedule) {
       var bookedByAndBookingID = bookingForSchedule.split('$');
@@ -341,9 +357,12 @@ angular.module('calendarApp')
 
     this.isSelectBookingSlotClass = function(currTime, day) {
       var isInfo = false;
+      //check if the user can select a slot
       if($scope.username !== undefined && $scope.username !== $scope.guestName) {
         var parsedCurrTime = parseFloat(currTime);
+        //check if the current booking has just been created
         if($scope.booking !== undefined && this.isNewBookingSelected === true){
+            //check the curernt booking day/schedule to know if the slot has to be colored
             if($scope.booking.day === day){
               if(parseFloat($scope.booking.scheduleStart) === parsedCurrTime){
                 isInfo = true;
@@ -370,9 +389,9 @@ angular.module('calendarApp')
         year: $scope.year,
         bookedBy: $scope.booking.bookedBy,
         isValidated: $scope.booking.isValidated
-    };
-    $scope.dataLoading = true;
-    databaseService.addBookingDB(newBooking, $scope.authToken).then(function (data) {
+      };
+      $scope.dataLoading = true;
+      databaseService.addBookingDB(newBooking, $scope.authToken).then(function (data) {
           newBooking.id = data.data.id;
           $scope.calendar.push(newBooking);
           $scope.dataLoading = false;
@@ -387,8 +406,8 @@ angular.module('calendarApp')
           $scope.error = data.data.error;
         });
               
-    $scope.booking = {};
-    $scope.booking.bookedBy = $scope.username === $scope.guestName ? undefined : $scope.username;
+      $scope.booking = {};
+      $scope.booking.bookedBy = $scope.username === $scope.guestName ? undefined : $scope.username;
     };
 
     this.validateBooking = function () {
