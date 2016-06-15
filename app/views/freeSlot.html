@@ -48,7 +48,7 @@
             <tr ng-repeat="monthWeek in freeSlotCtrl.monthWeeks track by $index" align="center">
                 <td ng-repeat="monthDay in monthWeek.monthDays track by $index" 
                     ng-class="{selectedClass: freeSlotCtrl.selectedDay === monthDay.day && freeSlotCtrl.selectedMonth === monthDay.month && freeSlotCtrl.selectedYear === monthWeek.year, todayClass:freeSlotCtrl.todayDate === monthDay.day && freeSlotCtrl.todayMonth === monthDay.month && freeSlotCtrl.todayYear === monthWeek.year}" 
-                    ng-click="freeSlotCtrl.selectDay(monthDay, monthWeek.year)" 
+                    ng-click="freeSlotCtrl.selectDay(monthDay, monthWeek.week,monthWeek.year)" 
                     style="margin: 5px;padding:2px;font-weight: normal;text-align:center;" >
                     {{monthDay.day}}
                 </td>
@@ -89,19 +89,27 @@
 	<div id="listFreeRoomsForSlot"
 	ng-show="availableRooms !== undefined && dataLoading === false"
 	style="float:right;width:80%;">
-	        <p ng-show="availableRooms.length <= 0"> Pas de salles de libre pour ce créneaux</p>
+	        <p ng-show="availableRooms.length <= 0"> Pas de salle de libre pour ce cr&eacute;neaux</p>
 	        <p ng-show="availableRooms.length > 0"> Salles libres :</p>
 	        <ul class="list-group" ng-show="availableRooms.length > 0">
 	            <li class="list-group-item" ng-repeat="availableRoom in availableRooms">
-	                <p>{{availableRoom}}
-	                <a ng-click=""
-	                	ng-show="username !== undefined"
-                    	style="float: right;margin-left:5px;">
-                        <button class="btn btn-info" style="vertical-align:middle;">
-                            R&eacute;server
-                        </button>
-                    </a>
-                	</p>
+	                <p>
+	                	{{availableRoom}}
+		                <a ng-click="freeSlotCtrl.bookFreeSlot(availableRoom, $index)"
+		                	ng-show="username !== undefined && slotsStatuses[$index].isLoadingData !== true && slotsStatuses[$index].isNewlyBooked !== true"
+	                    	style="float: right;margin-left:5px;">
+	                        <button class="btn btn-info" style="vertical-align:middle;">
+	                            R&eacute;server
+	                        </button>
+	                    </a>
+	                    <img ng-show="slotsStatuses[$index].isLoadingData === true" src="/images/loading.svg" style="width: 2%; height: 2%;float: right;"
+		            alt="R&eacute;servation en cours..." />
+	                    <button class="btn btn-success" 
+								ng-show="username !== undefined && slotsStatuses[$index].isLoadingData !== true && slotsStatuses[$index].isNewlyBooked === true"
+	                    		style="vertical-align:middle;float: right;">
+	                        R&eacute;serv&eacute;e !
+	                    </button>
+                    </p>
 	            </li>
 	        </ul>
 	    </div>

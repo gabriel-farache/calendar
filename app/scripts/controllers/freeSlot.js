@@ -14,6 +14,7 @@ angular.module('calendarApp')
 	$scope.dataLoading = false;
   $scope.week = '';
   $scope.year = '';
+  $scope.slotsStatuses = [];
 
   this.date = moment();
 	this.scheduleStart = undefined;
@@ -24,7 +25,8 @@ angular.module('calendarApp')
   this.todayYear = this.date.year();
   this.monthWeeks = [];
   this.selectedDay = this.todayDate;
-  this.selectedMonth = this.todayMonth
+  this.selectedMonth = this.todayMonth;
+  this.selectedWeek = this.todayWeek;
   this.selectedYear = this.todayYear;
   this.day = this.date.format('ddd DD-MM-YYYY');
 
@@ -112,8 +114,10 @@ angular.module('calendarApp')
     	databaseService.getFreeRoomsForSlot(this.day, this.scheduleStart, this.scheduleEnd).
     	then(function(data) {
     		var freeRooms = data.data;
+        $scope.slotsStatuses = [];
     		for(var i = 0; i < freeRooms.length; i++){
     			$scope.availableRooms.push(freeRooms[i].freeRoom);
+          $scope.slotsStatuses.push({'isLoadingData': false, 'isNewlyBooked': false});
     		}
     		$scope.dataLoading = false;
     	}, function(data) {
@@ -122,11 +126,35 @@ angular.module('calendarApp')
     	});
     };
 
-    this.selectDay = function(monthDay, year){
+    this.selectDay = function(monthDay, week, year){
       this.selectedDay = monthDay.day;
+      this.selectedWeek = week;
       this.selectedMonth = monthDay.month;
       this.selectedYear = year;
       this.day = this.date.month(monthDay.month).date(monthDay.day).format('ddd DD-MM-YYYY');
+    };
+
+    this.bookFreeSlot = function(room, slotIndex) {
+      var slotStatus = $scope.slotsStatuses[slotIndex];
+      var booking = {
+                'room'          : room,
+                'scheduleStart' : this.scheduleStart,
+                'scheduleEnd'   : this.scheduleEnd,
+                'day'           : this.day,
+                'week'          : this.selectedWeek,
+                'year'          : this.selectedYear,
+                'bookedBy'      : $scope.username
+              };
+      slotStatus.isLoadingData = true;
+      databaseService.addBookingDB(booking, $scope.authToken).
+      then(function(){
+        slotStatus.isLoadingData = false;
+        slotStatus.isNewlyBooked = true;
+      }, function(data, status){
+        $scope.error = data.data.error;
+        $scope.error = status + "<br>" + $scope.error;
+        slotStatus.isLoadingData = false;
+      });
     };
 
 
