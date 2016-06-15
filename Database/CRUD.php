@@ -70,6 +70,11 @@ switch($_GET['action'])  {
                     case 'delete_room' :
                             delete_room($GLOBALS['con']);
                             break;
+                    default:
+                        header("HTTP/1.1 401 Unauthorized");
+                        $arr = array('errorCode' => "-1", 'error' =>  'Not a valid admin action.');
+                        $jsn = json_encode($arr);
+                        print_r($jsn);
                 }
 
             } else {
@@ -91,7 +96,6 @@ function add_booking($con) {
     $year  			= $data->year;
     $bookedBy  		= $data->bookedBy;
  
-    //print_r($data);
     $qry = 'INSERT INTO Booking (room, scheduleStart, scheduleEnd, day, week, year, bookedBy) values ("' . $room . '",' . $scheduleStart . ',' .$scheduleEnd . ',"'.$day.'",'.$week.','.$year.',"'.$bookedBy.'")';
     $qry_res = mysqli_query($con,$qry);
     if ($qry_res) {
@@ -449,19 +453,28 @@ function generateAdminToken($con) {
 }
 
 function isTokenValid($con, $authToken) {
-    $qry = 'SELECT token FROM UserToken WHERE token = "'.$authToken.'" and isAdmin = False';
+    $qry = 'SELECT token FROM UserToken WHERE token = "'.$authToken.'"';
     $qry_res = mysqli_query($con,$qry);
-    $nbRows = mysqli_num_rows($qry_res);
-
-    return ($qry_res && mysqli_num_rows($qry_res) > 0);
+    if($qry_res) {
+        $nbRows = mysqli_num_rows($qry_res);
+        return (mysqli_num_rows($qry_res) > 0);
+    } else {
+        print_r($qry."  ".mysqli_error($con));
+        return false;
+    }
 }
 
 function isValidAndAdminToken($con, $adminAuthToken) {
     $qry = 'SELECT token FROM UserToken WHERE token = "'.$adminAuthToken.'" and isAdmin = True';
     $qry_res = mysqli_query($con,$qry);
-    $nbRows = mysqli_num_rows($qry_res);
-
-    return ($qry_res && mysqli_num_rows($qry_res) > 0);
+    if($qry_res) {
+        $nbRows = mysqli_num_rows($qry_res);
+        return (mysqli_num_rows($qry_res) > 0);
+    } else {
+        print_r($qry."  ".mysqli_error($con));
+        return false;
+    }
+    
 }
 
 function get_free_rooms_for_slot($con){
