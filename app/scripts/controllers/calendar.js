@@ -8,7 +8,7 @@
  * Controller of the calendarApp
  */
 angular.module('calendarApp')
-  .controller('calendarController', function ($scope, $http, $cookieStore, $timeout, moment, databaseService, sharedService, authenticationService) {
+  .controller('calendarController', function ($scope, $http, $cookieStore, $timeout, $interval, moment, databaseService, sharedService, authenticationService) {
     moment.locale('fr');
     $scope.guestName = 'Visiteur';
     $scope.colorOfValidatedBooking = '#4caf50';
@@ -28,7 +28,7 @@ angular.module('calendarApp')
     $scope.messageAdmin = undefined;
     $scope.message = undefined;
     $scope.timeoutTime = 5000;
-    
+    $scope.intervalRefreshCalendarTime = 60000;
     this.date = moment();
     this.todayMonth = this.date.month();
     this.todayWeek = this.date.week();
@@ -61,6 +61,8 @@ angular.module('calendarApp')
           $scope.authToken = message.token;
           $scope.booking.bookedBy = $scope.username === $scope.guestName ? undefined : $scope.username;
       });
+
+     $interval(function () { $scope.initWeekBookings();console.log("interval");}, $scope.intervalRefreshCalendarTime);
     
     this.initCalendar = function () {
       var globalsCookies = $cookieStore.get('globals');

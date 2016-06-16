@@ -10,14 +10,9 @@
  */
 angular
   .module('calendarApp', [
-    'ngAnimate',
     'ngAria',
     'ngCookies',
-    'ngMessages',
-    'ngResource',
     'ngRoute',
-    'ngSanitize',
-    'ngTouch',
     'angularMoment'
   ])
   .config(function ($routeProvider, $locationProvider) {
