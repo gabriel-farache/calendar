@@ -1,12 +1,13 @@
 
 'use strict';
 angular.module('calendarApp')
-  .controller('adminConsoleController', function ($scope, $cookieStore, databaseService, sharedService) {
+  .controller('adminConsoleController', function ($scope, $cookieStore, $timeout, databaseService, sharedService, authenticationService) {
         $scope.adminToken = '';
         $scope.adminTokenEndTime = '';
         $scope.error = undefined;
         $scope.rooms=[];
-
+        $scope.timeoutTime = 5000;
+        
         $scope.$on('handleBroadcast', function() {
             var message = sharedService.message;
             $scope.authToken = message.token;
@@ -28,13 +29,12 @@ angular.module('calendarApp')
                         $scope.adminToken = data.adminToken;
                         $scope.adminTokenEndTime = data.adminTokenEndTime;
                     }, function (response) {
-                        $scope.error = response.data.error;
-                        console.log(response);
-                        $scope.dataLoading = false;
+                        $scope.handleErrorDB(response.status, response.data);
                     }
                 );
             } else {
                 $scope.error = 'Clef d\'authentification inconnu';
+                $timeout(function () { $scope.error = undefined; }, $scope.timeoutTime); 
             }
             
         };
@@ -53,10 +53,8 @@ angular.module('calendarApp')
                     $scope.rooms.push(newRoom);
                 }
                 $scope.error = undefined;
-            },function(data, status){
-                console.log(status);
-                console.log(data);
-                $scope.error = data.data.error;
+            },function(response){
+                $scope.handleErrorDB(response.status, response.data);
             });
         };
 
@@ -69,8 +67,9 @@ angular.module('calendarApp')
                 then(function() {
                     $scope.initRooms();
                     $scope.messageAdmin = "Salle mise à jour.";
-                }, function(data) {
-                    $scope.error = data.data.error;
+                    $timeout(function () { $scope.messageAdmin = undefined; }, $scope.timeoutTime); 
+                }, function(response) {
+                    $scope.handleErrorDB(response.status, response.data);
                 });
         };
 
@@ -79,8 +78,9 @@ angular.module('calendarApp')
                 then(function() {
                     $scope.initRooms();
                     $scope.messageAdmin = "Salle supprimée.";
-                }, function(data) {
-                    $scope.error = data.data.error;
+                    $timeout(function () { $scope.messageAdmin = undefined; }, $scope.timeoutTime); 
+                }, function(response) {
+                    $scope.handleErrorDB(response.status, response.data);
                 });
         };
 
@@ -93,6 +93,15 @@ angular.module('calendarApp')
 
             $scope.rooms.push(newRoom);
         };
+
+    $scope.handleErrorDB = function(status, data){
+      if(data.errorCode === -1) {
+        authenticationService.ClearCredentials();
+      }
+      $scope.dataLoading = false;
+      $scope.error = data.error;
+      $timeout(function () { $scope.error = undefined; }, $scope.timeoutTime); 
+    };
 
 
 });

@@ -8,13 +8,14 @@
  * Controller of the calendarApp
  */
 angular.module('calendarApp')
-  .controller('freeSlotController', function ($scope, $http, $cookieStore, moment, databaseService, sharedService) {
+  .controller('freeSlotController', function ($scope, $http, $cookieStore, $timeout, moment, databaseService, sharedService, authenticationService) {
 	moment.locale('fr');
   $scope.availableRooms = undefined;
 	$scope.dataLoading = false;
   $scope.week = '';
   $scope.year = '';
   $scope.slotsStatuses = [];
+  $scope.timeoutTime = 5000;
 
   this.date = moment();
 	this.scheduleStart = undefined;
@@ -68,8 +69,9 @@ angular.module('calendarApp')
       this.setWeek(this.currIndexOfWeeksArray);
     };
 
-    this.initWeekData = function (newMonth) {
+    this.initWeekData = function (newMonth, newYear) {
       var date = this.date.month(newMonth);
+      date.year(newYear);
       var firstMonthWeek = date.startOf('month').week();
       this.monthWeeks = [];
       for(var i = 0; i < 6; i++){
@@ -120,9 +122,8 @@ angular.module('calendarApp')
           $scope.slotsStatuses.push({'isLoadingData': false, 'isNewlyBooked': false});
     		}
     		$scope.dataLoading = false;
-    	}, function(data) {
-    		$scope.error = data.data.error;
-    		$scope.dataLoading = false;
+    	}, function(response) {
+    		$scope.handleErrorDB(response.status, response.data);
     	});
     };
 
@@ -150,12 +151,19 @@ angular.module('calendarApp')
       then(function(){
         slotStatus.isLoadingData = false;
         slotStatus.isNewlyBooked = true;
-      }, function(data, status){
-        $scope.error = data.data.error;
-        $scope.error = status + "<br>" + $scope.error;
+      }, function(response){
+        $scope.handleErrorDB(response.status, response.data);
         slotStatus.isLoadingData = false;
       });
     };
 
+    $scope.handleErrorDB = function(status, data){
+      if(data.errorCode === -1) {
+        authenticationService.ClearCredentials();
+      }
+      $scope.dataLoading = false;
+      $scope.error = data.error;
+      $timeout(function () { $scope.error = undefined; }, $scope.timeoutTime); 
+    };
 
 });

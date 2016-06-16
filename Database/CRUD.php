@@ -393,7 +393,7 @@ function authenticate($con) {
     }
     else {
         header("HTTP/1.1 401 Unauthorized");
-        if(mysqli_num_rows($qry_res) <= 0) {
+        if($qry_res && mysqli_num_rows($qry_res) <= 0) {
             $arr = array('error' =>  "Le compte '".utf8_encode($username)."' n'exite pas.");
             $jsn = json_encode($arr);
         } else {
@@ -483,7 +483,9 @@ function get_free_rooms_for_slot($con){
     $scheduleStart      = $data->scheduleStart;
     $scheduleEnd        = $data->scheduleEnd;
 
-    $qry = 'SELECT r.room as freeRoom FROM room r where NOT EXISTS(SELECT * FROM Booking b WHERE b.day = "'.$day.'" and b.room = r.room and b.scheduleStart = '.$scheduleStart.' and b.scheduleEnd = '.$scheduleEnd.')';
+    $qry = 'SELECT r.room as freeRoom FROM room r where NOT EXISTS(SELECT * FROM Booking b WHERE b.day = "'.
+        $day.'" and b.room = r.room and b.scheduleStart between "'.$scheduleStart.'" and "'.$scheduleEnd.
+        '" and b.scheduleEnd between "'.$scheduleStart.'" and "'.$scheduleEnd.'")';
     $qry_res = mysqli_query($con,$qry);
     if($qry_res) {
         $data = array();

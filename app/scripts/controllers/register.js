@@ -3,14 +3,14 @@
  angular
     .module('calendarApp')
     .controller('registerController',   
-function RegisterController($scope, databaseService, authenticationService, $location) {
+function RegisterController($scope, $timeout, databaseService, authenticationService, $location) {
     this.username = '';
     this.password = '';
     this.email = '';
     this.adminToken = '';
     $scope.dataLoading = false;
     $scope.error = undefined;
-
+    $scope.timeoutTime = 5000;
     this.initRegisterCtrl = function() {
 
     };
@@ -18,15 +18,20 @@ function RegisterController($scope, databaseService, authenticationService, $loc
         $scope.dataLoading = true;
         databaseService.register(this.email, this.username, 
             authenticationService.encodeDecode.encode(this.password), this.adminToken)
-            .then(function (response) {
-                    console.log(response);
+            .then(function () {
                     $location.path('/loginout/login');
                 }, function (response) {
-                    console.log(response);
-                    $scope.error = response.data.error;
-                    $scope.dataLoading = false;
+                    $scope.handleErrorDB(response.status, response.data);
                 }
             );
+    };
+    $scope.handleErrorDB = function(status, data){
+      if(data.errorCode === -1) {
+        authenticationService.ClearCredentials();
+      }
+      $scope.dataLoading = false;
+      $scope.error = data.error;
+      $timeout(function () { $scope.error = undefined; }, $scope.timeoutTime); 
     };
 });
 

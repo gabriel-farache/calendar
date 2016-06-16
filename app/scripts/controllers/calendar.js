@@ -8,7 +8,7 @@
  * Controller of the calendarApp
  */
 angular.module('calendarApp')
-  .controller('calendarController', function ($scope, $http, $cookieStore, moment, databaseService, sharedService, authenticationService) {
+  .controller('calendarController', function ($scope, $http, $cookieStore, $timeout, moment, databaseService, sharedService, authenticationService) {
     moment.locale('fr');
     $scope.guestName = 'Visiteur';
     $scope.colorOfValidatedBooking = '#4caf50';
@@ -27,7 +27,8 @@ angular.module('calendarApp')
     $scope.dataLoading = false;
     $scope.messageAdmin = undefined;
     $scope.message = undefined;
-
+    $scope.timeoutTime = 5000;
+    
     this.date = moment();
     this.todayMonth = this.date.month();
     this.todayWeek = this.date.week();
@@ -85,10 +86,8 @@ angular.module('calendarApp')
         $scope.currentRoom = rooms[0].room;
         $scope.initWeekBookings();
         $scope.error = undefined;
-      },function(data, status){
-        console.log(status);
-        console.log(data);
-        $scope.error = data.data.error;
+      },function(response){
+        $scope.handleErrorDB(response.status, response.data);
       });
     };
 
@@ -97,10 +96,8 @@ angular.module('calendarApp')
       {
         $scope.bookerColorsStyles = data.data;
         $scope.error = undefined;
-      },function(data, status){
-        console.log(status);
-        console.log(data);
-        $scope.error = data.data.error;
+      },function(response){
+        $scope.handleErrorDB(response.status, response.data);
       });
 
     };
@@ -111,10 +108,8 @@ angular.module('calendarApp')
       {
         $scope.calendar = data.data;
         $scope.error = undefined;
-      },function(data, status){
-        console.log(status);
-        console.log(data);
-        $scope.error = data.data.error;
+      },function(response){
+        $scope.handleErrorDB(response.status, response.data);
       });
     };
 
@@ -282,10 +277,8 @@ angular.module('calendarApp')
 
               $scope.booking = bookingDB;
               $scope.error = undefined;
-          }, function(data, status){
-              console.log(status);
-              console.log(data);
-              $scope.error = data.data.error;
+          }, function(response){
+              $scope.handleErrorDB(response.status, response.data);
           });
         this.isNewBookingSelected = false;
         $scope.isExistingBookingSelected = true;
@@ -380,6 +373,7 @@ angular.module('calendarApp')
 
 
     this.addBooking = function() {
+      $scope.booking.bookedBy = $scope.username === $scope.guestName ? undefined : $scope.username;
       var newBooking = {
         room: $scope.currentRoom,
         scheduleStart: $scope.booking.scheduleStart,
@@ -396,14 +390,8 @@ angular.module('calendarApp')
           $scope.calendar.push(newBooking);
           $scope.dataLoading = false;
           $scope.error = undefined;
-        },function(data, status){
-          console.log(status);
-          console.log(data);
-          if(data.data.errorCode === -1) {
-            authenticationService.ClearCredentials();
-          }
-          $scope.dataLoading = false;
-          $scope.error = data.data.error;
+        },function(response){
+          $scope.handleErrorDB(response.status, response.data);
         });
               
       $scope.booking = {};
@@ -414,6 +402,7 @@ angular.module('calendarApp')
       var bookingToValidate = $scope.booking;
 		  databaseService.validateBookingDB(bookingToValidate.id, $scope.authToken).then(function () {
         $scope.messageAdmin = "Réservation validé.";
+        $timeout(function () { $scope.messageAdmin = undefined; }, $scope.timeoutTime);
         bookingToValidate.isValidated = true;
           //remove booking on the sharing a slot with the validated booking
           var bookingsSharingSlot = $scope.getBookingsSharingSlot(bookingToValidate);
@@ -429,19 +418,12 @@ angular.module('calendarApp')
             databaseService.deleteBookingsDB(bookingToRemoveIds, $scope.authToken)
               .then(function (){
                 $scope.initWeekBookings();
-              }, function (data) {
-                  console.log(data);
-                  $scope.error = data.data.error;
+              }, function (response) {
+                  $scope.handleErrorDB(response.status, response.data);
               });
           }
-        },function(data, status){
-          console.log(status);
-          console.log(data);
-          if(data.data.errorCode === -1) {
-            authenticationService.ClearCredentials();
-          }
-          $scope.dataLoading = false;
-          $scope.error = data.data.error;
+        },function(response){
+          $scope.handleErrorDB(response.status, response.data);          
         });
     };
 
@@ -486,13 +468,23 @@ angular.module('calendarApp')
       .then( function(){
         $scope.initWeekBookings();
         $scope.message = "Réservation supprimée.";
-      }, function(data){
-        $scope.error = data.data;
+        $timeout(function () { $scope.message = undefined; }, $scope.timeoutTime);
+      }, function(response){
+        $scope.handleErrorDB(response.status, response.data);
       });
     };
 
 
     this.getRowspanIntValue = function(rowspanString){
       return parseInt(rowspanString);
+    };
+
+    $scope.handleErrorDB = function(status, data){
+      if(data.errorCode === -1) {
+        authenticationService.ClearCredentials();
+      }
+      $scope.dataLoading = false;
+      $scope.error = data.error;
+      $timeout(function () { $scope.error = undefined; }, $scope.timeoutTime); 
     };
   });
