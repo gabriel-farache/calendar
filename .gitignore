@@ -3,4 +3,6 @@
 /.tmp
 /.sass-cache
 /bower_components
-./.DS_Store
+/Database/phpinfo.php
+.DS_Store
+*.log
