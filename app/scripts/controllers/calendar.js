@@ -263,20 +263,20 @@ angular.module('calendarApp')
     };
 
     this.selectBookingInDB = function(id) {
-      if(id !== undefined && id >= 0){
+      if(id !== undefined && id !== ''){
         databaseService.getBookingDB(id).then(function (dataDB) {
               var bookingDB = {};
               var data = dataDB.data;
-              bookingDB.id             =   data[0].id;
-              bookingDB.room           =   data[0].room;
-              bookingDB.scheduleStart  =   parseFloat(data[0].scheduleStart)+'';
-              bookingDB.scheduleEnd    =   parseFloat(data[0].scheduleEnd)+'';
-              bookingDB.day            =   data[0].day;
-              bookingDB.week           =   data[0].week;
-              bookingDB.year           =   data[0].year;
-              bookingDB.bookedBy       =   data[0].bookedBy;
-              bookingDB.isValidated    =   (data[0].isValidated === '1');
-
+              bookingDB.id             =   data.id;
+              bookingDB.room           =   data.room;
+              bookingDB.scheduleStart  =   parseFloat(data.scheduleStart)+'';
+              bookingDB.scheduleEnd    =   parseFloat(data.scheduleEnd)+'';
+              bookingDB.day            =   data.day;
+              bookingDB.week           =   data.week;
+              bookingDB.year           =   data.year;
+              bookingDB.bookedBy       =   data.bookedBy;
+              bookingDB.isValidated    =   data.isValidated;
+              console.log(dataDB);
               $scope.booking = bookingDB;
               $scope.error = undefined;
           }, function(response){
@@ -331,7 +331,7 @@ angular.module('calendarApp')
         }
       }
       if(this.isSelectBookingSlotClass(currTime, day) !== false){
-        bookedBy.push($scope.username+'$-1');
+        bookedBy.push($scope.username+'$');
       }
       return bookedBy;
     };
@@ -458,7 +458,7 @@ angular.module('calendarApp')
       var id = parseInt(bookingId);
       for(var i = 0; i < $scope.calendar.length; i++){
         if(parseInt($scope.calendar[i].id) === id) {
-          isValidated = ($scope.calendar[i].isValidated === '1');
+          isValidated = $scope.calendar[i].isValidated;
           break;
         }
       }

@@ -1,8 +1,8 @@
 CREATE TABLE Booking (
 	id INT NOT NULL AUTO_INCREMENT,
 	room VARCHAR(255) NOT NULL,
-	scheduleStart DECIMAL NOT NULL,
-	scheduleEnd DECIMAL NOT NULL,
+	scheduleStart DECIMAL(2,1) NOT NULL,
+	scheduleEnd DECIMAL(2,1) NOT NULL,
 	day VARCHAR(15) NOT NULL,
 	week INT NOT NULL,
 	year INT NOT NULL,

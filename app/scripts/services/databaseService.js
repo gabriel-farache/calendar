@@ -76,17 +76,10 @@ function DatabaseService($http) {
     }
 
     function deleteBookingsDB(bookingsToRemoveIds, authToken){
-      var idsString = "";
-      for (var i = 0; i < bookingsToRemoveIds.length; i++){
-        if(i === 0){
-          idsString = bookingsToRemoveIds[i];
-        } else {
-          idsString = idsString + ',' + bookingsToRemoveIds[i];
-        }
-      }
+
       var URL = serverAddr+'CRUD.php?action=delete_bookings';
       var params = {
-        'bookingsIds' : idsString, 
+        'bookingsIds' : bookingsToRemoveIds, 
         'authToken'   : authToken
       };
       console.log(params);

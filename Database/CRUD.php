@@ -1,80 +1,87 @@
 <?php
-$origin=isset($_SERVER['HTTP_ORIGIN'])?$_SERVER['HTTP_ORIGIN']:$_SERVER['HTTP_HOST'];
-header('Access-Control-Allow-Origin: '.$origin);        
-header('Access-Control-Allow-Methods: POST, OPTIONS, GET, PUT');
-header('Access-Control-Allow-Credentials: true');
-header("Access-Control-Allow-Headers: Authorization, origin, x-requested-with, content-type");
-header('P3P: CP="NON DSP LAW CUR ADM DEV TAI PSA PSD HIS OUR DEL IND UNI PUR COM NAV INT DEM CNT STA POL HEA PRE LOC IVD SAM IVA OTC"');
-header('Access-Control-Max-Age: 1');
 
-include('databaseConfig.php');
+
+    $host      = "localhost";
+    $port      = 27017;
+    $user      = "root";
+    $pass      = "root";
+    $database  = "calendar";
+
+    $connection = new MongoClient("mongodb://".$host.":".$port); 
+    $db = $connection->selectDB($database);
+ 
+    if (mysqli_connect_errno()) {
+        header("HTTP/1.1 503 Service Unavailable");
+        print_r('Could not connect: ' . mysqli_connect_errno());
+    }
+ 
+ $GLOBALS['db'] = $db;
  
 /**  Switch Case pour récupérer la l'action demandée par le controleur  Angular **/
 switch($_GET['action'])  {
         case 'get_booking' :
-                get_booking($GLOBALS['con']);
+                get_booking($GLOBALS['db']);
                 break;
         case 'get_week_booking' :
-                get_week_booking($GLOBALS['con']);
+                get_week_booking($GLOBALS['db']);
                 break;
         case 'get_all_booking' :
-                get_all_booking($GLOBALS['con']);
+                get_all_booking($GLOBALS['db']);
                 break; 
-        case 'update_booking' :
-                update_booking($GLOBALS['con']);
-                break;
         case 'get_bookers' :
-                get_bookers($GLOBALS['con']);
+                get_bookers($GLOBALS['db']);
                 break;
         case 'get_rooms' :
-                get_rooms($GLOBALS['con']);
+                get_rooms($GLOBALS['db']);
                 break;
         case 'get_free_rooms_for_slot' :
-                get_free_rooms_for_slot($GLOBALS['con']);
+                get_free_rooms_for_slot($GLOBALS['db']);
                 break;
         case 'register' :
-                register($GLOBALS['con']);
+                register($GLOBALS['db']);
                 break;
         case 'authenticate' :
-                authenticate($GLOBALS['con']);
+                authenticate($GLOBALS['db']);
                 break;
         case 'generateAdminToken' :
-                    generateAdminToken($GLOBALS['con']);
+                    generateAdminToken($GLOBALS['db']);
                     break;
         default:
             $data = json_decode(file_get_contents("php://input"));
             $authToken = $data->authToken;
-            if(isTokenValid($con, $authToken)) {
-                switch($_GET['action'])  {
-                    case 'add_booking' :
-                            add_booking($GLOBALS['con']);
-                            break; 
-                    case 'update_booking' :
-                            update_booking($GLOBALS['con']);
-                            break;
-                	case 'validate_booking' :
-                            validate_booking($GLOBALS['con']);
-                            break; 
-                    case 'delete_booking' :
-                            delete_booking($GLOBALS['con']);
-                            break;
-                    case 'delete_bookings' :
-                            delete_bookings($GLOBALS['con']);
-                            break;
-                }
-            } else if(isValidAndAdminToken($con, $authToken)) {
+            if(isAdminAction($_GET['action']) && isValidAndAdminToken($db, $authToken)) {
                 switch($_GET['action'])  {
                     case 'update_room' :
-                            update_room($GLOBALS['con']);
+                            update_room($GLOBALS['db']);
+                            break; 
+                    case 'validate_booking' :
+                            validate_booking($GLOBALS['db']);
                             break; 
                     case 'delete_room' :
-                            delete_room($GLOBALS['con']);
+                            delete_room($GLOBALS['db']);
                             break;
-                    default:
+                   default:
                         header("HTTP/1.1 401 Unauthorized");
                         $arr = array('errorCode' => "-1", 'error' =>  'Not a valid admin action.');
                         $jsn = json_encode($arr);
                         print_r($jsn);
+ 
+                }
+            
+            } else if(isTokenValid($db, $authToken)) {
+                switch($_GET['action'])  {
+                    case 'add_booking' :
+                            add_booking($GLOBALS['db']);
+                            break; 
+                    case 'update_booking' :
+                            update_booking($GLOBALS['db']);
+                            break;  
+                    case 'delete_booking' :
+                            delete_booking($GLOBALS['db']);
+                            break;
+                    case 'delete_bookings' :
+                            delete_bookings($GLOBALS['db']);
+                            break;
                 }
 
             } else {
@@ -86,7 +93,7 @@ switch($_GET['action'])  {
 } 
 /**  Function qui ajoute le produit en base de données MYSQL  **/
 
-function add_booking($con) {
+function add_booking($db) {
     $data = json_decode(file_get_contents("php://input"));
     $room			= $data->room;
     $scheduleStart	= $data->scheduleStart;
@@ -95,137 +102,205 @@ function add_booking($con) {
     $week           = $data->week;
     $year  			= $data->year;
     $bookedBy  		= $data->bookedBy;
- 
-    $qry = 'INSERT INTO Booking (room, scheduleStart, scheduleEnd, day, week, year, bookedBy) values ("' . $room . '",' . $scheduleStart . ',' .$scheduleEnd . ',"'.$day.'",'.$week.','.$year.',"'.$bookedBy.'")';
-    $qry_res = mysqli_query($con,$qry);
-    if ($qry_res) {
-        $arr = array('id' =>  mysqli_insert_id($con), 'msg' => "Booking Added Successfully!!!", 'error' => '');
-        $jsn = json_encode($arr);
-    }
-    else {
+
+    $collection = $db->booking;
+    $err = $db->lastError();
+    if(is_null($err["err"]) === TRUE) {
+        $newBooking = array(
+            "room"          => $data->room,
+            "scheduleStart" => (float)$data->scheduleStart,
+            "scheduleEnd"   => (float)$data->scheduleEnd,
+            "day"           => $data->day,
+            "week"          => (int)$data->week,
+            "year"          => (int)$data->year,
+            "bookedBy"      => $data->bookedBy,
+            "isValidated"   => false);
+        $collection->insert($newBooking);
+        $err = $db->lastError();
+        if(is_null($err["err"]) === TRUE) {
+            $arr = array('id' =>  $newBooking["_id"]->{'$id'}, 'msg' => "Booking Added Successfully!!!", 'error' => '');
+            $jsn = json_encode($arr);
+        } else {
+            header("HTTP/1.1 424 Method failure");
+            $arr = array('msg' => "", 'error' =>  $err);
+            $jsn = json_encode($arr);
+        }
+    } else {
         header("HTTP/1.1 424 Method failure");
-        $arr = array('msg' => "", 'error' =>  mysqli_error($con));
+        $arr = array('msg' => "", 'error' =>  $err);
         $jsn = json_encode($arr);
     }
     print_r($jsn);
 }
 
-function get_booking($con) {
+function get_booking($db) {
     $data = json_decode(file_get_contents("php://input"));
     $bookingID = $data->id;
-    $qry = mysqli_query($con,'SELECT * FROM Booking WHERE id = '.$bookingID);
-    if($qry === FALSE) { 
+    $collection = $db->booking;
+    $err = $db->lastError();
+    if(is_null($err["err"]) === TRUE) {
+        $mongo_qry = array('_id' => new MongoId($bookingID));
+        $booking = $collection->findOne($mongo_qry);
+        $err = $db->lastError();
+        if(is_null($err["err"]) === TRUE) {
+            $data = array(
+                        "id"            => $booking["_id"]->{'$id'},
+                        "room"          => $booking["room"],
+                        "scheduleStart" => $booking["scheduleStart"],
+                        "scheduleEnd"   => $booking["scheduleEnd"],
+                        "day"           => $booking["day"],
+                        "week"          => $booking["week"],
+                        "year"          => $booking["year"],
+                        "bookedBy"      => $booking["bookedBy"],
+                        "isValidated"   => $booking["isValidated"]
+                        );
+            $jsn = json_encode($data);
+        } else {
+            header("HTTP/1.1 418 I am a teapot");
+            $arr = array('msg' => "", 'error' =>  $err["err"]);
+            $jsn = json_encode($arr);
+        }
+    } else {
         header("HTTP/1.1 418 I am a teapot");
-        die($conn->error); // TODO: better error handling
-    }
-
-    $data = array();
-    while($rows = mysqli_fetch_array($qry))
-    {
-        $data[] = array(
-                    "id"            => $rows["id"],
-                    "room"          => $rows["room"],
-                    "scheduleStart" => $rows["scheduleStart"],
-                    "scheduleEnd"   => $rows["scheduleEnd"],
-                    "day"           => $rows["day"],
-                    "week"          => $rows["week"],
-                    "year"          => $rows["year"],
-                    "bookedBy"      => $rows["bookedBy"],
-                    "isValidated"   => $rows["isValidated"]
-                    );
-    }
-    print_r(json_encode($data));
+        $arr = array('msg' => "", 'error' =>  $err["err"]);
+        $jsn = json_encode($arr);
+    }            
+    print_r($jsn);
 }
  
-function get_all_booking($con) {
-    $qry = mysqli_query($con,'SELECT * FROM Booking');
-    if($qry === FALSE) { 
+function get_all_booking($db) {
+    $collection = $db->booking;
+    $err = $db->lastError();
+    if(is_null($err["err"]) === TRUE) {
+        $cursor = $collection->find();
+        $err = $db->lastError();
+        if(is_null($err["err"]) === TRUE) {
+            $data = array();
+            foreach ($cursor as $doc) {
+                $data[] = array(
+                                "id"            => $doc["_id"]->{'$id'},
+                                "room"          => $doc["room"],
+                                "scheduleStart" => $doc["scheduleStart"],
+                                "scheduleEnd"   => $doc["scheduleEnd"],
+                                "day"           => $doc["day"],
+                                "week"          => $doc["week"],
+                                "year"          => $doc["year"],
+                                "bookedBy"      => $doc["bookedBy"],
+                                "isValidated"   => $doc["isValidated"]
+                                );
+            }
+            $jsn = json_encode($data);
+        } else {
+            header("HTTP/1.1 418 I am a teapot");
+            $arr = array('msg' => "", 'error' =>  $err);
+            $jsn = json_encode($arr);
+        }
+    } else {
         header("HTTP/1.1 418 I am a teapot");
-        die($conn->error); // TODO: better error handling
-    }
-    $data = array();
-    while($rows = mysqli_fetch_array($qry))
-    {
-        $data[] = array(
-                    "id"            => $rows["id"],
-                    "room"			=> $rows["room"],
-				    "scheduleStart"	=> $rows["scheduleStart"],
-				    "scheduleEnd"	=> $rows["scheduleEnd"],
-				    "day"  			=> $rows["day"],
-                    "week"          => $rows["week"],
-				    "year"  		=> $rows["year"],
-				    "bookedBy"  	=> $rows["bookedBy"],
-				    "isValidated"  	=> $rows["isValidated"]
-                    );
-    }
-    print_r(json_encode($data));
+        $arr = array('msg' => "", 'error' =>  $err);
+        $jsn = json_encode($arr);
+    }            
+    print_r($jsn);
+
 }
 
-function get_week_booking($con) {
+function get_week_booking($db) {
     $data = json_decode(file_get_contents("php://input"));
     $week = $data->week;
     $year = $data->year;
     $room = $data->room;
-    $qry = 'SELECT * FROM Booking WHERE week = '.$week.
-        ' and year = '.$year.
-        ' and room = "'.$room.'"';
-    $qry_res = mysqli_query($con,$qry);
-    //print_r($qry);
-    //print_r('SELECT * FROM Booking WHERE week = '.$week.' and year = '.$year);
-    if($qry_res === FALSE) { 
-        header("HTTP/1.1 418 I am a teapot");
-        print_r($conn->error); // TODO: better error handling
-    } else {
-        $data = array();
-        while($rows = mysqli_fetch_array($qry_res))
-        {
-            $data[] = array(
-                        "id"            => $rows["id"],
-                        "room"          => $rows["room"],
-                        "scheduleStart" => $rows["scheduleStart"],
-                        "scheduleEnd"   => $rows["scheduleEnd"],
-                        "day"           => $rows["day"],
-                        "week"          => $rows["week"],
-                        "year"          => $rows["year"],
-                        "bookedBy"      => $rows["bookedBy"],
-                        "isValidated"   => $rows["isValidated"]
-                        );
+
+    $collection = $db->booking;
+    $err = $db->lastError();
+    if(is_null($err["err"]) === TRUE) {
+        $mongo_qry = array('week' => (int)$week,
+                            'year' => (int)$year,
+                            'room' => $room);
+        $cursor = $collection->find($mongo_qry);
+        $err = $db->lastError();
+        if(is_null($err["err"]) === TRUE) {
+            $data = array();
+            foreach ($cursor as $doc) {
+                $data[] = array(
+                                "id"            => $doc["_id"]->{'$id'},
+                                "room"          => $doc["room"],
+                                "scheduleStart" => $doc["scheduleStart"],
+                                "scheduleEnd"   => $doc["scheduleEnd"],
+                                "day"           => $doc["day"],
+                                "week"          => $doc["week"],
+                                "year"          => $doc["year"],
+                                "bookedBy"      => $doc["bookedBy"],
+                                "isValidated"   => $doc["isValidated"]
+                                );
+            }
+            $jsn = json_encode($data);
+        } else {
+            header("HTTP/1.1 418 I am a teapot");
+            $arr = array('msg' => "", 'error' =>  $err["err"]);
+            $jsn = json_encode($arr);
         }
-        print_r(json_encode($data));
-    }
+    } else {
+        header("HTTP/1.1 418 I am a teapot");
+        $arr = array('msg' => "", 'error' =>  $err["err"]);
+        $jsn = json_encode($arr);
+    }            
+    print_r($jsn);
+
 }
  
-/**  Function qui supprime un produit en base de donnée mysql  **/
  
-function delete_booking($con) {
+function delete_booking($db) {
     $data = json_decode(file_get_contents("php://input"));
     $bookingID  = $data->id;
     $username   = $data->username;
-    //print_r($data)   ;
-    $qry = 'DELETE FROM Booking WHERE id = '.$bookingID.' and bookedBy = "'.$username.'"';
-    $qry_res = mysqli_query($con,$qry);
-    if ($qry_res) {
-        $arr = array('msg' => "Bookings Deleted Successfully!!!", 'error' => '');
-        $jsn = json_encode($arr);
+    $collection = $db->booking;
+    $err = $db->lastError();
+    if(is_null($err["err"]) === TRUE) {
+        $collection->remove(array('_id' => new MongoId($bookingID),
+                                    'bookedBy' => $username));
+        $err = $db->lastError();
+        if(is_null($err["err"]) === TRUE) {
+            $arr = array('msg' => "Bookings Deleted Successfully!!!", 'error' => '');
+            $jsn = json_encode($arr);
+        } else {
+            header("HTTP/1.1 418 I am a teapot");
+            $arr = array('msg' => "", 'error' =>  $err);
+            $jsn = json_encode($arr);
+        }
     } else {
         header("HTTP/1.1 418 I am a teapot");
-        $arr = array('msg' => "", 'error' =>  mysqli_error($con));
+        $arr = array('msg' => "", 'error' =>  $err);
         $jsn = json_encode($arr);
     }
+
     print_r($jsn);
 }
 
-function delete_bookings($con) {
+function delete_bookings($db) {
     $data = json_decode(file_get_contents("php://input"));
     $bookingsIds = $data->bookingsIds;
-    $qry = 'DELETE FROM Booking WHERE id in ('.$bookingsIds.')';
-    $qry_res = mysqli_query($con,$qry);
-    if ($qry_res) {
-        $arr = array('msg' => "Bookings Deleted Successfully!!!", 'error' => '');
-        $jsn = json_encode($arr);
+    $collection = $db->booking;
+    $err = $db->lastError();
+    if(is_null($err["err"]) === TRUE) {
+        $errors = array();
+        foreach ($bookingsIds as $id) {
+            $collection->remove(array('_id' => new MongoId($id)));
+            $err = $db->lastError();
+            if(is_null($err["err"]) !== TRUE) {
+                $errors[] = array('errID' => $id, 'error' => $err);
+            }
+        }
+        if ($errors.count() <= 0) {
+            $arr = array('msg' => "Bookings Deleted Successfully!!!", 'error' => '');
+            $jsn = json_encode($arr);
+        } else {
+            header("HTTP/1.1 418 I am a teapot");
+            $arr = array('msg' => "", 'error' =>  $errors);
+            $jsn = json_encode($arr);
+        }
     } else {
         header("HTTP/1.1 418 I am a teapot");
-        $arr = array('msg' => "", 'error' =>  mysqli_error($con));
+        $arr = array('msg' => "", 'error' =>  $err);
         $jsn = json_encode($arr);
     }
     print_r($jsn);
@@ -233,171 +308,272 @@ function delete_bookings($con) {
  
 /** Function de mise à jour d'un produit **/
  
-function update_booking($con) {
+function update_booking($db) {
     $data = json_decode(file_get_contents("php://input"));
-    $id             = $data->id;
-    $room           = $data->room;
-    $scheduleStart  = $data->scheduleStart;
-    $scheduleEnd    = $data->scheduleEnd;
-    $day            = $data->day;
-    $week           = $data->week;
-    $year           = $data->year;
-    $bookedBy       = $data->bookedBy;
-    $isValidated    = $data->isValidated;
-   // print_r($data);
- 
-    $qry = "UPDATE Booking set room='".$room."' , scheduleStart=".$scheduleStart.",scheduleEnd=".$scheduleEnd.",day='".$day."',week=".$week.",year=".$year.",bookedBy='".$bookedBy."',isValidated=".$isValidated." WHERE id=".$id;
- 
-    $qry_res = mysqli_query($con,$qry);
-    if ($qry_res) {
-        $arr = array('msg' => "Booking Updated Successfully!!!", 'error' => '');
-        $jsn = json_encode($arr);
-    } else {
-        header("HTTP/1.1 418 I am a teapot");
-        $arr = array('msg' => "", 'error' =>  mysqli_error($con));
-        $jsn = json_encode($arr);
-    }
-    print_r($jsn);
-}
+    $id = $data->id;
 
-function validate_booking($con) {
-    $data = json_decode(file_get_contents("php://input"));
-    $id         = $data->id;
-    $authToken  = $data->authToken;
-    $isValidated  = $data->isValidated;
-    $qry = "UPDATE Booking set isValidated=".$isValidated." WHERE id=".$id;
- 
-    $qry_res = mysqli_query($con,$qry);
-    if ($qry_res) {
-        $arr = array('msg' => "Booking Validated Successfully!!!", 'error' => '');
-        $jsn = json_encode($arr);
-    } else {
-        header("HTTP/1.1 418 I am a teapot");
-        $arr = array('msg' => "", 'error' =>  mysqli_error($con));
-        $jsn = json_encode($arr);
-    }
-    print_r($jsn);
-}
-
-function get_bookers($con) {
-    $qry = mysqli_query($con,'SELECT username as booker, color FROM User order by username');
-    if($qry === FALSE) { 
-        header("HTTP/1.1 418 I am a teapot");
-        $arr = array('msg' => "", 'error' =>  mysqli_error($con));
-        $jsn = json_encode($arr);
-        print_r($jsn);
-    } else {
-        $data = array();
-        while($rows = mysqli_fetch_array($qry))
-        {
-
-            $data[] = array(
-                        "booker"  => utf8_encode($rows["booker"]),
-                        "color"   => $rows["color"]
-                        );
+    $collection = $db->booking;
+    $err = $db->lastError();
+    if(is_null($err["err"]) === TRUE) {
+        $updatedBooking = array(
+            "room"          => $data->room,
+            "scheduleStart" => $data->scheduleStart,
+            "scheduleEnd"   => $data->scheduleEnd,
+            "day"           => $data->day,
+            "week"          => $data->week,
+            "year"          => $data->year,
+            "bookedBy"      => $data->bookedBy,
+            "isValidated"   => $data->isValidated);
+        $newdata = array('$set' => $updatedBooking);
+        $c->update(array("_id" => new MongoId($id)), $newdata);
+        $err = $db->lastError();
+        if(is_null($err["err"]) === TRUE) {
+            $arr = array('msg' => "Booking Updated Successfully!!!", 'error' => '');
+            $jsn = json_encode($arr);
+        } else {
+            header("HTTP/1.1 418 I am a teapot");
+            $arr = array('msg' => "", 'error' =>  $err);
+            $jsn = json_encode($arr);
         }
-        print_r(json_encode($data));
+    } else {
+        header("HTTP/1.1 418 I am a teapot");
+        $arr = array('msg' => "", 'error' =>  $err);
+        $jsn = json_encode($arr);
     }
+    print_r($jsn);
 }
 
-function get_rooms($con) {
-    $qry = mysqli_query($con,'SELECT room FROM Room order by room');
-    if($qry === FALSE) {
-        header("HTTP/1.1 418 I am a teapot"); 
-        die($conn->error); // TODO: better error handling
+function validate_booking($db) {
+    $data = json_decode(file_get_contents("php://input"));
+    $id = $data->id;
+    $collection = $db->booking;
+    $err = $db->lastError();
+    if(is_null($err["err"]) === TRUE) {
+        $newdata = array('$set' => array("isValidated"   => $data->isValidated));
+        $collection->update(array("_id" => new MongoId($id)), $newdata);
+        $err = $db->lastError();
+        if(is_null($err["err"]) === TRUE) {
+            $arr = array('msg' => "Booking Validated Successfully!!!", 'error' => '');
+            $jsn = json_encode($arr);
+        } else {
+            header("HTTP/1.1 418 I am a teapot");
+            $arr = array('msg' => "", 'error' =>  $err);
+            $jsn = json_encode($arr);
+        }
+    } else {
+        header("HTTP/1.1 418 I am a teapot");
+        $arr = array('msg' => "", 'error' =>  $err);
+        $jsn = json_encode($arr);
     }
-    $data = array();
-    while($rows = mysqli_fetch_array($qry))
-    {
-        $data[] = array(
-                    "room"  => $rows["room"]
+    print_r($jsn);
+}
+
+function get_bookers($db) {
+    $collection = $db->User;
+    $err = $db->lastError();
+    if(is_null($err["err"]) === TRUE) {
+        $cursor = $collection->find();
+        $err = $db->lastError();
+        if(is_null($err["err"]) === TRUE) {
+            $data = array();
+            foreach ($cursor as $doc) {
+                $data[] = array(
+                        "booker"  => utf8_encode($doc["booker"]),
+                        "color"   => $doc["color"]
                         );
-    }
-    print_r(json_encode($data));
+            }
+            $jsn = json_encode($data);
+        } else {
+            header("HTTP/1.1 418 I am a teapot");
+            $arr = array('msg' => "", 'error' =>  $err);
+            $jsn = json_encode($arr);
+        }
+    } else {
+        header("HTTP/1.1 418 I am a teapot");
+        $arr = array('msg' => "", 'error' =>  $err);
+        $jsn = json_encode($arr);
+    }            
+    print_r($jsn);
 }
 
-function update_room($con) {
+function get_rooms($db) {
+    $collection = $db->Room;
+    $err = $db->lastError();
+    if(is_null($err["err"]) === TRUE) {
+        $cursor = $collection->find();
+        $err = $db->lastError();
+        if(is_null($err["err"]) === TRUE) {
+            $data = array();
+            foreach ($cursor as $doc) {
+                $data[] = array(
+                        "room"  => $doc["room"]
+                        );
+            }
+            $jsn = json_encode($data);
+        } else {
+            header("HTTP/1.1 418 I am a teapot");
+            $arr = array('msg' => "", 'error' =>  $err);
+            $jsn = json_encode($arr);
+        }
+    } else {
+        header("HTTP/1.1 418 I am a teapot");
+        $arr = array('msg' => "", 'error' =>  $err);
+        $jsn = json_encode($arr);
+    }            
+    print_r($jsn);
+}
+
+function update_room($db) {
     $data = json_decode(file_get_contents("php://input"));
     $newRoomName = $data->newName;
     $oldRoomName = $data->oldName;
-    $qry = 'UPDATE room SET room = "'.$newRoomName.'" WHERE room = "'.$oldRoomName.'"';
-    $qry_res = mysqli_query($con,$qry);
-    if ($qry_res) {
-        $arr = array('msg' => "Room Updated Successfully!!!", 'error' => '');
-        $jsn = json_encode($arr);
+    //update the Room collection
+    $err = updateRoomIntoRoomCollection($db, $oldRoomName, $newRoomName);
+    if(is_null($err["err"]) === TRUE) {
+        //Updtae the rooms inside the Booking collection
+        $err = updateRoomsIntoBookingCollection($db, $oldRoomName, $newRoomName);
+        if(is_null($err["err"]) === TRUE) {
+            $arr = array('msg' => "Room Updated Successfully!!!", 'error' => '');
+            $jsn = json_encode($arr);
+        } else {
+            header("HTTP/1.1 418 I am a teapot");
+            $arr = array('msg' => "", 'error' =>  $err);
+            $jsn = json_encode($arr);
+        }
     } else {
         header("HTTP/1.1 418 I am a teapot");
-        $arr = array('msg' => "", 'error' =>  mysqli_error($con));
+        $arr = array('msg' => "", 'error' =>  $err);
         $jsn = json_encode($arr);
     }
+
     print_r($jsn);
 }
 
-function delete_room($con) {
+function updateRoomIntoRoomCollection($db, $oldRoomName, $newRoomName){
+    $collection = $db->Room;
+    $err = $db->lastError();
+    if(is_null($err["err"]) === TRUE) {
+        $updatedRoom = array(
+                "room"  => $newRoomName
+            );
+        $newdata = array('$set' => $updatedRoom);
+        $collection->update(array("room" => $oldRoomName), $newdata);
+        $err = $db->lastError();       
+    } 
+    return $err;
+}
+
+function updateRoomsIntoBookingCollection($db, $oldRoomName, $newRoomName){
+    $collection = $db->booking;
+    $err = $db->lastError();
+    if(is_null($err["err"]) === TRUE) {
+        $updatedRoom = array(
+                "room"  => $newRoomName
+            );
+        $newdata = array('$set' => $updatedRoom);
+        $collection->update(array("room" => $oldRoomName), $newdata, array('multiple' => true));
+        $err = $db->lastError();       
+    } 
+    return $err;
+}
+
+
+function delete_room($db) {
     $data = json_decode(file_get_contents("php://input"));
     $roomName = $data->roomName;
-    $qry = 'DELETE FROM room WHERE room = "'.$roomName.'"';
-    $qry_res = mysqli_query($con,$qry);
-    if ($qry_res) {
-        $arr = array('msg' => "Room Deleted Successfully!!!", 'error' => '');
-        $jsn = json_encode($arr);
+    $collection = $db->Room;
+    $err = $db->lastError();
+    if(is_null($err["err"]) === TRUE) {
+        $collection->remove(array('room' => $roomName));
+        $err = $db->lastError();
+        if(is_null($err["err"]) === TRUE) {
+            $arr = array('msg' => "Room Deleted Successfully!!!", 'error' => '');
+            $jsn = json_encode($arr);
+        } else {
+            header("HTTP/1.1 418 I am a teapot");
+            $arr = array('msg' => "", 'error' =>  $err);
+            $jsn = json_encode($arr);
+        }
     } else {
         header("HTTP/1.1 418 I am a teapot");
-        $arr = array('msg' => "", 'error' =>  mysqli_error($con));
+        $arr = array('msg' => "", 'error' =>  $err);
         $jsn = json_encode($arr);
     }
+
     print_r($jsn);
 }
-function register($con) {
+function register($db) {
     date_default_timezone_set('Europe/Paris');
     $data = json_decode(file_get_contents("php://input"));
     $email                  = $data->email;
     $username               = $data->username;
     $encodedPassword        = $data->encodedPassword;
-    $generatedAdminToken    = $data->generatedAdminToken;
+    $generatedAdminToken    = $data->adminToken;
     
-    $qryAdminToken = 'SELECT adminToken FROM AdminToken WHERE adminToken = "'.$generatedAdminToken.'" and adminTokenEndTime > "'.date("Y-m-d h:i").'"';
-    $qryAdminToken_res = mysqli_query($con,$qryAdminToken);
-    if ($qryAdminToken_res && mysqli_num_rows($qryAdminToken_res) > 0) {
-        $qry = 'INSERT INTO User (username, encodedPassword) values ("' . $username . '","' . $encodedPassword.'")';
-        $qry_res = mysqli_query($con,$qry);
-        if ($qry_res) {
-            $qryDeleteAdminToken = 'Delete FROM adminToken WHERE adminToken = "'.$generatedAdminToken.'"';
-            $arr = array('id' =>  mysqli_insert_id($con), 'msg' => "User Added Successfully!!!", 'error' => '');
-            $jsn = json_encode($arr);
-            mysqli_query($con,$qryDeleteAdminToken);
+    $collection = $db->AdminToken;
+    $mongoDate = new MongoDate(strtotime(date("Y-m-d h:i")));
+    $result = $collection->findOne(array('adminToken' => $generatedAdminToken,
+                                     'adminTokenEndTime' => array('$gte' => $mongoDate)));
+
+    $err = $db->lastError();
+    if (is_null($err["err"]) === TRUE && is_null($result) !== TRUE) {
+        $collection = $db->User;
+        $result = $collection->findOne(array('booker' => $username));
+        $err = $db->lastError();
+        if (is_null($err["err"]) === TRUE && is_null($result) === TRUE) {
+            $newUser = array('booker' =>$username, 'password' =>$encodedPassword);
+            $collection->insert($newUser);
+            $err = $db->lastError();
+            if (is_null($err["err"]) === TRUE) {
+                $qryDeleteAdminToken = 'Delete FROM adminToken WHERE adminToken = "'.$generatedAdminToken.'"';
+                $collection = $db->AdminToken;
+                $collection->remove(array('adminToken' => $generatedAdminToken));
+                $arr = array('id' =>  $newUser["_id"]->{'$id'}, 'msg' => "User Added Successfully!!!", 'error' => '');
+                $jsn = json_encode($arr);
+            } else {
+                header("HTTP/1.1 401 Unauthorized");
+                $arr = array('msg' => "",  'error' => $err);
+                $jsn = json_encode($arr);
+            }
+            
+        } else {
+            if(is_null($result) !== TRUE) {
+                header("HTTP/1.1 409 Conflict");
+                $arr = array('msg' => "",  'error' => "The user '".$username."' already exists");
+                $jsn = json_encode($arr);
+            } else {
+                header("HTTP/1.1 409 Conflict");
+                $arr = array('msg' => "",  'error' => $err);
+                $jsn = json_encode($arr);
+            }
         }
-        else {
-            header("HTTP/1.1 401 Unauthorized");
-            $arr = array('msg' => "",  mysqli_error($con));
-            $jsn = json_encode($arr);
-        }
+      
     } else {
         header("HTTP/1.1 401 Unauthorized");
-        $arr = array('error' => 'The admin token is not good: '.$adminToken);
+        $arr = array('error' => 'The admin token is not good: '.$generatedAdminToken);
         $jsn = json_encode($arr);
     }
     print_r($jsn);
 }
-function authenticate($con) {
+function authenticate($db) {
     $data = json_decode(mb_convert_encoding(file_get_contents("php://input"), 'HTML-ENTITIES', "UTF-8"));
     $username           = $data->username;
     $encodedPassword    = $data->encodedPassword;
     
-    //print_r($data);
-    $qry = 'SELECT username, isAdmin FROM User WHERE username = "'.$username.'"and encodedPassword = "' . $encodedPassword.'"';
-    $qry_res = mysqli_query($con,$qry);
-    if ($qry_res && mysqli_num_rows($qry_res) > 0) {
-        $isAdmin =  mysqli_fetch_array($qry_res)['isAdmin'];
-        return (createAuthenticationToken($con, $isAdmin));
+    $collection = $db->User;
+    $user = $collection->findOne(array('booker' => $username, 'password' => $encodedPassword));
+    $err = $db->lastError();
+    if(is_null($err["err"]) === TRUE && is_null($user) !== TRUE) {
+        $isAdmin = $user['isAdmin'];
+        return (createAuthenticationToken($db, $isAdmin));
     }
     else {
         header("HTTP/1.1 401 Unauthorized");
-        if($qry_res && mysqli_num_rows($qry_res) <= 0) {
+        if(is_null($user) === TRUE) {
             $arr = array('error' =>  "Le compte '".utf8_encode($username)."' n'exite pas.");
             $jsn = json_encode($arr);
         } else {
-            $arr = array('error' =>  mysqli_error($con).'\n'.$qry);
+            $arr = array('error' =>  $err);
             $jsn = json_encode($arr);
         }        
     }
@@ -405,43 +581,47 @@ function authenticate($con) {
 
 }
 
-function createAuthenticationToken($con, $isAdmin) {
+function createAuthenticationToken($db, $isAdmin) {
     date_default_timezone_set('Europe/Paris');
     $endAvailability = date("Y-m-d h:i", strtotime('+2 hours'));
     $token = md5(uniqid(rand(), true));
-    $qryToken = 'INSERT INTO UserToken (token, endAvailability, isAdmin) values ("' .$token . '","' . $endAvailability.'", '.$isAdmin.')';
-    $qryToken_res = mysqli_query($con,$qryToken);
-    if ($qryToken_res) {
+    $collection = $db->UserToken;
+    $newAuthToken = array('token' => $token, 'endAvailability' => new MongoDate(strtotime($endAvailability)), 'isAdmin' =>$isAdmin);
+    $collection->insert($newAuthToken);
+    $err = $db->lastError();
+    if (is_null($err["err"]) === TRUE) {
         $arr = array('token' =>  $token, 'endAvailability' => $endAvailability, 'isAdmin' => $isAdmin,
             'msg' => "User Logged Successfully!!!", 'error' => '');
         $jsn = json_encode($arr);
     } else {
         //header("HTTP/1.1 401 Unauthorized");
         $arr = array('msg' => "",
-         'error' => 'Error when inserting token: '.$token.' endAvailability: '.$endAvailability.'\n'.$qryToken.'\n'.mysqli_error($con));
+         'error' => 'Error when inserting token: '.$token.' endAvailability: '.$endAvailability.'<br>'.$qryToken.'<br>'.$err);
         $jsn = json_encode($arr);
     }
     print_r($jsn);
 }
 
-function generateAdminToken($con) {
+function generateAdminToken($db) {
     $data = json_decode(file_get_contents("php://input"));
     date_default_timezone_set('Europe/Paris');
     $adminTokenEndTime = date("Y-m-d h:i", strtotime('+1 day'));
     $adminToken = md5(uniqid(rand(), true));
     $adminAuthToken = $data->adminAuthToken;
 
-    if (isValidAndAdminToken($con, $adminAuthToken)) {
-        $qryToken = 'INSERT INTO adminToken (adminToken, adminTokenEndTime) values ("' . $adminToken . '","' . $adminTokenEndTime.'")';
-        $qryToken_res = mysqli_query($con,$qryToken);
-        if ($qryToken_res) {
+    if (isValidAndAdminToken($db, $adminAuthToken)) {
+        $collection = $db->AdminToken;
+        $newAdminToken = array('adminToken' => $adminToken, 'adminTokenEndTime' => new MongoDate(strtotime($adminTokenEndTime)));
+        $collection->insert($newAdminToken);
+        $err = $db->lastError();
+        if(is_null($err["err"]) === TRUE) {
             $arr = array('adminToken' =>  $adminToken, 'adminTokenEndTime' => $adminTokenEndTime,
                 'msg' => "Admin token generated Successfully!!!", 'error' => '');
             $jsn = json_encode($arr);
         } else {
             header("HTTP/1.1 401 Unauthorized");
             $arr = array('msg' => "",
-                'error' => 'Error when inserting token: '.$adminToken.' adminTokenEndTime: '.$adminTokenEndTime.'\n'.$qryToken.'\n'.mysqli_error($con));
+                'error' => 'Error when inserting token: '.$adminToken.' adminTokenEndTime: '.$adminTokenEndTime.'<br>'.$qryToken.'<br>'.$err);
             $jsn = json_encode($arr);
         }
     } else {
@@ -452,55 +632,85 @@ function generateAdminToken($con) {
     print_r($jsn);
 }
 
-function isTokenValid($con, $authToken) {
-    $qry = 'SELECT token FROM UserToken WHERE token = "'.$authToken.'"';
-    $qry_res = mysqli_query($con,$qry);
-    if($qry_res) {
-        $nbRows = mysqli_num_rows($qry_res);
-        return (mysqli_num_rows($qry_res) > 0);
+function isTokenValid($db, $authToken) {
+    $collection = $db->UserToken;
+    $result = $collection->findOne(array('token' => $authToken));
+    $err = $db->lastError();
+    if(is_null($err["err"]) === TRUE) {
+        return (is_null($result) !== TRUE);
     } else {
-        print_r($qry."  ".mysqli_error($con));
+        print_r($err);
         return false;
     }
 }
 
-function isValidAndAdminToken($con, $adminAuthToken) {
-    $qry = 'SELECT token FROM UserToken WHERE token = "'.$adminAuthToken.'" and isAdmin = True';
-    $qry_res = mysqli_query($con,$qry);
-    if($qry_res) {
-        $nbRows = mysqli_num_rows($qry_res);
-        return (mysqli_num_rows($qry_res) > 0);
+function isValidAndAdminToken($db, $adminAuthToken) {
+    $collection = $db->UserToken;
+    $result = $collection->findOne(array('token' => $adminAuthToken, 'isAdmin'=> true));
+    $err = $db->lastError();
+    if(is_null($err["err"]) === TRUE) {
+        return (is_null($result) !== TRUE);
     } else {
-        print_r($qry."  ".mysqli_error($con));
+        print_r($err);
         return false;
-    }
-    
+    }    
 }
 
-function get_free_rooms_for_slot($con){
+function get_free_rooms_for_slot($db){
     $data = json_decode(file_get_contents("php://input"));
     $day                = $data->day;
     $scheduleStart      = $data->scheduleStart;
     $scheduleEnd        = $data->scheduleEnd;
-
-    $qry = 'SELECT r.room as freeRoom FROM room r where NOT EXISTS(SELECT * FROM Booking b WHERE b.day = "'.
-        $day.'" and b.room = r.room and b.scheduleStart between "'.$scheduleStart.'" and "'.$scheduleEnd.
-        '" and b.scheduleEnd between "'.$scheduleStart.'" and "'.$scheduleEnd.'")';
-    $qry_res = mysqli_query($con,$qry);
-    if($qry_res) {
-        $data = array();
-        while($rows = mysqli_fetch_array($qry_res))
-            {
-                $data[] = array(
-                            "freeRoom"  => utf8_encode($rows["freeRoom"])
-                            );
+    $collection = $db->booking;
+    $err = $db->lastError();
+    if(is_null($err["err"]) === TRUE) {
+        $mongo_qry = array('day' => $day,
+                    '$or' => array(array('scheduleStart' => array('$gte' => (float)$scheduleStart, '$lt' => (float)$scheduleEnd)),
+                        array('scheduleEnd' => array('$gt' => (float)$scheduleStart, '$lte' => (float)$scheduleEnd)))
+                );
+        $cursor = $collection->distinct("room", $mongo_qry);
+        $err = $db->lastError();
+        if(is_null($err["err"]) === TRUE) {
+            $occupiedRooms = array();
+            if($cursor) {
+                foreach ($cursor as $doc) {
+                    array_push($occupiedRooms, $doc);
+                    
+                }
             }
-            $jsn = json_encode($data);
+            $collection = $db->Room;
+            $cursor = $collection->find(array('room' => array('$nin' => $occupiedRooms)));
+            $err = $db->lastError();
+            if(is_null($err["err"]) === TRUE) {
+                $freeRooms = array();
+                foreach ($cursor as $doc) {
+                    $freeRooms[] = array(
+                            "freeRoom" => $doc["room"]
+                            );
+                } 
+
+                $jsn = json_encode($freeRooms);
+                
+            } else {
+                header("HTTP/1.1 418 I am a teapot");
+                $arr = array('msg' => "", 'error' =>  $err);
+                $jsn = json_encode($arr);
+            }
+            
         } else {
             header("HTTP/1.1 418 I am a teapot");
-            $arr = array('msg' => "", 'error' =>  mysqli_error($con));
+            $arr = array('msg' => "", 'error' =>  $err);
             $jsn = json_encode($arr);
         }
-        print_r($jsn);
+    } else {
+        header("HTTP/1.1 418 I am a teapot");
+        $arr = array('msg' => "", 'error' =>  $err);
+        $jsn = json_encode($arr);
+    }
+    print_r($jsn);
+}
+
+function isAdminAction($action){
+    return($action == 'update_room' || $action == 'validate_booking' || $action == 'delete_room' );
 }
 ?>
