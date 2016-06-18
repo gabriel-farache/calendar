@@ -521,7 +521,7 @@ function register($db) {
         $result = $collection->findOne(array('booker' => $username));
         $err = $db->lastError();
         if (is_null($err["err"]) === TRUE && is_null($result) === TRUE) {
-            $newUser = array('booker' =>$username, 'password' =>$encodedPassword);
+            $newUser = array('booker' =>$username, 'password' =>$encodedPassword, 'color' => '#FFFFFF');
             $collection->insert($newUser);
             $err = $db->lastError();
             if (is_null($err["err"]) === TRUE) {
