@@ -62,7 +62,7 @@ angular.module('calendarApp')
           $scope.booking.bookedBy = $scope.username === $scope.guestName ? undefined : $scope.username;
       });
 
-     $interval(function () { $scope.initWeekBookings();console.log("interval");}, $scope.intervalRefreshCalendarTime);
+     $interval(function () { $scope.initWeekBookings();}, $scope.intervalRefreshCalendarTime);
     
     this.initCalendar = function () {
       var globalsCookies = $cookieStore.get('globals');
@@ -276,7 +276,7 @@ angular.module('calendarApp')
               bookingDB.year           =   data.year;
               bookingDB.bookedBy       =   data.bookedBy;
               bookingDB.isValidated    =   data.isValidated;
-              console.log(dataDB);
+
               $scope.booking = bookingDB;
               $scope.error = undefined;
           }, function(response){

@@ -82,7 +82,6 @@ function DatabaseService($http) {
         'bookingsIds' : bookingsToRemoveIds, 
         'authToken'   : authToken
       };
-      console.log(params);
       return ($http.post(URL, params));
     }
 
