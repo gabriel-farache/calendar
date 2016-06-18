@@ -62,8 +62,8 @@ angular.module('calendarApp')
           $scope.booking.bookedBy = $scope.username === $scope.guestName ? undefined : $scope.username;
       });
 
-     $interval(function () { $scope.initWeekBookings();}, $scope.intervalRefreshCalendarTime);
-    
+    var interval = $interval(function () { $scope.initWeekBookings();}, $scope.intervalRefreshCalendarTime);
+    $scope.$on('$destroy', function () { $interval.cancel(interval); });
     this.initCalendar = function () {
       var globalsCookies = $cookieStore.get('globals');
       if(globalsCookies !== undefined) {
