@@ -291,12 +291,12 @@ angular.module('calendarApp')
       var bookedByAndBookingID = bookingForSchedule.split('$');
       var color = this.getBookerColor(bookedByAndBookingID[0]);
       if(bookedByAndBookingID.length >= 2 ) {
-        var bookingID = parseInt(bookedByAndBookingID[1]);
+        var bookingID = bookedByAndBookingID[1];
         var isValidated = this.isBookingValidated(bookingID);
         if($scope.booking !== undefined &&
           $scope.booking !== undefined &&
           $scope.booking.id !== undefined &&
-          parseInt($scope.booking.id) === bookingID ) {          
+          $scope.booking.id === bookingID ) {          
             color = isValidated ? $scope.colorOfValidatedBookingSelected : this.colorOfSelectedBooking;
         } 
       }
@@ -409,10 +409,10 @@ angular.module('calendarApp')
           //remove booking on the sharing a slot with the validated booking
           var bookingsSharingSlot = $scope.getBookingsSharingSlot(bookingToValidate);
           if(bookingsSharingSlot !== false) {
-            var bookingToValidateID = parseInt(bookingToValidate.id);
+            var bookingToValidateID = bookingToValidate.id;
             var bookingToRemoveIds= [];
             for (var i = 0; i < bookingsSharingSlot.length; i++){
-              var bookingsSharingSlotID = parseInt(bookingsSharingSlot[i].id);
+              var bookingsSharingSlotID = bookingsSharingSlot[i].id;
               if(bookingToValidateID !== bookingsSharingSlotID){
                 bookingToRemoveIds.push(bookingsSharingSlot[i].id);
               }
@@ -433,13 +433,13 @@ angular.module('calendarApp')
       var bookingsSharingSlot = false;
       if($scope.calendar !== undefined && booking !== undefined) {
         var start = parseFloat(booking.scheduleStart);
-        var bookingID = parseInt(booking.id);
+        var bookingID = booking.id;
         var end = parseFloat(booking.scheduleEnd);
         for (var i = 0; i < $scope.calendar.length; i++) {
           var detail = $scope.calendar[i];
           var dStart = detail.scheduleStart;
           var dEnd = parseFloat(detail.scheduleEnd);
-          if(bookingID !== parseInt(detail.id) &&
+          if(bookingID !== detail.id &&
             booking.day === detail.day &&
             parseInt(booking.year) === parseInt(detail.year) &&
             dStart < end && start < dEnd) {
@@ -455,9 +455,9 @@ angular.module('calendarApp')
 
     this.isBookingValidated = function(bookingId){
       var isValidated = false;
-      var id = parseInt(bookingId);
+      var id = bookingId;
       for(var i = 0; i < $scope.calendar.length; i++){
-        if(parseInt($scope.calendar[i].id) === id) {
+        if($scope.calendar[i].id === id) {
           isValidated = $scope.calendar[i].isValidated;
           break;
         }
@@ -482,11 +482,11 @@ angular.module('calendarApp')
     };
 
     $scope.handleErrorDB = function(status, data){
-      if(data.errorCode === -1) {
+      if(data.errorCode !== undefined && data.errorCode === -1) {
         authenticationService.ClearCredentials();
       }
       $scope.dataLoading = false;
       $scope.error = data.error;
-      $timeout(function () { $scope.error = undefined; }, $scope.timeoutTime); 
+      $timeout(function () {  }, $scope.timeoutTime); 
     };
   });
