@@ -1,13 +1,16 @@
 <div class="container-fluid table-responsive" ng-init="freeSlotCtrl.initSearch()">
     <div class="alert alert-danger" ng-show="error !== undefined" style="padding:2px;margin-bottom:2px;">
-        {{error}}
-    </div>
-    <div class="alert alert-success" ng-show="message !== undefined" style="padding:2px;margin-bottom:2px;">
-        {{message}}
-    </div>
-    <div class="alert alert-success" ng-show="messageAdmin !== undefined" style="padding:2px;margin-bottom:2px;">
-        {{messageAdmin}}
-    </div>
+         {{error}}
+         <a style="float: right" ng-click="removeErrorMessage()">x</a>
+   </div>
+   <div class="alert alert-success" ng-show="message !== undefined" style="padding:2px;margin-bottom:2px;">
+         {{message}}
+         <a style="float: right" ng-click="removeMessage()">x</a>
+   </div>
+   <div class="alert alert-success" ng-show="messageAdmin !== undefined" style="padding:2px;margin-bottom:2px;">
+         {{messageAdmin}}
+         <a style="float: right" ng-click="removeMessageAdmin()">x</a>
+   </div>
     <div id="calendarDays" class="container-fluid" style="float:left;width:20%;">
         <table class="table-responsive table-hover" 
             style="margin-left: 2px;margin-bottom:5px;padding:0px;width:100%;" align="center">

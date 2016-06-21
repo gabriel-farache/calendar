@@ -102,7 +102,18 @@ angular.module('calendarApp')
       $scope.error = data.error;
       $timeout(function () { $scope.error = undefined; }, $scope.timeoutTime); 
     };
+    
+    $scope.removeErrorMessage = function() {
+      $scope.error = undefined;
+    };
 
+    $scope.removeAdminMessage = function() {
+      $scope.messageAdmin = undefined;
+    };
+
+    $scope.removeMessage = function() {
+      $scope.message = undefined;
+    };
 
 });
 

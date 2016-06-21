@@ -2,7 +2,7 @@
 
 angular
     .module('calendarApp')
-    .controller('headerController', function LoginController($scope, $cookieStore, sharedService, authenticationService) {
+    .controller('headerController', function HeaderController($scope, $cookieStore, sharedService, authenticationService) {
         $scope.guestName = 'Visiteur';
         $scope.username = $scope.guestName;
         $scope.isAdmin = false;

@@ -27,7 +27,7 @@ angular.module('calendarApp')
     $scope.dataLoading = false;
     $scope.messageAdmin = undefined;
     $scope.message = undefined;
-    $scope.timeoutTime = 5000;
+    $scope.timeoutTime = 10000;
     $scope.intervalRefreshCalendarTime = 60000;
     this.date = moment();
     this.todayMonth = this.date.month();
@@ -483,7 +483,9 @@ angular.module('calendarApp')
     };
 
     $scope.handleErrorDB = function(status, data){
-      if(data.errorCode !== undefined && data.errorCode === -1) {
+      if(data !== undefined && 
+          data.errorCode !== undefined && 
+          data.errorCode === -1) {
         authenticationService.ClearCredentials();
       }
       $scope.dataLoading = false;
@@ -499,14 +501,26 @@ angular.module('calendarApp')
         var cc = '';
         var subject = "Réservation validée - le " + booking.day +
                       " de " + booking.scheduleStart + " à " + booking.scheduleEnd;
-        var message = "Bonjour, \nNous avons le plaisir de vous informer que votre réservation du " +
-          booking.day + " de " + booking.scheduleStart + " à " + booking.scheduleEnd + " est validée.\n" +
-          "Cordialement,\nLa Mairie. ";
+        var message = "Bonjour, <br>Nous avons le plaisir de vous informer que votre réservation du " +
+          booking.day + " de " + booking.scheduleStart + " à " + booking.scheduleEnd + " est validée.<br>" +
+          "Cordialement,<br>La Mairie. ";
         emailService.sendEmail(from, to, cc, subject, message, $scope.authToken);
 
       }, function(response){
         $scope.handleErrorDB(response.status, response.data);
       });
+    };
+
+    $scope.removeErrorMessage = function() {
+      $scope.error = undefined;
+    };
+
+    $scope.removeAdminMessage = function() {
+      $scope.messageAdmin = undefined;
+    };
+
+    $scope.removeMessage = function() {
+      $scope.message = undefined;
     };
 
   });
