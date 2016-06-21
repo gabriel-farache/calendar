@@ -86,6 +86,9 @@ try {
                     case 'delete_room':
                         delete_room($GLOBALS['db']);
                         break;
+                    case 'get_booker_email':
+                        get_booker_email($GLOBALS['db']);
+                        break;
                     default:
                         header("HTTP/1.1 401 Unauthorized");
                         $arr = array(
@@ -388,7 +391,7 @@ function delete_bookings($db)
                 );
             }
         }
-        if ($errors . count() <= 0) {
+        if ($errors.count() <= 0) {
             $arr = array(
                 'msg' => "Bookings Deleted Successfully!!!",
                 'error' => ''
@@ -524,6 +527,41 @@ function get_bookers($db)
             $jsn = json_encode($data);
         } else {
             header("HTTP/1.1 418 I am a teapot");
+            $arr = array(
+                'msg' => "",
+                'error' => $err
+            );
+            $jsn = json_encode($arr);
+        }
+    } else {
+        header("HTTP/1.1 418 I am a teapot");
+        $arr = array(
+            'msg' => "",
+            'error' => $err
+        );
+        $jsn = json_encode($arr);
+    }
+    print_r($jsn);
+}
+
+function get_booker_email($db)
+{
+    $data       = json_decode(file_get_contents("php://input"));
+    $booker     = $data->booker;
+    $collection = $db->User;
+    $err        = $db->lastError();
+    if (is_null($err["err"]) === TRUE) {
+        $result     = $collection->findOne(array(
+            'booker' => $booker
+        ));
+        
+        $err = $db->lastError();
+        if (isset($err["err"]) !== TRUE && isset($result) === TRUE) {
+            
+            $data = array('email' => $result['email']);
+            $jsn = json_encode($data);
+        } else {
+            header("HTTP/1.1 404 Not Found");
             $arr = array(
                 'msg' => "",
                 'error' => $err
@@ -715,9 +753,10 @@ function register($db)
         $err        = $db->lastError();
         if (is_null($err["err"]) === TRUE && is_null($result) === TRUE) {
             $newUser = array(
-                'booker' => $username,
-                'password' => $encodedPassword,
-                'color' => '#FFFFFF'
+                'booker'    => $username,
+                'password'  => $encodedPassword,
+                'email'     => $email,
+                'color'     => '#FFFFFF'
             );
             $collection->insert($newUser);
             $err = $db->lastError();
@@ -991,7 +1030,10 @@ function get_free_rooms_for_slot($db)
 
 function isAdminAction($action)
 {
-    return ($action == 'update_room' || $action == 'validate_booking' || $action == 'delete_room');
+    return ($action == 'update_room' ||
+     $action == 'validate_booking' ||
+      $action == 'delete_room' || 
+      $action == 'get_booker_email');
 }
 
 

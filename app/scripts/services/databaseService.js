@@ -93,6 +93,15 @@ function DatabaseService($http) {
       return ($http.get(URL, params));
     }
 
+    function getBookerEmailDB(booker, authToken) {
+      var URL = serverAddr+'CRUD.php?action=get_booker_email';
+      var params = {
+        'booker' : booker,
+        'authToken':authToken
+      };
+      return ($http.post(URL, params));
+    }
+
     function getRoomsDB() {
       var URL = serverAddr+'CRUD.php?action=get_rooms';
       var params = {
@@ -181,6 +190,7 @@ function DatabaseService($http) {
     service.updateRoomDB = updateRoomDB;
     service.deleteRoomDB = deleteRoomDB;
     service.getFreeRoomsForSlot = getFreeRoomsForSlot;
+    service.getBookerEmailDB = getBookerEmailDB;
 
     return service;
  }

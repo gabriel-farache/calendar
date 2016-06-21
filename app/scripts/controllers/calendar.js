@@ -8,7 +8,7 @@
  * Controller of the calendarApp
  */
 angular.module('calendarApp')
-  .controller('calendarController', function ($scope, $http, $cookieStore, $timeout, $interval, moment, databaseService, sharedService, authenticationService) {
+  .controller('calendarController', function ($scope, $http, $cookieStore, $timeout, $interval, moment, databaseService, sharedService, authenticationService, emailService) {
     moment.locale('fr');
     $scope.guestName = 'Visiteur';
     $scope.colorOfValidatedBooking = '#4caf50';
@@ -404,6 +404,7 @@ angular.module('calendarApp')
       var bookingToValidate = $scope.booking;
 		  databaseService.validateBookingDB(bookingToValidate.id, $scope.authToken).then(function () {
         $scope.messageAdmin = "Réservation validé.";
+        $scope.sendConfirmationEmail(bookingToValidate);
         $timeout(function () { $scope.messageAdmin = undefined; }, $scope.timeoutTime);
         bookingToValidate.isValidated = true;
           //remove booking on the sharing a slot with the validated booking
@@ -489,4 +490,23 @@ angular.module('calendarApp')
       $scope.error = data.error;
       $timeout(function () {  }, $scope.timeoutTime); 
     };
+
+    $scope.sendConfirmationEmail = function(booking){
+      databaseService.getBookerEmailDB(booking.bookedBy, $scope.authToken).
+      then(function(response) {
+        var to = response.data.email;
+        var from = 'admin@admin.fr';
+        var cc = '';
+        var subject = "Réservation validée - le " + booking.day +
+                      " de " + booking.scheduleStart + " à " + booking.scheduleEnd;
+        var message = "Bonjour, \nNous avons le plaisir de vous informer que votre réservation du " +
+          booking.day + " de " + booking.scheduleStart + " à " + booking.scheduleEnd + " est validée.\n" +
+          "Cordialement,\nLa Mairie. ";
+        emailService.sendEmail(from, to, cc, subject, message, $scope.authToken);
+
+      }, function(response){
+        $scope.handleErrorDB(response.status, response.data);
+      });
+    };
+
   });
