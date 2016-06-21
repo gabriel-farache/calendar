@@ -500,9 +500,11 @@ angular.module('calendarApp')
         var from = 'admin@admin.fr';
         var cc = '';
         var subject = "Réservation validée - le " + booking.day +
-                      " de " + booking.scheduleStart + " à " + booking.scheduleEnd;
+                      " de " + (booking.scheduleStart+'h').replace(".5h", "h30") +
+                      " à " + (booking.scheduleEnd+'h').replace(".5h", "h30");
         var message = "Bonjour, <br>Nous avons le plaisir de vous informer que votre réservation du " +
-          booking.day + " de " + booking.scheduleStart + " à " + booking.scheduleEnd + " est validée.<br>" +
+          booking.day + " de " + (booking.scheduleStart+'h').replace(".5h", "h30") +
+          " à " + (booking.scheduleEnd+'h').replace(".5h", "h30") + " est validée.<br>" +
           "Cordialement,<br>La Mairie. ";
         emailService.sendEmail(from, to, cc, subject, message, $scope.authToken);
 
