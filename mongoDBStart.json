@@ -1,0 +1,16 @@
+mongod --port 27017 --dbpath /data/rs0/db0 --replSet rs0 --smallfiles --oplogSize 128 &
+mongod --port 27018 --dbpath /data/rs0/db1 --replSet rs0 --smallfiles --oplogSize 128 &
+mongod --port 27019 --dbpath /data/rs0/db2 --replSet rs0 --smallfiles --oplogSize 128 &
+
+rsconf = {
+           _id: "rs0",
+           members: [
+                      {
+                       _id: 0,
+                       host: "localhost:27017"
+                      }
+                    ]
+         };
+
+
+rs.initiate(rsconf);
