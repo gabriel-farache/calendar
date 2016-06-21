@@ -391,7 +391,7 @@ function delete_bookings($db)
                 );
             }
         }
-        if ($errors.count() <= 0) {
+        if (count($errors) <= 0) {
             $arr = array(
                 'msg' => "Bookings Deleted Successfully!!!",
                 'error' => ''
