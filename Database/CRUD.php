@@ -91,9 +91,6 @@ try {
                     case 'delete_room':
                         delete_room($GLOBALS['db']);
                         break;
-                    case 'get_booker_email':
-                        get_booker_email($GLOBALS['db']);
-                        break;
                     case 'delete_booker':
                         delete_booker($GLOBALS['db']);
                         break;
@@ -124,6 +121,12 @@ try {
                         break;
                     case 'delete_booking':
                         delete_booking($GLOBALS['db']);
+                        break;
+                    case 'get_booker_email':
+                        get_booker_email($GLOBALS['db']);
+                        break;
+                    case 'update_booker_settings':
+                        update_booker_settings($GLOBALS['db']);
                         break;
                     
                 }
@@ -596,10 +599,10 @@ function update_booker($db)
     $newBookerName  = $data->newName;
     $newBookerColor = $data->newColor;
     $oldBookerName  = $data->oldName;
+    $collection = $db->selectCollection(USER_COLLECTION);
     //update the Room collection
     $err         = updateBookerIntoBookerCollection($db, $oldBookerName, $newBookerName, $newBookerColor);
     if (is_null($err["err"]) === TRUE) {
-        //Updtae the rooms inside the Booking collection
         $err = updateBookerIntoBookingCollection($db, $oldBookerName, $newBookerName);
         if (is_null($err["err"]) === TRUE) {
             $arr = array(
@@ -627,24 +630,80 @@ function update_booker($db)
     print_r($jsn);
 }
 
-function updateBookerIntoBookerCollection($db, $oldBookerName, $newBookerName, $newBookerColor)
+function update_booker_settings($db)
 {
-    $collection = $db->selectCollection(USER_COLLECTION);
-    $err        = $db->lastError();
-    if (is_null($err["err"]) === TRUE) {
-        $updatedBooker = array(
-            "booker"    => $newBookerName,
-            "color"     => $newBookerColor
-        );
-        $newdata     = array(
-            '$set' => $updatedBooker
-        );
-        $collection->update(array(
-            "booker" => $oldBookerName
-        ), $newdata);
-        $err = $db->lastError();
+    $data           = json_decode(mb_convert_encoding(file_get_contents("php://input"), 'HTML-ENTITIES', "UTF-8"));
+    $booker         = $data->booker;
+    $newBooker      = $data->newBooker;
+    $email          = $data->email;
+    $oldPassword       = $data->password;
+    $newPassword    = $data->newPassword;
+
+    $password       = (int)$newPassword == -1 ? $oldPassword : $newPassword;
+    $collection     = $db->selectCollection(USER_COLLECTION);
+    $err            = $db->lastError();
+    $user           = $collection->findOne(array(
+        'booker' => $booker,
+        'password' => $oldPassword
+    ));
+    $err = $db->lastError();
+    if (is_null($err["err"]) === TRUE && is_null($user) !== TRUE) {
+        if (is_null($err["err"]) === TRUE) {
+            $updatedBooker = array(
+                "booker"    => $newBooker,
+                "email"     =>$email,
+                "password"  => $password
+            );
+            $newdata     = array(
+                '$set' => $updatedBooker
+            );
+            $collection->update(array(
+                "booker" => $booker,
+                "password"  => $oldPassword
+            ), $newdata);
+            $err = $db->lastError();
+            if (is_null($err["err"]) === TRUE) {
+                $err = updateBookerIntoBookingCollection($db, $booker, $newBooker);
+                if (is_null($err["err"]) === TRUE) {
+                    $arr = array(
+                        'msg' => "User seetings Updated Successfully!!!",
+                        'error' => ''
+                    );
+                    $jsn = json_encode($arr);
+                } else {
+                    header("HTTP/1.1 418 I am a teapot");
+                    $arr = array(
+                        'msg' => "",
+                        'error' => $err
+                    );
+                    $jsn = json_encode($arr);
+                }
+            } else {
+                header("HTTP/1.1 418 I am a teapot");
+                $arr = array(
+                    'msg' => "",
+                    'error' => $err
+                );
+                $jsn = json_encode($arr);
+            }
+        } else {
+            header("HTTP/1.1 418 I am a teapot");
+            $arr = array(
+                'msg' => "",
+                'error' => $err
+            );
+            $jsn = json_encode($arr);
+        }
+    } else {
+        header("HTTP/1.1 401 Unauthorized");
+        $arr = array(
+                'msg' => "",
+                'error' => "Password or username incorrect."
+            );
+        $jsn = json_encode($arr);
     }
-    return $err;
+    
+    print_r($jsn);
 }
 
 function updateBookerIntoBookingCollection($db, $oldBookerName, $newBookerName)
@@ -653,13 +712,13 @@ function updateBookerIntoBookingCollection($db, $oldBookerName, $newBookerName)
     $err        = $db->lastError();
     if (is_null($err["err"]) === TRUE) {
         $updatedBooker = array(
-            "booker" => $oldBookerName
+            "bookedBy" => $newBookerName
         );
         $newdata     = array(
             '$set' => $updatedBooker
         );
         $collection->update(array(
-            "booker" => $newBookerName
+            "bookedBy" => $oldBookerName
         ), $newdata, array(
             'multiple' => true
         ));
@@ -946,7 +1005,9 @@ function authenticate($db)
         'booker' => $username,
         'password' => $encodedPassword
     ));
+
     $err        = $db->lastError();
+
     if (is_null($err["err"]) === TRUE && is_null($user) !== TRUE) {
         $isAdmin = $user['isAdmin'];
         return (createAuthenticationToken($db, $isAdmin));
@@ -1162,8 +1223,7 @@ function isAdminAction($action)
       $action == 'delete_room' || 
       $action == 'delete_booker' || 
       $action == 'update_booker' || 
-      $action == 'delete_bookings' || 
-      $action == 'get_booker_email');
+      $action == 'delete_bookings');
 }
 
 
