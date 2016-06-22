@@ -13,8 +13,19 @@ angular
     'ngAria',
     'ngCookies',
     'ngRoute',
-    'angularMoment'
+    'angularMoment',
+    'ngSanitize'
   ])
+  .directive('trustedHTML', ['$sce', function($sce) {
+    return {
+      require: 'ngModel',
+      link: function(scope, element, attrs, ngModel) {
+        ngModel.$parsers.push(function(value) {
+          return $sce.trustAsHTML(value);
+        });
+      }
+    };
+  }])
   .config(function ($routeProvider, $locationProvider) {
     $routeProvider      
       .when('/loginout/:param', {

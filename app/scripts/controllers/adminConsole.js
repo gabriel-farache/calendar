@@ -1,11 +1,12 @@
 
 'use strict';
 angular.module('calendarApp')
-  .controller('adminConsoleController', function ($scope, $cookieStore, $timeout, databaseService, sharedService, authenticationService) {
+  .controller('adminConsoleController', function ($scope, $cookieStore, $timeout, $sce, databaseService, sharedService, authenticationService) {
         $scope.adminToken = '';
         $scope.adminTokenEndTime = '';
         $scope.error = undefined;
         $scope.rooms=[];
+        $scope.bookers=[];
         $scope.timeoutTime = 5000;
         
         $scope.$on('handleBroadcast', function() {
@@ -58,6 +59,7 @@ angular.module('calendarApp')
             });
         };
 
+
         this.modifyRoom = function(room){
             room.oldName = room.name;
         };
@@ -94,26 +96,72 @@ angular.module('calendarApp')
             $scope.rooms.push(newRoom);
         };
 
-    $scope.handleErrorDB = function(status, data){
-      if(data.errorCode === -1) {
-        authenticationService.ClearCredentials();
-      }
-      $scope.dataLoading = false;
-      $scope.error = data.error;
-      $timeout(function () { $scope.error = undefined; }, $scope.timeoutTime); 
-    };
-    
-    $scope.removeErrorMessage = function() {
-      $scope.error = undefined;
-    };
+        $scope.initBookers = function() {
+            $scope.bookers=[];
+            databaseService.getBookersDB().then(function(data)
+            {
+                var bookers = data.data;
+                for(var i = 0; i < bookers.length; i++){
+                    var newBooker = {
+                        booker: $sce.trustAsHtml(bookers[i].booker),
+                        color: bookers[i].color,
+                        oldName: undefined,
+                        isNew: false
+                    };
+                    $scope.bookers.push(newBooker);
+                }
+                $scope.error = undefined;
+            },function(response){
+                $scope.handleErrorDB(response.status, response.data);
+            });
+        };
 
-    $scope.removeAdminMessage = function() {
-      $scope.messageAdmin = undefined;
-    };
+        this.modifyBooker = function(booker){
+            booker.oldName = booker.booker;
+        };
 
-    $scope.removeMessage = function() {
-      $scope.message = undefined;
-    };
+        this.updateBookerInDB = function(booker){
+            databaseService.updateBookerDB(booker, $scope.authToken).
+                then(function() {
+                    $scope.initBookers();
+                    $scope.messageAdmin = "Utilisateur mis à jour.";
+                    $timeout(function () { $scope.messageAdmin = undefined; }, $scope.timeoutTime); 
+                }, function(response) {
+                    $scope.handleErrorDB(response.status, response.data);
+                });
+        };
+
+        this.deleteBookerDB = function(booker) {
+            databaseService.deleteBookerDB(booker, $scope.authToken).
+                then(function() {
+                    $scope.initBookers();
+                    $scope.messageAdmin = "Utilisateur supprimé.";
+                    $timeout(function () { $scope.messageAdmin = undefined; }, $scope.timeoutTime); 
+                }, function(response) {
+                    $scope.handleErrorDB(response.status, response.data);
+                });
+        };
+
+        $scope.handleErrorDB = function(status, data){
+          if(data.errorCode === -1) {
+            authenticationService.ClearCredentials();
+          }
+          $scope.dataLoading = false;
+          $scope.error = data.error;
+          $timeout(function () { $scope.error = undefined; }, $scope.timeoutTime); 
+        };
+
+        $scope.removeErrorMessage = function() {
+          $scope.error = undefined;
+        };
+
+        $scope.removeAdminMessage = function() {
+          $scope.messageAdmin = undefined;
+        };
+
+        $scope.removeMessage = function() {
+          $scope.message = undefined;
+        };
 
 });
 
