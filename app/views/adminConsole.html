@@ -79,12 +79,9 @@
                         </input>
                         <span class="glyphicon glyphicon-stop" 
                             ng-style="{color:booker.color}"
-                            ng-show="booker.isNew === false && booker.oldName === undefined" 
                             style="padding:0px;margin-left:5px;"></span>
-                        <input type="text" 
-                        style="width:30%"
-                        ng-model="booker.color" 
-                        ng-hide="booker.isNew === false && booker.oldName === undefined" required />
+                        <material-picker ng-hide="booker.isNew === false && booker.oldName === undefined"
+                        ng-model="booker.color" format="'hex'" hover-model="hoverColor" size="size"></material-picker>
                         <a ng-click="adminConsoleCtrl.deleteBookerDB(booker)"
                         style="float: right;margin-left:5px;">
                             <button class="btn btn-danger">

@@ -46,6 +46,14 @@
                         </button>
                     </a>
                 </li>
+                <li>
+                    <a href="/userConsole" style="margin: 8px;margin-right:0px;padding:0px;display:inline;">
+                        <button ng-show="username !== undefined && username !== guestName" class="btn btn-info" 
+                        style="margin: 8px;" >
+                            Mon compte
+                        </button>
+                    </a>
+                </li>
                 <li ng-show="username === guestName || username === undefined" >
                     <a href="/loginout/login" style="margin: 8px;margin-left:0px;padding:0px;display:inline;">
                         <button type="button" class="btn btn-info" 
@@ -97,6 +105,7 @@
     <!-- endbower -->
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/moment/locale/fr.js"></script>
+    <script src="scripts/services/ui.bootstrap.materialPicker.js"></script>
     <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
@@ -110,6 +119,7 @@
         <script src="scripts/controllers/register.js"></script>
         <script src="scripts/controllers/calendar.js"></script>
         <script src="scripts/controllers/adminConsole.js"></script>
+        <script src="scripts/controllers/userConsole.js"></script>
         <script src="scripts/controllers/freeSlot.js"></script>
         <script src="scripts/controllers/about.js"></script>
         <!-- endbuild -->
