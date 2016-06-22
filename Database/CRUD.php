@@ -4,6 +4,11 @@ set_error_handler('myErrorHandler');
 register_shutdown_function('fatalErrorShutdownHandler');
 error_reporting(E_ALL & ~ E_ERROR);
 
+DEFINE("BOOKING_COLLECTION", "Booking");
+DEFINE("USER_COLLECTION", "User");
+DEFINE("ROOM_COLLECTION", "Room");
+DEFINE("USER_TOKEN_COLLECTION", "UserToken");
+DEFINE("ADMIN_TOKEN_COLLECTION", "AdminToken");
 
 function myErrorHandler($code, $message, $file, $line) {
     header("HTTP/1.1 503 Service unavailable");
@@ -89,6 +94,15 @@ try {
                     case 'get_booker_email':
                         get_booker_email($GLOBALS['db']);
                         break;
+                    case 'delete_booker':
+                        delete_booker($GLOBALS['db']);
+                        break;
+                    case 'update_booker':
+                        update_booker($GLOBALS['db']);
+                        break;
+                    case 'delete_bookings':
+                        delete_bookings($GLOBALS['db']);
+                        break;
                     default:
                         header("HTTP/1.1 401 Unauthorized");
                         $arr = array(
@@ -111,9 +125,7 @@ try {
                     case 'delete_booking':
                         delete_booking($GLOBALS['db']);
                         break;
-                    case 'delete_bookings':
-                        delete_bookings($GLOBALS['db']);
-                        break;
+                    
                 }
                 
             } else {
@@ -150,7 +162,7 @@ function add_booking($db)
     $year          = $data->year;
     $bookedBy      = $data->bookedBy;
     
-    $collection = $db->booking;
+    $collection = $db->selectCollection(BOOKING_COLLECTION);
     $err        = $db->lastError();
     if (is_null($err["err"]) === TRUE) {
         $newBooking = array(
@@ -195,7 +207,7 @@ function get_booking($db)
 {
     $data       = json_decode(file_get_contents("php://input"));
     $bookingID  = $data->id;
-    $collection = $db->booking;
+    $collection = $db->selectCollection(BOOKING_COLLECTION);
     $err        = $db->lastError();
     if (is_null($err["err"]) === TRUE) {
         $mongo_qry = array(
@@ -237,7 +249,7 @@ function get_booking($db)
 
 function get_all_booking($db)
 {
-    $collection = $db->booking;
+    $collection = $db->selectCollection(BOOKING_COLLECTION);
     $err        = $db->lastError();
     if (is_null($err["err"]) === TRUE) {
         $cursor = $collection->find();
@@ -285,7 +297,7 @@ function get_week_booking($db)
     $year = $data->year;
     $room = $data->room;
     
-    $collection = $db->booking;
+    $collection = $db->selectCollection(BOOKING_COLLECTION);
     $err        = $db->lastError();
     if (is_null($err["err"]) === TRUE) {
         $mongo_qry = array(
@@ -337,7 +349,7 @@ function delete_booking($db)
     $data       = json_decode(file_get_contents("php://input"));
     $bookingID  = $data->id;
     $username   = $data->username;
-    $collection = $db->booking;
+    $collection = $db->selectCollection(BOOKING_COLLECTION);
     $err        = $db->lastError();
     if (is_null($err["err"]) === TRUE) {
         $collection->remove(array(
@@ -375,7 +387,7 @@ function delete_bookings($db)
 {
     $data        = json_decode(file_get_contents("php://input"));
     $bookingsIds = $data->bookingsIds;
-    $collection  = $db->booking;
+    $collection  = $db->selectCollection(BOOKING_COLLECTION);
     $err         = $db->lastError();
     if (is_null($err["err"]) === TRUE) {
         $errors = array();
@@ -423,7 +435,7 @@ function update_booking($db)
     $data = json_decode(file_get_contents("php://input"));
     $id   = $data->id;
     
-    $collection = $db->booking;
+    $collection = $db->selectCollection(BOOKING_COLLECTION);
     $err        = $db->lastError();
     if (is_null($err["err"]) === TRUE) {
         $updatedBooking = array(
@@ -472,7 +484,7 @@ function validate_booking($db)
 {
     $data       = json_decode(file_get_contents("php://input"));
     $id         = $data->id;
-    $collection = $db->booking;
+    $collection = $db->selectCollection(BOOKING_COLLECTION);
     $err        = $db->lastError();
     if (is_null($err["err"]) === TRUE) {
         $newdata = array(
@@ -511,7 +523,7 @@ function validate_booking($db)
 
 function get_bookers($db)
 {
-    $collection = $db->User;
+    $collection = $db->selectCollection(USER_COLLECTION);
     $err        = $db->lastError();
     if (is_null($err["err"]) === TRUE) {
         $cursor = $collection->find();
@@ -548,7 +560,7 @@ function get_booker_email($db)
 {
     $data       = json_decode(file_get_contents("php://input"));
     $booker     = $data->booker;
-    $collection = $db->User;
+    $collection = $db->selectCollection(USER_COLLECTION);
     $err        = $db->lastError();
     if (is_null($err["err"]) === TRUE) {
         $result     = $collection->findOne(array(
@@ -578,10 +590,125 @@ function get_booker_email($db)
     }
     print_r($jsn);
 }
+function update_booker($db)
+{
+    $data           = json_decode(mb_convert_encoding(file_get_contents("php://input"), 'HTML-ENTITIES', "UTF-8"));
+    $newBookerName  = $data->newName;
+    $newBookerColor = $data->newColor;
+    $oldBookerName  = $data->oldName;
+    //update the Room collection
+    $err         = updateBookerIntoBookerCollection($db, $oldBookerName, $newBookerName, $newBookerColor);
+    if (is_null($err["err"]) === TRUE) {
+        //Updtae the rooms inside the Booking collection
+        $err = updateBookerIntoBookingCollection($db, $oldBookerName, $newBookerName);
+        if (is_null($err["err"]) === TRUE) {
+            $arr = array(
+                'msg' => "Room Updated Successfully!!!",
+                'error' => ''
+            );
+            $jsn = json_encode($arr);
+        } else {
+            header("HTTP/1.1 418 I am a teapot");
+            $arr = array(
+                'msg' => "",
+                'error' => $err
+            );
+            $jsn = json_encode($arr);
+        }
+    } else {
+        header("HTTP/1.1 418 I am a teapot");
+        $arr = array(
+            'msg' => "",
+            'error' => $err
+        );
+        $jsn = json_encode($arr);
+    }
+    
+    print_r($jsn);
+}
+
+function updateBookerIntoBookerCollection($db, $oldBookerName, $newBookerName, $newBookerColor)
+{
+    $collection = $db->selectCollection(USER_COLLECTION);
+    $err        = $db->lastError();
+    if (is_null($err["err"]) === TRUE) {
+        $updatedBooker = array(
+            "booker"    => $newBookerName,
+            "color"     => $newBookerColor
+        );
+        $newdata     = array(
+            '$set' => $updatedBooker
+        );
+        $collection->update(array(
+            "booker" => $oldBookerName
+        ), $newdata);
+        $err = $db->lastError();
+    }
+    return $err;
+}
+
+function updateBookerIntoBookingCollection($db, $oldBookerName, $newBookerName)
+{
+    $collection = $db->selectCollection(BOOKING_COLLECTION);
+    $err        = $db->lastError();
+    if (is_null($err["err"]) === TRUE) {
+        $updatedBooker = array(
+            "booker" => $oldBookerName
+        );
+        $newdata     = array(
+            '$set' => $updatedBooker
+        );
+        $collection->update(array(
+            "booker" => $newBookerName
+        ), $newdata, array(
+            'multiple' => true
+        ));
+        $err = $db->lastError();
+    }
+    return $err;
+}
+
+
+function delete_booker($db)
+{
+    $data       = json_decode(file_get_contents("php://input"));
+    $booker     = $data->booker;
+    $collection = $db->selectCollection(USER_COLLECTION);
+    $err        = $db->lastError();
+    if (is_null($err["err"]) === TRUE) {
+        $collection->remove(array(
+            'room' => $roomName
+        ));
+        $err = $db->lastError();
+        if (is_null($err["err"]) === TRUE) {
+            $arr = array(
+                'msg' => "Booker Deleted Successfully!!!",
+                'error' => ''
+            );
+            $jsn = json_encode($arr);
+        } else {
+            header("HTTP/1.1 418 I am a teapot");
+            $arr = array(
+                'msg' => "",
+                'error' => $err
+            );
+            $jsn = json_encode($arr);
+        }
+    } else {
+        header("HTTP/1.1 418 I am a teapot");
+        $arr = array(
+            'msg' => "",
+            'error' => $err
+        );
+        $jsn = json_encode($arr);
+    }
+    
+    print_r($jsn);
+}
 
 function get_rooms($db)
 {
-    $collection = $db->Room;
+    $collection = $db->selectCollection(ROOM_COLLECTION);
     $err        = $db->lastError();
     if (is_null($err["err"]) === TRUE) {
         $cursor = $collection->find();
@@ -622,7 +749,7 @@ function update_room($db)
     $err         = updateRoomIntoRoomCollection($db, $oldRoomName, $newRoomName);
     if (is_null($err["err"]) === TRUE) {
         //Updtae the rooms inside the Booking collection
-        $err = updateRoomsIntoBookingCollection($db, $oldRoomName, $newRoomName);
+        $err = updateRoomIntoBookingCollection($db, $oldRoomName, $newRoomName);
         if (is_null($err["err"]) === TRUE) {
             $arr = array(
                 'msg' => "Room Updated Successfully!!!",
@@ -651,7 +778,7 @@ function update_room($db)
 
 function updateRoomIntoRoomCollection($db, $oldRoomName, $newRoomName)
 {
-    $collection = $db->Room;
+    $collection = $db->selectCollection(ROOM_COLLECTION);
     $err        = $db->lastError();
     if (is_null($err["err"]) === TRUE) {
         $updatedRoom = array(
@@ -668,9 +795,9 @@ function updateRoomIntoRoomCollection($db, $oldRoomName, $newRoomName)
     return $err;
 }
 
-function updateRoomsIntoBookingCollection($db, $oldRoomName, $newRoomName)
+function updateRoomIntoBookingCollection($db, $oldRoomName, $newRoomName)
 {
-    $collection = $db->booking;
+    $collection = $db->selectCollection(BOOKING_COLLECTION);
     $err        = $db->lastError();
     if (is_null($err["err"]) === TRUE) {
         $updatedRoom = array(
@@ -694,7 +821,7 @@ function delete_room($db)
 {
     $data       = json_decode(file_get_contents("php://input"));
     $roomName   = $data->roomName;
-    $collection = $db->Room;
+    $collection = $db->selectCollection(ROOM_COLLECTION);
     $err        = $db->lastError();
     if (is_null($err["err"]) === TRUE) {
         $collection->remove(array(
@@ -735,7 +862,7 @@ function register($db)
     $encodedPassword     = $data->encodedPassword;
     $generatedAdminToken = $data->adminToken;
     
-    $collection = $db->AdminToken;
+    $collection = $db->selectCollection(ADMIN_TOKEN_COLLECTION);
     $mongoDate  = new MongoDate(strtotime(date("Y-m-d h:i")));
     $result     = $collection->findOne(array(
         'adminToken' => $generatedAdminToken,
@@ -746,7 +873,7 @@ function register($db)
     
     $err = $db->lastError();
     if (is_null($err["err"]) === TRUE && is_null($result) !== TRUE) {
-        $collection = $db->User;
+        $collection = $db->selectCollection(USER_COLLECTION);
         $result     = $collection->findOne(array(
             'booker' => $username
         ));
@@ -762,7 +889,7 @@ function register($db)
             $err = $db->lastError();
             if (is_null($err["err"]) === TRUE) {
                 $qryDeleteAdminToken = 'Delete FROM adminToken WHERE adminToken = "' . $generatedAdminToken . '"';
-                $collection          = $db->AdminToken;
+                $collection          = $db->selectCollection(ADMIN_TOKEN_COLLECTION);
                 $collection->remove(array(
                     'adminToken' => $generatedAdminToken
                 ));
@@ -814,7 +941,7 @@ function authenticate($db)
     $username        = $data->username;
     $encodedPassword = $data->encodedPassword;
     
-    $collection = $db->User;
+    $collection = $db->selectCollection(USER_COLLECTION);
     $user       = $collection->findOne(array(
         'booker' => $username,
         'password' => $encodedPassword
@@ -846,7 +973,7 @@ function createAuthenticationToken($db, $isAdmin)
     date_default_timezone_set('Europe/Paris');
     $endAvailability = date("Y-m-d h:i", strtotime('+2 hours'));
     $token           = md5(uniqid(rand(), true));
-    $collection      = $db->UserToken;
+    $collection      = $db->selectCollection(USER_TOKEN_COLLECTION);
     $newAuthToken    = array(
         'token' => $token,
         'endAvailability' => new MongoDate(strtotime($endAvailability)),
@@ -883,7 +1010,7 @@ function generateAdminToken($db)
     $adminAuthToken    = $data->adminAuthToken;
     
     if (isValidAndAdminToken($db, $adminAuthToken)) {
-        $collection    = $db->AdminToken;
+        $collection    = $db->selectCollection(ADMIN_TOKEN_COLLECTION);
         $newAdminToken = array(
             'adminToken' => $adminToken,
             'adminTokenEndTime' => new MongoDate(strtotime($adminTokenEndTime))
@@ -918,7 +1045,7 @@ function generateAdminToken($db)
 
 function isTokenValid($db, $authToken)
 {
-    $collection = $db->UserToken;
+    $collection = $db->selectCollection(USER_TOKEN_COLLECTION);
     $result     = $collection->findOne(array(
         'token' => $authToken
     ));
@@ -933,7 +1060,7 @@ function isTokenValid($db, $authToken)
 
 function isValidAndAdminToken($db, $adminAuthToken)
 {
-    $collection = $db->UserToken;
+    $collection = $db->selectCollection(USER_TOKEN_COLLECTION);
     $result     = $collection->findOne(array(
         'token' => $adminAuthToken,
         'isAdmin' => true
@@ -953,7 +1080,7 @@ function get_free_rooms_for_slot($db)
     $day           = $data->day;
     $scheduleStart = $data->scheduleStart;
     $scheduleEnd   = $data->scheduleEnd;
-    $collection    = $db->booking;
+    $collection    = $db->selectCollection(BOOKING_COLLECTION);
     $err           = $db->lastError();
     if (is_null($err["err"]) === TRUE) {
         $mongo_qry = array(
@@ -983,7 +1110,7 @@ function get_free_rooms_for_slot($db)
                     
                 }
             }
-            $collection = $db->Room;
+            $collection = $db->selectCollection(ROOM_COLLECTION);
             $cursor     = $collection->find(array(
                 'room' => array(
                     '$nin' => $occupiedRooms
@@ -1033,6 +1160,9 @@ function isAdminAction($action)
     return ($action == 'update_room' ||
      $action == 'validate_booking' ||
       $action == 'delete_room' || 
+      $action == 'delete_booker' || 
+      $action == 'update_booker' || 
+      $action == 'delete_bookings' || 
       $action == 'get_booker_email');
 }
 
