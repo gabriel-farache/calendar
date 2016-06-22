@@ -14,7 +14,8 @@ angular
     'ngCookies',
     'ngRoute',
     'angularMoment',
-    'ngSanitize'
+    'ngSanitize',
+    'ui.bootstrap.materialPicker'
   ])
   .directive('trustedHTML', ['$sce', function($sce) {
     return {
@@ -40,6 +41,10 @@ angular
         templateUrl: 'views/adminConsole.html',
         controller: 'adminConsoleController',
         controllerAs: 'adminConsoleCtrl'
+      }).when('/userConsole', {
+        templateUrl: 'views/userConsole.html',
+        controller: 'userConsoleController',
+        controllerAs: 'userConsoleCtrl'
       }).when('/searchFreeSlot', {
         templateUrl: 'views/freeSlot.html',
         controller: 'freeSlotController',

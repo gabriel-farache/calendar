@@ -8,7 +8,7 @@ angular.module('calendarApp')
         $scope.rooms=[];
         $scope.bookers=[];
         $scope.timeoutTime = 5000;
-        
+        $scope.size=10;
         $scope.$on('handleBroadcast', function() {
             var message = sharedService.message;
             $scope.authToken = message.token;
