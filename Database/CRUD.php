@@ -636,7 +636,7 @@ function update_booker_settings($db)
     $booker         = $data->booker;
     $newBooker      = $data->newBooker;
     $email          = $data->email;
-    $oldPassword       = $data->password;
+    $oldPassword    = $data->password;
     $newPassword    = $data->newPassword;
 
     $password       = (int)$newPassword == -1 ? $oldPassword : $newPassword;
@@ -646,6 +646,7 @@ function update_booker_settings($db)
         'booker' => $booker,
         'password' => $oldPassword
     ));
+
     $err = $db->lastError();
     if (is_null($err["err"]) === TRUE && is_null($user) !== TRUE) {
         if (is_null($err["err"]) === TRUE) {

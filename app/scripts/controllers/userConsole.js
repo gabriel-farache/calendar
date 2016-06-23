@@ -42,6 +42,8 @@ angular.module('calendarApp')
                 $scope.message = "Paramètres mis à jour.";
                 $scope.isUpdating = false;
                 $scope.dataLoading = false;
+                $scope.booker.newPassword = undefined;
+                $scope.booker.password = undefined;
                 authenticationService.SetCredentials($scope.booker.booker, $scope.authToken, $scope.isAdmin);
                 $timeout(function () { $scope.message = undefined; }, $scope.timeoutTime);
                 $scope.initUser();
