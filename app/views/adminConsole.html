@@ -13,24 +13,31 @@
    </div>
    <div class="container-fluid" style="width:100%;">
        <ul class="nav nav-pills">
-          <li class="active"><a data-toggle="pill" href="#adminAuthKeyGenerator">G&eacute;n&eacute;ration clef administrative</a></li>
-          <li><a data-toggle="pill" href="#metrics">M&eacute;trique</a></li>
-          <li><a data-toggle="pill" href="#roomManagement" ng-click="initRooms()">Gestion des salles</a></li>
-          <li><a data-toggle="pill" href="#bookerManagement" ng-click="initBookers()">Gestion des Utilisateurs</a></li>
+            <li class="active"><a data-toggle="pill" href="#adminAuthKeyGenerator">
+                {{'ADMIN_GENERATING_ADMIN_TOKEN_TITLE' | i18n}}</a></li>
+            <li><a data-toggle="pill" href="#metrics">
+                {{'ADMIN_METRICS_TITLE' | i18n}}
+            </a></li>
+            <li><a data-toggle="pill" href="#roomManagement" ng-click="initRooms()">
+                {{'ADMIN_ROOM_MANAGEMENT_TITLE' | i18n}}
+            </a></li>
+            <li><a data-toggle="pill" href="#bookerManagement" ng-click="initBookers()">
+                {{'ADMIN_USER_MANAGEMENT_TITLE' | i18n}}
+            </a></li>
         </ul>
         <div class="tab-content">
             <div id="adminAuthKeyGenerator" class="tab-pane fade in active">
-                <h2>G&eacute;n&eacute;rer clef administrative</h2>
+                <h2>{{'ADMIN_GENERATE_ADMIN_TOKEN_LABEL' | i18n}}</h2>
                 <a ng-click="adminConsoleCtrl.generateAdminToken()">
                     <button type="button" class="btn btn-info" style="margin: 8px;" >
-                        G&eacute;n&eacute;rer
+                        {{'ADMIN_GENERATE_LABEL' | i18n}}
                     </button>
                 </a>
-                <p>Clef : {{adminToken}}</p>
-                <p>Fin de validit&eacute; : {{adminTokenEndTime}}</p>
+                <p>{{'ADMIN_KEY_LABEL' | i18n}} {{adminToken}}</p>
+                <p>{{'ADMIN_END_OF_VALIDITY_LABEL' | i18n}} {{adminTokenEndTime}}</p>
             </div>
             <div id="metrics" class="tab-pane fade">
-                <h2>ElasticSearch</h2>
+                <h2>{{'ADMIN_METRICS_LABEL' | i18n}}</h2>
             </div>
             <div id="roomManagement" class="tab-pane fade">
                 <ul id="roomList" class="list-group">
@@ -42,20 +49,20 @@
                         <a ng-click="adminConsoleCtrl.deleteRoomDB(room)"
                         style="float: right;margin-left:5px;">
                             <button class="btn btn-danger">
-                                Supprimer
+                                {{'ADMIN_DELETE_ROOM_LABEL' | i18n}}
                             </button>
                         </a>
                         <a ng-click="adminConsoleCtrl.modifyRoom(room)" ng-show="room.oldName === undefined"
                         style="float: right;margin-left:5px;">
                             <button class="btn btn-warning" 
                                 ng-show="room.isNew === false && room.oldName === undefined">
-                                Modifier
+                                {{'ADMIN_UPDATE_ROOM_LABEL' | i18n}}
                             </button>
                         </a>
                         <a ng-click="adminConsoleCtrl.updateRoomInDB(room)"  ng-show="room.oldName !== undefined"
                         style="float: right;margin-left:5px;">
                             <button class="btn btn-success" ng-show="room.isNew === true || room.oldName !== undefined">
-                                Valider
+                                {{'ADMIN_VALIDATE_ROOM_LABEL' | i18n}}
                             </button>
                         </a>
                         
@@ -63,12 +70,12 @@
                 </ul>
                 <a ng-click="adminConsoleCtrl.addNewRoom()">
                     <button class="btn btn-info">
-                        Ajouter une salle
+                        {{'ADMIN_ADD_ROOM_LABEL' | i18n}}
                     </button>
                 </a>
             </div>
             <div id="bookerManagement" class="tab-pane fade">
-                <h2>Utilisateurs</h2>
+                <h2>{{'ADMIN_USERS_LABEL' | i18n}}</h2>
                 <ul id="bookersList" class="list-group">
                     <li class="list-group-item" ng-repeat="booker in bookers">
                         <input type="text" 
@@ -85,7 +92,7 @@
                         <a ng-click="adminConsoleCtrl.deleteBookerDB(booker)"
                         style="float: right;margin-left:5px;">
                             <button class="btn btn-danger">
-                                Supprimer
+                                {{'ADMIN_DELETE_USER_LABEL' | i18n}}
                             </button>
                         </a>
                         
@@ -93,13 +100,13 @@
                         style="float: right;margin-left:5px;">
                             <button class="btn btn-warning" 
                                 ng-show="booker.isNew === false && booker.oldName === undefined">
-                                Modifier
+                                {{'ADMIN_UPDATE_USER_LABEL' | i18n}}
                             </button>
                         </a>
                         <a ng-click="adminConsoleCtrl.updateBookerInDB(booker)"  ng-show="booker.oldName !== undefined"
                         style="float: right;margin-left:5px;">
                             <button class="btn btn-success" ng-show="booker.isNew === true || booker.oldName !== undefined">
-                                Valider
+                                {{'ADMIN_VALIDATE_USER_LABEL' | i18n}}
                             </button>
                         </a>
                         

@@ -14,31 +14,31 @@
    <div class="container-fluid" style="width:100%;">
       <div>
          <p>
-            Vos informations:
+            {{'USER_ACCOUNT_INFORMATION_LABEL' | i18n}}
             <a ng-click="userConsoleCtrl.enableUpdateSettings()" ng-show="room.oldName === undefined"
             style="margin-left:5px;">
                 <button class="btn btn-warning" 
                     ng-show="isUpdating === false">
-                    Modifier
+                    {{'USER_UPDATE_LABEL' | i18n}}
                 </button>
             </a>
          </p>
          <form name="userAccountForm" 
                ng-submit="userAccountForm.$valid && userConsoleCtrl.updateBookerSettings()" novalidate>
                <div class="input-group" style="width:65%;">
-                  <label>Nom d'utilisateur :</label><br>
+                  <label>{{'USER_USERNAME_LABEL' | i18n}}</label><br>
                   <input type="text" style="width:65%;" ng-model="booker.booker" ng-disabled="isUpdating === false" required />
                </div>
                <div class="input-group" style="width:65%;">
-                  <label>Email :</label><br>
+                  <label>{{'USER_EMAIL_LABEL' | i18n}}</label><br>
                   <input type="email" style="width:65%;" ng-model="booker.email" ng-disabled="isUpdating === false" required />
                </div>
                <div class="input-group" style="width:65%;">
-                  <label>Mot de passe :</label><br>
+                  <label>{{'USER_PASSWORD_LABEL' | i18n}}</label><br>
                   <input type="password" style="width:65%;" ng-model="booker.password" ng-disabled="isUpdating === false" required />
                </div>
                <div class="input-group" style="width:65%;">
-                  <label>Nouveau mot de passe (optionnel) :</label><br>
+                  <label>{{'USER_NEW_PASSWORD_LABEL' | i18n}}</label><br>
                   <input type="password" style="width:65%;" ng-model="booker.newPassword" ng-disabled="isUpdating === false"/>
                </div>
                <img ng-show="dataLoading === true" src="/images/loading.svg" 

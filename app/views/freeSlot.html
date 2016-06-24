@@ -27,25 +27,25 @@
             </tr>
             <tr>
                 <th style="text-align:center;padding:2px;margin-right:5px;">
-                    lu.
+                   {{'AGENDA_MONDAY_LABEL' | i18n}}
                 </th>
                 <th style="text-align:center;padding:2px;margin-right:5px;">
-                    ma.
+                   {{'AGENDA_TUESDAY_LABEL' | i18n}}
                 </th>
                 <th style="text-align:center;padding:2px;margin-right:5px;">
-                    me.
+                   {{'AGENDA_WEDNESDAY_LABEL' | i18n}}
                 </th>
                 <th style="text-align:center;padding:2px;margin-right:5px;">
-                    je.
+                   {{'AGENDA_THURSDAY_LABEL' | i18n}}
                 </th>
                 <th style="text-align:center;padding:2px;margin-right:5px;">
-                    ve.
+                   {{'AGENDA_FRIDAY_LABEL' | i18n}}
                 </th>
                 <th style="text-align:center;padding:2px;margin-right:5px;">
-                    sa.
+                   {{'AGENDA_SATURDAY_LABEL' | i18n}}
                 </th>
                 <th style="text-align:center;padding:2px;margin-right:5px;">
-                    di.
+                   {{'AGENDA_SUNDAY_LABEL' | i18n}}
                 </th>
             </tr>
             <tr ng-repeat="monthWeek in freeSlotCtrl.monthWeeks track by $index" align="center">
@@ -61,23 +61,23 @@
 	    <div id="comonInfo" style="margin-bottom:20px;width:100%;">
 	    	<p>
 	    		<button ng-click="freeSlotCtrl.initWeekData(freeSlotCtrl.todayMonth, freeSlotCtrl.todayYear)">
-        			Aujourd'hui
+        			{{'TODAY_LABEL' | i18n}}
       			</button>
       		</p>
-	        <p>Le : {{freeSlotCtrl.day}}</p>
+	        <p>{{'FREE_SLOT_SELECTED_DAY_LABEL' | i18n}} {{freeSlotCtrl.day}}</p>
 	    </div>
 	    <form name="searchFreeSlotForm"
 	    style="width:100%;"
 	        ng-submit="searchFreeSlotForm.$valid && freeSlotCtrl.searchFreeSlot()" novalidate>
 	        <div class="input-group">
 	            <div  style="width:50%;float: left;margin-bottom:20px;">
-	                <label style="">De :</label><br>
+	                <label style="">{{'FREE_SLOT_SCHEDULE_FROM_LABEL' | i18n}}</label><br>
 	                <select ng-model="freeSlotCtrl.scheduleStart" required>
 	                    <option ng-repeat="timeStart in freeSlotCtrl.schedules track by $index" value="{{timeStart}}">{{freeSlotCtrl.schedulesLabels[$index]}}</option>
 	                </select>
 	            </div>
 	            <div style="width:50%;float: right;margin-bottom:20px;">
-	                <label>&Agrave; :</label><br>
+	                <label>{{'FREE_SLOT_SCHEDULE_TO_LABEL' | i18n}}</label><br>
 	                <select ng-model="freeSlotCtrl.scheduleEnd" required>
 	                    <option ng-repeat="timeEnd in freeSlotCtrl.schedules track by $index" value="{{timeEnd}}">{{freeSlotCtrl.schedulesLabels[$index]}}</option>
 	                </select>
@@ -92,8 +92,8 @@
 	<div id="listFreeRoomsForSlot"
 	ng-show="availableRooms !== undefined && dataLoading === false"
 	style="float:right;width:80%;">
-	        <p ng-show="availableRooms.length <= 0"> Pas de salle de libre pour ce cr&eacute;neaux</p>
-	        <p ng-show="availableRooms.length > 0"> Salles libres :</p>
+	        <p ng-show="availableRooms.length <= 0">{{'FREE_SLOT_NO_ROOM_MESSAGE' | i18n}}</p>
+	        <p ng-show="availableRooms.length > 0">{{'FREE_SLOT_FREE_ROOM_LABEL' | i18n}}</p>
 	        <ul class="list-group" ng-show="availableRooms.length > 0">
 	            <li class="list-group-item" ng-repeat="availableRoom in availableRooms">
 	                <p>
@@ -102,7 +102,7 @@
 		                	ng-show="username !== undefined && slotsStatuses[$index].isLoadingData !== true && slotsStatuses[$index].isNewlyBooked !== true"
 	                    	style="float: right;margin-left:5px;">
 	                        <button class="btn btn-info" style="vertical-align:middle;">
-	                            R&eacute;server
+	                            {{'FREE_SLOT_BOOK_ROOM_LABEL' | i18n}}
 	                        </button>
 	                    </a>
 	                    <img ng-show="slotsStatuses[$index].isLoadingData === true" src="/images/loading.svg" style="width: 2%; height: 2%;float: right;"
@@ -110,7 +110,7 @@
 	                    <button class="btn btn-success" 
 								ng-show="username !== undefined && slotsStatuses[$index].isLoadingData !== true && slotsStatuses[$index].isNewlyBooked === true"
 	                    		style="vertical-align:middle;float: right;">
-	                        R&eacute;serv&eacute;e !
+	                        {{'FREE_SLOT_ROMM_BOOKED_MESSAGE' | i18n}}
 	                    </button>
                     </p>
 	            </li>

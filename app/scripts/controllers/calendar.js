@@ -8,8 +8,8 @@
  * Controller of the calendarApp
  */
 angular.module('calendarApp')
-  .controller('calendarController', function ($scope, $http, $cookieStore, $timeout, $interval, moment, databaseService, sharedService, authenticationService, emailService) {
-    moment.locale('fr');
+  .controller('calendarController', function ($scope, $http, $window, $cookieStore, $timeout, $interval, moment, databaseService, sharedService, authenticationService, emailService) {
+    moment.locale($window.navigator.userLanguage || $window.navigator.language);
     $scope.guestName = 'Visiteur';
     $scope.colorOfValidatedBooking = '#4caf50';
     $scope.colorOfValidatedBookingSelected = '#8bc34a';
@@ -482,16 +482,6 @@ angular.module('calendarApp')
       return parseInt(rowspanString);
     };
 
-    $scope.handleErrorDB = function(status, data){
-      if(data !== undefined && 
-          data.errorCode !== undefined && 
-          data.errorCode === -1) {
-        authenticationService.ClearCredentials();
-      }
-      $scope.dataLoading = false;
-      $scope.error = data.error;
-      $timeout(function () {  }, $scope.timeoutTime); 
-    };
 
     $scope.sendConfirmationEmail = function(booking){
       databaseService.getBookerEmailDB(booking.bookedBy, $scope.authToken).
@@ -511,6 +501,17 @@ angular.module('calendarApp')
       }, function(response){
         $scope.handleErrorDB(response.status, response.data);
       });
+    };
+
+    $scope.handleErrorDB = function(status, data){
+      if(data !== undefined && 
+          data.errorCode !== undefined && 
+          data.errorCode === -1) {
+        authenticationService.ClearCredentials();
+      }
+      $scope.dataLoading = false;
+      $scope.error = data.error;
+      $timeout(function () {  }, $scope.timeoutTime); 
     };
 
     $scope.removeErrorMessage = function() {

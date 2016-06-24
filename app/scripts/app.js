@@ -63,4 +63,7 @@ angular
         redirectTo: '/'
       });
       $locationProvider.html5Mode(true);
-  });
+  })
+.run(function(globalizationService) {
+  globalizationService.initLocalizedResources();
+});

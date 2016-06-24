@@ -38,25 +38,25 @@
          </tr>
          <tr>
             <th style="text-align:center;padding:2px;margin-right:5px;">
-               lu.
+               {{'AGENDA_MONDAY_LABEL' | i18n}}
             </th>
             <th style="text-align:center;padding:2px;margin-right:5px;">
-               ma.
+               {{'AGENDA_TUESDAY_LABEL' | i18n}}
             </th>
             <th style="text-align:center;padding:2px;margin-right:5px;">
-               me.
+               {{'AGENDA_WEDNESDAY_LABEL' | i18n}}
             </th>
             <th style="text-align:center;padding:2px;margin-right:5px;">
-               je.
+               {{'AGENDA_THURSDAY_LABEL' | i18n}}
             </th>
             <th style="text-align:center;padding:2px;margin-right:5px;">
-               ve.
+               {{'AGENDA_FRIDAY_LABEL' | i18n}}
             </th>
             <th style="text-align:center;padding:2px;margin-right:5px;">
-               sa.
+               {{'AGENDA_SATURDAY_LABEL' | i18n}}
             </th>
             <th style="text-align:center;padding:2px;margin-right:5px;">
-               di.
+               {{'AGENDA_SUNDAY_LABEL' | i18n}}
             </th>
          </tr>
          <tr ng-repeat="monthWeek in calendarCtrl.monthWeeks track by $index" ng-click="calendarCtrl.setWeek($index)" align="center">
@@ -71,58 +71,59 @@
             <div class="panel panel-default">
                <div class="panel-heading" style="padding: 5px;">
                   <p class="panel-title" style="font-size:14px;">
-                     R&eacute;servation
+                     {{'CALENDAR_BOOKING' | i18n}}
                   </p>
                </div>
                <div id="bookingFormColl" class="panel-collapse collapse in" style="margin-left: 5px;">
                   <form name="bookingDetailForm" ng-hide="booking == null" 
                      ng-submit="bookingDetailForm.$valid && calendarCtrl.addBooking()" novalidate>
                      <div class="input-group" >
-                        <label>R&eacute;servation :</label>
+                        <label>{{'CALENDAR_BOOKING_LABEL' | i18n}}</label>
                         <select style="width:90%;" ng-model="booking.day" ng-disabled="username === undefined || username === ''">
                            <option ng-repeat="day in calendarCtrl.days track by $index" value="{{day}}">{{day}}</option>
                         </select>
                      </div>
                      <div class="input-group">
                         <div  style="width:50%;float: left;">
-                           <label style="">De :</label>
+                           <label style="">{{'CALENDAR_SCHEDULE_FROM_LABEL' | i18n}}</label>
                            <select ng-model="booking.scheduleStart" ng-disabled="username === undefined || username === ''">
                               <option ng-repeat="timeStart in calendarCtrl.schedules track by $index" value="{{timeStart}}">{{calendarCtrl.schedulesLabels[$index]}}</option>
                            </select>
                         </div>
                         <div style="width:50%;float: right;">
-                           <label>&Agrave; :</label><br>
+                           <label>{{'CALENDAR_SCHEDULE_TO_LABEL' | i18n}}</label><br>
                            <select ng-model="booking.scheduleEnd" ng-disabled="username === undefined || username === ''">
                               <option ng-repeat="timeEnd in calendarCtrl.schedules track by $index" value="{{timeEnd}}">{{calendarCtrl.schedulesLabels[$index]}}</option>
                            </select>
                         </div>
                      </div>
                      <div class="input-group">
-                        <label>Salle :</label>
+                        <label>{{'CALENDAR_ROOM_LABEL' | i18n}}</label>
                         <input style="width:90%;" type="text" name="room" ng-model="currentRoom" disabled required /> 
                      </div>
                      <div class="input-group" >
-                        <label>R&eacute;serv&eacute; par :</label>
+                        <label>{{'CALENDAR_BOOKED_BY_LABEL' | i18n}}</label>
                         <input style="width:90%;" type="text" name="bookedBy" ng-model="booking.bookedBy" disabled  required />
                      </div>
                      <div class="input-group">
-                        <label>R&eacute;servation : </label>
+                        <label>{{'CALENDAR_BOOKING_LABEL' | i18n}}</label>
                         <input type="checkbox" name="isValidated" ng-checked="booking.isValidated === true" disabled/>
-                         Valid&eacute;e
+                         {{'CALENDAR_VALIDATED_LABEL' | i18n}}
                      </div>
-                     <input class="btn btn-success" ng-hide="dataLoading === true || booking.bookedBy === username && booking.isValidated === true" type="submit" value="R&eacute;server" style="margin: 3px;" required/>                  
+                     <input class="btn btn-success" ng-hide="dataLoading === true || booking.bookedBy === username && booking.isValidated === true" type="submit" 
+                     value="{{'CALENDAR_BOOK_LABEL' | i18n}}" style="margin: 3px;" required/>                  
                      <img ng-show="dataLoading === true" src="/images/loading.svg" 
                         alt="Authentification en cours..." style="width: 5%; height: 5%"/>
                      <a ng-click="calendarCtrl.validateBooking()" style="padding:0px;">
                         <button ng-show="isAdmin === true && isExistingBookingSelected === true && booking.isValidated === false"
                         class="btn btn-info" style="white-space: normal;margin: 3px;" >
-                           Valider r&eacute;servation
+                           {{'CALENDAR_VALIDATE_BOOKING_LABEL' | i18n}}
                         </button>
                      </a>
                      <a ng-click="calendarCtrl.deleteBooking()" style="padding:0px;margin:0px;">
                            <button ng-show="booking.bookedBy === username && dataLoading !== true" 
                            class="btn btn-danger" style="white-space: normal;padding:4px;margin:0px;margin-top:3px;margin-bottom:3px" >
-                              Supprimer r&eacute;servation
+                              {{'CALENDAR_DELETE_BOOKING_LABEL' | i18n}}
                            </button>
                      </a>
                   </form>
@@ -134,7 +135,7 @@
          <div class="panel panel-default">
             <div class="panel-heading" style="padding: 5px;">
                <p data-toggle="collapse" href="#bookersCollapse" class="panel-title" style="font-size:14px;">
-                  Associations
+                  {{'CALENDAR_BOOKERS' | i18n}}
                </p>
             </div>
             <div id="bookersCollapse" class="panel-collapse collapse">
@@ -159,7 +160,7 @@
         <p>
           {{weekStartEndDates}}
           <button ng-click="calendarCtrl.initWeekData(calendarCtrl.todayMonth, calendarCtrl.todayYear)">
-            Aujourd'hui
+            {{'TODAY_LABEL' | i18n}}
           </button>
         </p>
         

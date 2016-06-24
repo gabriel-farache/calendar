@@ -3,7 +3,7 @@
 
 function AuthenticationService($http, $cookieStore, $rootScope, $timeout, databaseService, sharedService) {
     
-    function Login(username, password, callback) {
+    function Login(username, password) {
 
         return databaseService.authenticate(username, password);
 
