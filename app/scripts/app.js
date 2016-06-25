@@ -15,7 +15,8 @@ angular
     'ngRoute',
     'angularMoment',
     'ngSanitize',
-    'ui.bootstrap.materialPicker'
+    'ui.bootstrap.materialPicker',
+    'localization'
   ])
   .directive('trustedHTML', ['$sce', function($sce) {
     return {
@@ -63,7 +64,4 @@ angular
         redirectTo: '/'
       });
       $locationProvider.html5Mode(true);
-  })
-.run(function(globalizationService) {
-  globalizationService.initLocalizedResources();
-});
+  });

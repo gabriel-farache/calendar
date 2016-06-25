@@ -1,4 +1,11 @@
-{
+[{
+   "INDEX_WELCOME_LABEL" : "Bienvenue",
+   "INDEX_SEARCH_FREE_SLOT_BUTTON" : "Chercher salles libres",
+   "INDEX_ADMIN_CONSOLE_BUTTON" : "Administration",
+   "INDEX_ACCOUNT_BUTTON" : "Mon compte",
+   "INDEX_LOGIN_BUTTON" : "S'authentifier",
+   "INDEX_LOGOFF_BUTTON" : "Se déconnecter",
+
    "AGENDA_MONDAY_LABEL" : "lu.",
    "AGENDA_TUESDAY_LABEL" : "ma.",
    "AGENDA_WEDNESDAY_LABEL" : "me.",
@@ -66,4 +73,4 @@
    "USER_EMAIL_LABEL" : "Email : ",
    "USER_PASSWORD_LABEL" : "Mot de passe : ",
    "USER_NEW_PASSWORD_LABEL" : "Nouveau mot de passe (optionnel) : "
-}
+}]

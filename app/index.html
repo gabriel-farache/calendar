@@ -27,12 +27,14 @@
           <div class="container-fluid">
             <ul class="nav navbar-nav navbar-left">
                 <li>
-                    <a class="navbar-brand" href="/calendar">Bienvenue {{username}}</p>
+                    <a class="navbar-brand" href="/calendar">
+                        {{'INDEX_WELCOME_LABEL' | i18n}} {{username}}
+                    </a>
                 </li>
                 <li>
                     <a href="/searchFreeSlot" style="margin: 8px;margin-right:0px;padding:0px;display:inline;">
                         <button class="btn btn-info" style="margin: 8px;">
-                            Chercher salles libres
+                            {{'INDEX_SEARCH_FREE_SLOT_BUTTON' | i18n}}
                         </button>
                     </a>
                 </li>
@@ -42,7 +44,7 @@
                     <a href="/adminConsole" style="margin: 8px;margin-right:0px;padding:0px;display:inline;">
                         <button ng-show="isAdmin === true" class="btn btn-success" 
                         style="margin: 8px;" >
-                            Administration
+                            {{'INDEX_ADMIN_CONSOLE_BUTTON' | i18n}}
                         </button>
                     </a>
                 </li>
@@ -50,7 +52,7 @@
                     <a href="/userConsole" style="margin: 8px;margin-right:0px;padding:0px;display:inline;">
                         <button ng-show="username !== undefined && username !== guestName" class="btn btn-info" 
                         style="margin: 8px;" >
-                            Mon compte
+                            {{'INDEX_ACCOUNT_BUTTON' | i18n}}
                         </button>
                     </a>
                 </li>
@@ -58,7 +60,7 @@
                     <a href="/loginout/login" style="margin: 8px;margin-left:0px;padding:0px;display:inline;">
                         <button type="button" class="btn btn-info" 
                         style="margin: 8px;" >
-                            S'authentifier
+                            {{'INDEX_LOGIN_BUTTON' | i18n}}
                         </button>
                     </a>
                 </li>
@@ -66,7 +68,7 @@
                     <a ng-click="headerCtrl.logout()" style="margin: 8px;padding:0px;display:inline;">
                         <button type="button" class="btn btn-danger" 
                         style="margin: 8px;" >
-                            Se d&eacute;connecter
+                            {{'INDEX_LOGOFF_BUTTON' | i18n}}
                         </button>
                     </a>
                 </li>  
@@ -105,16 +107,16 @@
     <!-- endbower -->
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/moment/locale/fr.js"></script>
-    <script src="scripts/services/ui.bootstrap.materialPicker.js"></script>
+    <script src="libs/ui.bootstrap.materialPicker/ui.bootstrap.materialPicker.js"></script>
     <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
+        <script src="scripts/services/globalizationService.js"></script>
         <script src="scripts/app.js"></script>
         <script src="scripts/services/sharedService.js"></script>
         <script src="scripts/services/databaseService.js"></script>
         <script src="scripts/services/emailService.js"></script>
         <script src="scripts/services/authenticationService.js"></script>
-        <script src="scripts/services/globalizationService.js"></script>
         <script src="scripts/controllers/header.js"></script>
         <script src="scripts/controllers/login.js"></script>
         <script src="scripts/controllers/register.js"></script>
