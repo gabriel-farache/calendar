@@ -59,13 +59,12 @@
                                 {{'ADMIN_UPDATE_ROOM_LABEL' | i18n}}
                             </button>
                         </a>
-                        <a ng-click="adminConsoleCtrl.updateRoomInDB(room)"  ng-show="room.oldName !== undefined"
+                        <a ng-click="adminConsoleCtrl.updateRoomInDB(room)"  g-show="room.isNew === true || room.oldName !== undefined"
                         style="float: right;margin-left:5px;">
                             <button class="btn btn-success" ng-show="room.isNew === true || room.oldName !== undefined">
                                 {{'ADMIN_VALIDATE_ROOM_LABEL' | i18n}}
                             </button>
-                        </a>
-                        
+                        </a>                        
                     </li>
                 </ul>
                 <a ng-click="adminConsoleCtrl.addNewRoom()">

@@ -30,7 +30,7 @@
               <button ng-click="calendarCtrl.initWeekData(calendarCtrl.date.month()-1)"><</button>
             </td>
             <td colspan="5" style="text-align:center;padding:2px;">
-               {{calendarCtrl.date.format("MMMM YYYY")}}
+               {{calendarCtrl.dateDisplay.format("MMMM YYYY")}}
             </td>
             <td colspan="2">
               <button ng-click="calendarCtrl.initWeekData(calendarCtrl.date.month()+1)">></button>
@@ -38,25 +38,25 @@
          </tr>
          <tr>
             <th style="text-align:center;padding:2px;margin-right:5px;">
-               {{'AGENDA_MONDAY_LABEL' | i18n}}
+               {{'AGENDA_DAY1_LABEL' | i18n}}
             </th>
             <th style="text-align:center;padding:2px;margin-right:5px;">
-               {{'AGENDA_TUESDAY_LABEL' | i18n}}
+               {{'AGENDA_DAY2_LABEL' | i18n}}
             </th>
             <th style="text-align:center;padding:2px;margin-right:5px;">
-               {{'AGENDA_WEDNESDAY_LABEL' | i18n}}
+               {{'AGENDA_DAY3_LABEL' | i18n}}
             </th>
             <th style="text-align:center;padding:2px;margin-right:5px;">
-               {{'AGENDA_THURSDAY_LABEL' | i18n}}
+               {{'AGENDA_DAY4_LABEL' | i18n}}
             </th>
             <th style="text-align:center;padding:2px;margin-right:5px;">
-               {{'AGENDA_FRIDAY_LABEL' | i18n}}
+               {{'AGENDA_DAY5_LABEL' | i18n}}
             </th>
             <th style="text-align:center;padding:2px;margin-right:5px;">
-               {{'AGENDA_SATURDAY_LABEL' | i18n}}
+               {{'AGENDA_DAY6_LABEL' | i18n}}
             </th>
             <th style="text-align:center;padding:2px;margin-right:5px;">
-               {{'AGENDA_SUNDAY_LABEL' | i18n}}
+               {{'AGENDA_DAY7_LABEL' | i18n}}
             </th>
          </tr>
          <tr ng-repeat="monthWeek in calendarCtrl.monthWeeks track by $index" ng-click="calendarCtrl.setWeek($index)" align="center">
@@ -80,7 +80,7 @@
                      <div class="input-group" >
                         <label>{{'CALENDAR_BOOKING_LABEL' | i18n}}</label>
                         <select style="width:90%;" ng-model="booking.day" ng-disabled="username === undefined || username === ''">
-                           <option ng-repeat="day in calendarCtrl.days track by $index" value="{{day}}">{{day}}</option>
+                           <option ng-repeat="day in calendarCtrl.days track by $index" value="{{day}}">{{calendarCtrl.daysDisplay[$index]}}</option>
                         </select>
                      </div>
                      <div class="input-group">
@@ -165,10 +165,11 @@
         </p>
         
       <div >
-         <table class="table-responsive table-bordered table-hover" style="margin: 0px;width:98.5%;" border>
+         <table class="table-responsive table-bordered table-hover" 
+               style="margin: 0px;width:98.5%;" border>
             <tr class="active" >
                <th style="width:2%;"></th>
-               <th style="text-align: center;width:14%;" ng-repeat="day in calendarCtrl.days track by $index">{{ day }}</th>
+               <th style="text-align: center;width:14%;" ng-repeat="day in calendarCtrl.daysDisplay track by $index">{{ day }}</th>
             </tr>
          </table>
          <div style="height:10px;">

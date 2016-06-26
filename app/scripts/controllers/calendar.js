@@ -8,8 +8,8 @@
  * Controller of the calendarApp
  */
 angular.module('calendarApp')
-  .controller('calendarController', function ($scope, $http, $window, $cookieStore, $timeout, $interval, moment, databaseService, sharedService, authenticationService, emailService) {
-    moment.locale($window.navigator.userLanguage || $window.navigator.language);
+  .controller('calendarController', function ($scope, $http, $window, $cookieStore, $timeout, $interval, moment, databaseService, sharedService, authenticationService, emailService, globalizationService) {
+    
     $scope.guestName = 'Visiteur';
     $scope.colorOfValidatedBooking = '#4caf50';
     $scope.colorOfValidatedBookingSelected = '#8bc34a';
@@ -29,7 +29,13 @@ angular.module('calendarApp')
     $scope.message = undefined;
     $scope.timeoutTime = 10000;
     $scope.intervalRefreshCalendarTime = 60000;
+
+    this.dateDisplay = moment();
     this.date = moment();
+
+    this.dateDisplay.locale($window.navigator.userLanguage || $window.navigator.language);
+    this.date.locale('fr');
+
     this.todayMonth = this.date.month();
     this.todayWeek = this.date.week();
     this.todayYear = this.date.year();
@@ -38,7 +44,10 @@ angular.module('calendarApp')
     this.bookingSlotSelectionIsGoingUp = false;
     this.isNewBookingSelected = false;
     $scope.isExistingBookingSelected = false;
+
+    this.daysDisplay = [];
     this.days = [];
+
     this.monthWeeks = [];
     this.currIndexOfWeeksArray = 0;
     this.originCurrTime = undefined;
@@ -119,8 +128,13 @@ angular.module('calendarApp')
       this.days = [];
       this.date.week($scope.week);
       for(var i = 0; i < 7; i++) {
-            this.days.push(this.date.weekday(i).format('ddd DD-MM-YYYY'));
-          }
+        this.days.push(this.date.weekday(i).format('ddd DD-MM-YYYY'));
+      }
+      this.daysDisplay = [];
+      this.dateDisplay.week($scope.week);
+      for(var j = 0; j < 7; j++) {
+        this.daysDisplay.push(this.dateDisplay.weekday(j).format('ddd DD-MM-YYYY'));
+      }
     };
 
     this.initWeek = function() {
@@ -130,6 +144,7 @@ angular.module('calendarApp')
 
     this.initWeekData = function (newMonth, newYear) {
       var date = this.date.month(newMonth);
+      this.dateDisplay.month(newMonth);
       date.year(newYear);
       var firstMonthWeek = date.startOf('month').week();
       this.monthWeeks = [];
@@ -208,6 +223,7 @@ angular.module('calendarApp')
     };
 
     this.mouseDown = function(day, week, year, currTime){
+      console.log(day);
       //if the user is authenticated and the user clicks on a slot
     	if($scope.username !== undefined &&
           $scope.username !== $scope.guestName &&
@@ -229,6 +245,7 @@ angular.module('calendarApp')
     };
 
     this.mouseEnter = function (currTime, day) {
+
       //if the user is authenticated and a creation of booking is in progress
       if($scope.username !== undefined &&
           $scope.username !== $scope.guestName && 
@@ -489,14 +506,19 @@ angular.module('calendarApp')
         var to = response.data.email;
         var from = 'admin@admin.fr';
         var cc = '';
-        var subject = "Réservation validée - le " + booking.day +
-                      " de " + (booking.scheduleStart+'h').replace(".5h", "h30") +
-                      " à " + (booking.scheduleEnd+'h').replace(".5h", "h30");
-        var message = "Bonjour, <br>Nous avons le plaisir de vous informer que votre réservation du " +
-          booking.day + " de " + (booking.scheduleStart+'h').replace(".5h", "h30") +
-          " à " + (booking.scheduleEnd+'h').replace(".5h", "h30") + " est validée.<br>" +
-          "Cordialement,<br>La Mairie. ";
-        emailService.sendEmail(from, to, cc, subject, message, $scope.authToken);
+        var scheduleStart = (booking.scheduleStart+'h').replace(".5h", "h30");
+        var scheduleEnd = (booking.scheduleEnd+'h').replace(".5h", "h30");
+        var subject = globalizationService.getLocalizedString("VALIDATION_EMAIL_SUBJECT");
+        var body = globalizationService.getLocalizedString("VALIDATION_EMAIL_BODY");
+        subject = subject.replace("<BOOKING_DAY>", booking.day)
+                .replace("<BOOKING_SCHEDULE_START>", scheduleStart)
+                .replace("<BOOKING_SCHEDULE_END>", scheduleEnd);
+
+         body = body.replace("<BOOKING_DAY>", booking.day)
+                .replace("<BOOKING_SCHEDULE_START>", scheduleStart)
+                .replace("<BOOKING_SCHEDULE_END>", scheduleEnd);
+
+        emailService.sendEmail(from, to, cc, subject, body, $scope.authToken);
 
       }, function(response){
         $scope.handleErrorDB(response.status, response.data);

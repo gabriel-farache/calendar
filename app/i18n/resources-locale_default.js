@@ -6,13 +6,13 @@
    "INDEX_LOGIN_BUTTON" : "S'authentifier",
    "INDEX_LOGOFF_BUTTON" : "Se déconnecter",
 
-   "AGENDA_MONDAY_LABEL" : "lu.",
-   "AGENDA_TUESDAY_LABEL" : "ma.",
-   "AGENDA_WEDNESDAY_LABEL" : "me.",
-   "AGENDA_THURSDAY_LABEL" : "je.",
-   "AGENDA_FRIDAY_LABEL" : "ve.",
-   "AGENDA_SATURDAY_LABEL" : "sa.",
-   "AGENDA_SUNDAY_LABEL" : "di.",
+   "AGENDA_DAY1_LABEL" : "lu.",
+   "AGENDA_DAY2_LABEL" : "ma.",
+   "AGENDA_DAY3_LABEL" : "me.",
+   "AGENDA_DAY4_LABEL" : "je.",
+   "AGENDA_DAY5_LABEL" : "ve.",
+   "AGENDA_DAY6_LABEL" : "sa.",
+   "AGENDA_DAY7_LABEL" : "di.",
    "TODAY_LABEL" : "Aujourd'hui",
 
    "CALENDAR_BOOKING": "Réservation",
@@ -53,24 +53,28 @@
    "ADMIN_UPDATE_USER_LABEL" : "Modifier",
    "ADMIN_VALIDATE_USER_LABEL" : "Valider",
 
-   "LOGIN_TITLE" : "Login",
-   "LOGIN_USERNAME_LABEL" : "Username",
-   "LOGIN_PASSWORD_LABEL" : "Password",
-   "LOGIN_LOGIN_LABEL" : "Login",
-   "LOGIN_REGISTER_LABEL" : "Register",
+   "LOGIN_TITLE" : "Authentification",
+   "LOGIN_USERNAME_LABEL" : "Nom d'utilisateur",
+   "LOGIN_PASSWORD_LABEL" : "Mot de passe",
+   "LOGIN_LOGIN_LABEL" : "S'authentifier",
+   "LOGIN_REGISTER_LABEL" : "S'enregistrer",
 
-   "REGISTER_TITLE" : "Register",
+   "REGISTER_TITLE" : "S'enregistrer",
    "REGISTER_EMAIL_LABEL" : "Address email de contact : ",
    "REGISTER_USERNAME_LABEL" : "Nom d'utilisateur",
    "REGISTER_PASSWORD_LABEL" : "Mot de passe",
    "REGISTER_ADMIN_KEY_LABEL" : "Clef administrative",
-   "REGISTER_REGISTER_LABEL" : "Register",
-   "REGISTER_CANCEL_LABEL" : "Cancel",
+   "REGISTER_REGISTER_LABEL" : "S'enregistrer",
+   "REGISTER_CANCEL_LABEL" : "Annuler",
 
    "USER_ACCOUNT_INFORMATION_LABEL" : "Vos informations : ",
    "USER_UPDATE_LABEL" : "Modifier",
    "USER_USERNAME_LABEL" : "Nom d'utilisateur : ",
    "USER_EMAIL_LABEL" : "Email : ",
    "USER_PASSWORD_LABEL" : "Mot de passe : ",
-   "USER_NEW_PASSWORD_LABEL" : "Nouveau mot de passe (optionnel) : "
+   "USER_NEW_PASSWORD_LABEL" : "Nouveau mot de passe (optionnel) : ",
+
+   "VALIDATION_EMAIL_SUBJECT": "Réservation validée - le <BOOKING_DAY> de <BOOKING_SCHEDULE_START> à <BOOKING_SCHEDULE_END>",
+   "VALIDATION_EMAIL_BODY": "Bonjour, <br>Nous avons le plaisir de vous informer que votre réservation du <BOOKING_DAY> de <BOOKING_SCHEDULE_START> à <BOOKING_SCHEDULE_END> est validée.<br>Cordialement,<br>La Mairie. "
+
 }]
