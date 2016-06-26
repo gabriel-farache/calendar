@@ -2,7 +2,7 @@
 
 angular
     .module('calendarApp')
-    .controller('headerController', function HeaderController($scope, $cookieStore, sharedService, authenticationService) {
+    .controller('headerController', function HeaderController($scope, $cookieStore, $location, sharedService, authenticationService) {
         $scope.guestName = 'Visiteur';
         $scope.username = $scope.guestName;
         $scope.isAdmin = false;
@@ -21,9 +21,9 @@ angular
         }
 
         this.logout = function() {
-
 			authenticationService.ClearCredentials();
 			$scope.username = undefined;
 	        $scope.isAdmin = false;
+            $location.path('/');
         };
     });

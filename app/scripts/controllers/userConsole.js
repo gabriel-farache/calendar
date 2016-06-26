@@ -21,7 +21,7 @@ angular.module('calendarApp')
         $scope.isAdmin = globalsCookies.isAdmin;
     }
 
-    this.initUser = function() {
+    $scope.initUser = function() {
         databaseService.getBookerEmailDB($scope.booker.booker, $scope.authToken).
             then(function(response){
                 $scope.booker.email = response.data.email;

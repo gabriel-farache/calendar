@@ -13,18 +13,18 @@ function GlobalizationService($http, $rootScope, $window) {
                            "INDEX_ACCOUNT_BUTTON" : "Mon compte",
                            "INDEX_LOGIN_BUTTON" : "S'authentifier",
                            "INDEX_LOGOFF_BUTTON" : "Se déconnecter"},
-                        'en' : {"INDEX_WELCOME_LABEL" : "Bienvenue",
-                           "INDEX_SEARCH_FREE_SLOT_BUTTON" : "Chercher salles libres",
+                        'en' : {"INDEX_WELCOME_LABEL" : "Welcome",
+                           "INDEX_SEARCH_FREE_SLOT_BUTTON" : "Search free slot",
                            "INDEX_ADMIN_CONSOLE_BUTTON" : "Administration",
-                           "INDEX_ACCOUNT_BUTTON" : "Mon compte",
-                           "INDEX_LOGIN_BUTTON" : "S'authentifier",
-                           "INDEX_LOGOFF_BUTTON" : "Se déconnecter"},
-                        'en-US' : {"INDEX_WELCOME_LABEL" : "Bienvenue",
-                           "INDEX_SEARCH_FREE_SLOT_BUTTON" : "Chercher salles libres",
+                           "INDEX_ACCOUNT_BUTTON" : "My account",
+                           "INDEX_LOGIN_BUTTON" : "Login",
+                           "INDEX_LOGOFF_BUTTON" : "Logoff"},
+                        'en-US' : {"INDEX_WELCOME_LABEL" : "Welcome",
+                           "INDEX_SEARCH_FREE_SLOT_BUTTON" : "Search free slot",
                            "INDEX_ADMIN_CONSOLE_BUTTON" : "Administration",
-                           "INDEX_ACCOUNT_BUTTON" : "Mon compte",
-                           "INDEX_LOGIN_BUTTON" : "S'authentifier",
-                           "INDEX_LOGOFF_BUTTON" : "Se déconnecter"}
+                           "INDEX_ACCOUNT_BUTTON" : "My account",
+                           "INDEX_LOGIN_BUTTON" : "Login",
+                           "INDEX_LOGOFF_BUTTON" : "Logoff"}
                        };
     var localize = {
         // use the $window service to get the language of the user's browser
@@ -78,7 +78,6 @@ function GlobalizationService($http, $rootScope, $window) {
         return result;
     }
     localize.dictionary.push(default_init[localize.language]);
-    console.log(localize.language);
     initLocalizedResources();
 
     var service = {};

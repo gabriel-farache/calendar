@@ -65,10 +65,11 @@ angular.module('calendarApp')
         };
 
         this.updateRoomInDB = function(room){
-            databaseService.updateRoomDB(room, $scope.authToken).
+            console.log(room);
+            databaseService.addRoomDB(room, $scope.authToken).
                 then(function() {
                     $scope.initRooms();
-                    $scope.messageAdmin = "Salle mise à jour.";
+                    $scope.messageAdmin = "Salle ajoutée.";
                     $timeout(function () { $scope.messageAdmin = undefined; }, $scope.timeoutTime); 
                 }, function(response) {
                     $scope.handleErrorDB(response.status, response.data);

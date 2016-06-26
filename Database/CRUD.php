@@ -85,6 +85,9 @@ try {
                     case 'update_room':
                         update_room($GLOBALS['db']);
                         break;
+                    case 'add_room':
+                        add_room($GLOBALS['db']);
+                        break;
                     case 'validate_booking':
                         validate_booking($GLOBALS['db']);
                         break;
@@ -728,6 +731,28 @@ function updateBookerIntoBookingCollection($db, $oldBookerName, $newBookerName)
     return $err;
 }
 
+function updateBookerIntoBookerCollection($db, $oldBookerName, $newBookerName)
+{
+    $collection = $db->selectCollection(USER_COLLECTION);
+    $err        = $db->lastError();
+    if (is_null($err["err"]) === TRUE) {
+        $updatedBooker = array(
+            "booker" => $newBookerName
+        );
+        $newdata     = array(
+            '$set' => $updatedBooker
+        );
+        $collection->update(array(
+            "booker" => $oldBookerName
+        ), $newdata, array(
+            'multiple' => true
+        ));
+        $err = $db->lastError();
+    }
+    return $err;
+}
+
+
 
 function delete_booker($db)
 {
@@ -813,6 +838,45 @@ function update_room($db)
         if (is_null($err["err"]) === TRUE) {
             $arr = array(
                 'msg' => "Room Updated Successfully!!!",
+                'error' => ''
+            );
+            $jsn = json_encode($arr);
+        } else {
+            header("HTTP/1.1 418 I am a teapot");
+            $arr = array(
+                'msg' => "",
+                'error' => $err
+            );
+            $jsn = json_encode($arr);
+        }
+    } else {
+        header("HTTP/1.1 418 I am a teapot");
+        $arr = array(
+            'msg' => "",
+            'error' => $err
+        );
+        $jsn = json_encode($arr);
+    }
+    
+    print_r($jsn);
+}
+
+function add_room($db)
+{
+    $data        = json_decode(file_get_contents("php://input"));
+    $newRoomName = $data->newName;
+    //update the Room collection
+    $collection = $db->selectCollection(ROOM_COLLECTION);
+    $err        = $db->lastError();
+    if (is_null($err["err"]) === TRUE) {
+        $newRoom = array(
+            "room" => $newRoomName
+        );
+        $collection->insert($newRoom);
+        $err = $db->lastError();
+        if (is_null($err["err"]) === TRUE) {
+            $arr = array(
+                'msg' => "Room Added Successfully!!!",
                 'error' => ''
             );
             $jsn = json_encode($arr);
@@ -1224,6 +1288,7 @@ function isAdminAction($action)
       $action == 'delete_room' || 
       $action == 'delete_booker' || 
       $action == 'update_booker' || 
+      $action == 'add_room' ||
       $action == 'delete_bookings');
 }
 

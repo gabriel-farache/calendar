@@ -146,7 +146,16 @@ function DatabaseService($http) {
       var URL = serverAddr+'CRUD.php?action=update_room';
       var params = {
         newName: room.name,
-        oldName: room.oldName ,
+        oldName: room.oldName,
+        authToken: authToken       
+      };
+      return ($http.post(URL, params));
+    }
+
+    function addRoomDB(room, authToken) {
+      var URL = serverAddr+'CRUD.php?action=add_room';
+      var params = {
+        newName: room.name,
         authToken: authToken       
       };
       return ($http.post(URL, params));
@@ -226,6 +235,7 @@ function DatabaseService($http) {
     service.getFreeRoomsForSlot     = getFreeRoomsForSlot;
     service.getBookerEmailDB        = getBookerEmailDB;
     service.updateBookerSettingsDB  = updateBookerSettingsDB;
+    service.addRoomDB               = addRoomDB;
 
     return service;
  }
