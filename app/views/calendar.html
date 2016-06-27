@@ -24,16 +24,16 @@
    <div class="innerInfoPage" >
    <div   class="container-fluid innerInfoContent" style="overflow-y:scroll;overflow-x: hidden;font-size:12px;margin: 0px;padding:0px;float: left;">
       <table class="table-responsive table-hover" 
-         style="margin-left: 2px;margin-bottom:5px;padding:0px;" align="center">
+         style="margin-left: 2px;margin-bottom:5px;padding:0px;width:100%;" align="center">
          <tr>
             <td >
-              <button ng-click="calendarCtrl.initWeekData(calendarCtrl.date.month()-1)"><</button>
+              <button class="btn btn-default" style="padding:3px;" ng-click="calendarCtrl.initWeekData(calendarCtrl.date.month()-1)"><</button>
             </td>
             <td colspan="5" style="text-align:center;padding:2px;">
                {{calendarCtrl.dateDisplay.format("MMMM YYYY")}}
             </td>
             <td colspan="2">
-              <button ng-click="calendarCtrl.initWeekData(calendarCtrl.date.month()+1)">></button>
+              <button class="btn btn-default" style="padding:3px;" ng-click="calendarCtrl.initWeekData(calendarCtrl.date.month()+1)">></button>
             </td>
          </tr>
          <tr>
@@ -159,7 +159,7 @@
    <div style="margin: 0;margin-bottom:10px;width:85%;float: right;" >
         <p>
           {{weekStartEndDates}}
-          <button ng-click="calendarCtrl.initWeekData(calendarCtrl.todayMonth, calendarCtrl.todayYear)">
+          <button class="btn btn-default" style="padding:3px;" ng-click="calendarCtrl.initWeekData(calendarCtrl.todayMonth, calendarCtrl.todayYear)">
             {{'TODAY_LABEL' | i18n}}
           </button>
         </p>

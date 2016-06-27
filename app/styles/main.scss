@@ -25,7 +25,19 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/boots
 .validatedBooking {
   font-weight: bold!important;
 }
-
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0,0,0,.5);
+    -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+}
+html {
+     overflow: -moz-scrollbars-vertical;
+     overflow: scroll;
+}
 html, body{
     height:100%;
     margin:0;

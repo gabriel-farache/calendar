@@ -33,11 +33,14 @@ angular.module('calendarApp')
     this.dateDisplay = moment();
     this.date = moment();
 
+    this.numberOfDays = 7;
+    this.offsetFirstDayOfWeek = this.date.day(0).format('ddd') === this.dateDisplay.day(0).format('ddd') ? 0 : 1;
+
     this.dateDisplay.locale($window.navigator.userLanguage || $window.navigator.language);
     this.date.locale('fr');
 
     this.todayMonth = this.date.month();
-    this.todayWeek = this.date.week();
+    this.todayWeek = this.date.isoWeek();
     this.todayYear = this.date.year();
     this.colorOfSelectedBooking = '#FFCDD2';
     this.isMouseUp = true;
@@ -81,7 +84,7 @@ angular.module('calendarApp')
         $scope.isAdmin = globalsCookies.isAdmin;
       }
       $scope.booking.bookedBy = $scope.username === $scope.guestName ? undefined : $scope.username;
-      $scope.week = this.date.week();
+      $scope.week = this.date.isoWeek();
       $scope.year = this.date.year();
       this.initRooms();
       this.initBookers();
@@ -126,14 +129,14 @@ angular.module('calendarApp')
 
     this.initCalendarDays = function () {
       this.days = [];
-      this.date.week($scope.week);
-      for(var i = 0; i < 7; i++) {
-        this.days.push(this.date.weekday(i).format('ddd DD-MM-YYYY'));
+      this.date.isoWeek($scope.week);
+      for(var i = 1; i <= this.numberOfDays; i++) {
+        this.days.push(this.date.isoWeekday(i).format('ddd DD-MM-YYYY'));
       }
       this.daysDisplay = [];
-      this.dateDisplay.week($scope.week);
-      for(var j = 0; j < 7; j++) {
-        this.daysDisplay.push(this.dateDisplay.weekday(j).format('ddd DD-MM-YYYY'));
+      this.dateDisplay.isoWeek($scope.week);
+      for(var j = 1; j <= this.numberOfDays; j++) {
+        this.daysDisplay.push(this.dateDisplay.isoWeekday(j).format('ddd DD-MM-YYYY'));
       }
     };
 
