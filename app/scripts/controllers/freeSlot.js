@@ -99,9 +99,7 @@ angular.module('calendarApp')
       var weekData = this.monthWeeks[indexOfWeeksArray];
       $scope.week = weekData.week;
       $scope.year = weekData.year;
-      if($scope.currentRoom !== undefined){
-        $scope.initWeekBookings();
-      }
+
       $scope.weekStartEndDates = weekData.monthDays[0].day + ' ' + 
                                 weekData.monthDays[0].month +
                                 ' - ' + 
@@ -132,7 +130,7 @@ angular.module('calendarApp')
       this.selectedWeek = week;
       this.selectedMonth = monthDay.month;
       this.selectedYear = year;
-      this.day = this.date.month(monthDay.month).date(monthDay.day).format('ddd DD-MM-YYYY');
+      this.day = this.date.year(year).month(monthDay.month).date(monthDay.day).format('ddd DD-MM-YYYY');
     };
 
     this.bookFreeSlot = function(room, slotIndex) {
