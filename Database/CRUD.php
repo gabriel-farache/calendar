@@ -1313,7 +1313,7 @@ function get_periodic_bookings($db) {
                     "id" => $doc["_id"]->{'$id'},
                     "periodicBookingScheduleStart" => $doc["periodicBookingScheduleStart"],
                     "periodicBookingScheduleEnd" => $doc["periodicBookingScheduleEnd"],
-                    "periodicBookingWeeksDuration" => $doc["bookingWeeksDuration"],
+                    "periodicBookingWeeksDuration" => $doc["periodicBookingWeeksDuration"],
                     "periodicBookingStartingDay" => $doc["periodicBookingStartingDay"],
                     "periodicBookingStartingMonth" => $doc["periodicBookingStartingMonth"],
                     "periodicBookingStartingYear" => $doc["periodicBookingStartingYear"],
