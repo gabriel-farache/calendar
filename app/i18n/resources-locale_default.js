@@ -1,6 +1,7 @@
 [{
    "INDEX_WELCOME_LABEL" : "Bienvenue",
    "INDEX_SEARCH_FREE_SLOT_BUTTON" : "Chercher salles libres",
+   "INDEX_PERIODIC_BOOKING_BUTTON" : "Réservations périodiques",
    "INDEX_ADMIN_CONSOLE_BUTTON" : "Administration",
    "INDEX_ACCOUNT_BUTTON" : "Mon compte",
    "INDEX_LOGIN_BUTTON" : "S'authentifier",
@@ -75,6 +76,10 @@
    "USER_NEW_PASSWORD_LABEL" : "Nouveau mot de passe (optionnel) : ",
 
    "VALIDATION_EMAIL_SUBJECT": "Réservation validée - le <BOOKING_DAY> de <BOOKING_SCHEDULE_START> à <BOOKING_SCHEDULE_END>",
-   "VALIDATION_EMAIL_BODY": "Bonjour, <br>Nous avons le plaisir de vous informer que votre réservation du <BOOKING_DAY> de <BOOKING_SCHEDULE_START> à <BOOKING_SCHEDULE_END> est validée.<br>Cordialement,<br>La Mairie. "
+   "VALIDATION_EMAIL_BODY": "Bonjour, <br>Nous avons le plaisir de vous informer que votre réservation du <BOOKING_DAY> de <BOOKING_SCHEDULE_START> à <BOOKING_SCHEDULE_END> est validée.<br>Cordialement,<br>La Mairie. ",
+
+
+   "VALIDATION_PERIODIC_BOOKING_EMAIL_SUBJECT" : "Réservation périodique validée - les <BOOKING_DAY> de <BOOKING_SCHEDULE_START> à <BOOKING_SCHEDULE_END> pendant <BOOKING_WEEK_DURATION> semaines",
+   "VALIDATION_EMAIL_BODY": "Bonjour, <br>Nous avons le plaisir de vous informer que votre réservation périodique des <BOOKING_DAY> de <BOOKING_SCHEDULE_START> à <BOOKING_SCHEDULE_END>  pendant <BOOKING_WEEK_DURATION> semaines est validée.<br>Cordialement,<br>La Mairie. "
 
 }]
