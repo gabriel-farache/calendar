@@ -212,30 +212,77 @@ function DatabaseService($http) {
       return ($http.post(URL,params));
     }
 
+    function getPeriodicBookingsDB(bookerName, authToken) {
+      var URL = serverAddr+'CRUD.php?action=get_periodic_bookings';
+      var params = {
+        'booker'  : bookerName,
+        authToken: authToken 
+      };
+      return ($http.post(URL,params));
+    }
+
+    function addPeriodicBookingDB(newPeriodicBooking, bookerName, authToken) {
+      var URL = serverAddr+'CRUD.php?action=add_periodic_booking';
+      var params = {
+        'periodicBookingStartingDay' : newPeriodicBooking.periodicBookingStartingDay,
+        'periodicBookingStartingMonth' : newPeriodicBooking.periodicBookingStartingMonth,
+        'periodicBookingStartingYear' : newPeriodicBooking.periodicBookingStartingYear,
+        'periodicBookingScheduleStart' : newPeriodicBooking.periodicBookingScheduleStart,
+        'periodicBookingScheduleEnd' : newPeriodicBooking.periodicBookingScheduleEnd,
+        'periodicBookingWeeksDuration' : newPeriodicBooking.periodicBookingWeeksDuration,
+        'room' : newPeriodicBooking.room,
+        'booker'  : bookerName,
+        authToken: authToken 
+      };
+      return ($http.post(URL,params));
+    }
+
+    function deletePeriodicBookingDB(periodicBookingID, bookerName, authToken) {
+      var URL = serverAddr+'CRUD.php?action=delete_periodic_booking';
+      var params = {
+        'periodicBookingID' : periodicBookingID,
+        authToken: authToken 
+      };
+      return ($http.post(URL,params));
+    }
+
+    function validatePeriodicBookingDB(periodicBookingID, bookerName, authToken) {
+      var URL = serverAddr+'CRUD.php?action=validate_periodic_booking';
+      var params = {
+        'periodicBookingID' : periodicBookingID,
+        authToken: authToken 
+      };
+      return ($http.post(URL,params));
+    }
+
     var service = {};
-    service.getBookingDB            = getBookingDB;
-    service.getAllBookingDB         = getAllBookingDB;
-    service.getWeekBookingDB        = getWeekBookingDB;
-    service.addBookingDB            = addBookingDB;
-    service.deleteBookingDB         = deleteBookingDB;
-    service.updateBookingDB         = updateBookingDB;
-    service.getRoomsDB              = getRoomsDB;
-    service.getBookersDB            = getBookersDB;
-    service.updateBookerDB          = updateBookerDB;
-    service.deleteBookerDB          = deleteBookerDB;
-    service.validateBookingDB       = validateBookingDB;
-    service.authenticate            = authenticate;
-    service.register                = register;
-    service.setServerAddress        = setServerAddress;
-    service.getServerAddress        = getServerAddress;
-    service.generateAdminToken      = generateAdminToken;
-    service.deleteBookingsDB        = deleteBookingsDB;
-    service.updateRoomDB            = updateRoomDB;
-    service.deleteRoomDB            = deleteRoomDB;
-    service.getFreeRoomsForSlot     = getFreeRoomsForSlot;
-    service.getBookerEmailDB        = getBookerEmailDB;
-    service.updateBookerSettingsDB  = updateBookerSettingsDB;
-    service.addRoomDB               = addRoomDB;
+    service.getBookingDB              = getBookingDB;
+    service.getAllBookingDB           = getAllBookingDB;
+    service.getWeekBookingDB          = getWeekBookingDB;
+    service.addBookingDB              = addBookingDB;
+    service.deleteBookingDB           = deleteBookingDB;
+    service.updateBookingDB           = updateBookingDB;
+    service.getRoomsDB                = getRoomsDB;
+    service.getBookersDB              = getBookersDB;
+    service.updateBookerDB            = updateBookerDB;
+    service.deleteBookerDB            = deleteBookerDB;
+    service.validateBookingDB         = validateBookingDB;
+    service.authenticate              = authenticate;
+    service.register                  = register;
+    service.setServerAddress          = setServerAddress;
+    service.getServerAddress          = getServerAddress;
+    service.generateAdminToken        = generateAdminToken;
+    service.deleteBookingsDB          = deleteBookingsDB;
+    service.updateRoomDB              = updateRoomDB;
+    service.deleteRoomDB              = deleteRoomDB;
+    service.getFreeRoomsForSlot       = getFreeRoomsForSlot;
+    service.getBookerEmailDB          = getBookerEmailDB;
+    service.updateBookerSettingsDB    = updateBookerSettingsDB;
+    service.addRoomDB                 = addRoomDB;
+    service.getPeriodicBookingsDB     = getPeriodicBookingsDB;
+    service.addPeriodicBookingDB      = addPeriodicBookingDB;
+    service.deletePeriodicBookingDB   = deletePeriodicBookingDB;
+    service.validatePeriodicBookingDB = validatePeriodicBookingDB;
 
     return service;
  }

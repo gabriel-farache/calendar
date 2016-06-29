@@ -50,6 +50,10 @@ angular
         templateUrl: 'views/freeSlot.html',
         controller: 'freeSlotController',
         controllerAs: 'freeSlotCtrl'
+      }).when('/periodicBooking', {
+        templateUrl: 'views/periodicBooking.html',
+        controller: 'periodicBookingController',
+        controllerAs: 'periodicBookingCtrl'
       }).when('/', {
         templateUrl: 'views/calendar.html',
         controller: 'calendarController',
