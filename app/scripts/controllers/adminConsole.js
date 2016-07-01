@@ -5,6 +5,7 @@ angular.module('calendarApp')
         $scope.adminToken = '';
         $scope.adminTokenEndTime = '';
         $scope.error = undefined;
+        $scope.dataLoading = false;
         $scope.rooms=[];
         $scope.bookers=[];
         $scope.timeoutTime = 5000;
@@ -27,13 +28,16 @@ angular.module('calendarApp')
                 databaseService.generateAdminToken(globalsCookies.token).
                 then(function (response) {
                         var data = response.data;
+                        $scope.dataLoading = false;
                         $scope.adminToken = data.adminToken;
                         $scope.adminTokenEndTime = data.adminTokenEndTime;
                     }, function (response) {
+                        $scope.dataLoading = false;
                         $scope.handleErrorDB(response.status, response.data);
                     }
                 );
             } else {
+                $scope.dataLoading = false;
                 $scope.error = 'Clef d\'authentification inconnu';
                 $timeout(function () { $scope.error = undefined; }, $scope.timeoutTime); 
             }
@@ -42,8 +46,10 @@ angular.module('calendarApp')
 
         $scope.initRooms = function() {
             $scope.rooms=[];
+            $scope.dataLoading = true;
             databaseService.getRoomsDB().then(function(data)
             {
+                $scope.dataLoading = false;
                 var rooms = data.data;
                 for(var i = 0; i < rooms.length; i++){
                     var newRoom = {
@@ -65,9 +71,10 @@ angular.module('calendarApp')
         };
 
         this.updateRoomInDB = function(room){
-            console.log(room);
+            $scope.dataLoading = true;
             databaseService.addRoomDB(room, $scope.authToken).
                 then(function() {
+                    $scope.dataLoading = false;
                     $scope.initRooms();
                     $scope.messageAdmin = "Salle ajoutée.";
                     $timeout(function () { $scope.messageAdmin = undefined; }, $scope.timeoutTime); 
@@ -77,8 +84,10 @@ angular.module('calendarApp')
         };
 
         this.deleteRoomDB = function(room) {
+            $scope.dataLoading = true;
             databaseService.deleteRoomDB(room, $scope.authToken).
                 then(function() {
+                    $scope.dataLoading = false;
                     $scope.initRooms();
                     $scope.messageAdmin = "Salle supprimée.";
                     $timeout(function () { $scope.messageAdmin = undefined; }, $scope.timeoutTime); 
@@ -98,13 +107,15 @@ angular.module('calendarApp')
         };
 
         $scope.initBookers = function() {
+            $scope.dataLoading = true;
             $scope.bookers=[];
             databaseService.getBookersDB().then(function(data)
             {
+                $scope.dataLoading = false;
                 var bookers = data.data;
                 for(var i = 0; i < bookers.length; i++){
                     var newBooker = {
-                        booker: $sce.trustAsHtml(bookers[i].booker),
+                        booker: bookers[i].booker,
                         color: bookers[i].color,
                         oldName: undefined,
                         isNew: false
@@ -122,8 +133,10 @@ angular.module('calendarApp')
         };
 
         this.updateBookerInDB = function(booker){
+            $scope.dataLoading = true;
             databaseService.updateBookerDB(booker, $scope.authToken).
                 then(function() {
+                    $scope.dataLoading = false;
                     $scope.initBookers();
                     $scope.messageAdmin = "Utilisateur mis à jour.";
                     $timeout(function () { $scope.messageAdmin = undefined; }, $scope.timeoutTime); 
@@ -133,8 +146,10 @@ angular.module('calendarApp')
         };
 
         this.deleteBookerDB = function(booker) {
+            $scope.dataLoading = true;
             databaseService.deleteBookerDB(booker, $scope.authToken).
                 then(function() {
+                    $scope.dataLoading = false;
                     $scope.initBookers();
                     $scope.messageAdmin = "Utilisateur supprimé.";
                     $timeout(function () { $scope.messageAdmin = undefined; }, $scope.timeoutTime); 
