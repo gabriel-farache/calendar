@@ -11,8 +11,8 @@
          {{messageAdmin}}
          <a style="float: right" ng-click="removeMessageAdmin()">x</a>
    </div>
-   {{periodicBookings}}
-   <div id="calendarStartDays" class="container-fluid" style="float:left;width:30%;">
+   <div>
+   <div id="calendarStartDays" class="col-xs-6 col-md-4">
       <table id="selectStartingDay" class="table-responsive table-hover" 
             style="margin-left: 2px;margin-bottom:5px;padding:0px;width:100%;" align="center">
          <tr>
@@ -60,7 +60,7 @@
          </tr>
       </table>
    </div>
-   <div id="calendarEndDays" class="container-fluid" style="width:30%;">
+   <div id="calendarEndDays" class="col-xs-6 col-md-4">
       <table id="SelectEndingDay" class="table-responsive table-hover" 
             style="margin-left: 2px;margin-bottom:5px;padding:0px;width:100%;" align="center">
          <tr>
@@ -108,7 +108,7 @@
          </tr>
       </table>
    </div>
-   <div>
+   <div id="perdiodicInfo" class="col-xs-6 col-md-4">
       <form name="selectSchedulesForm"
          style="width:100%;"
         ng-submit="selectSchedulesForm.$valid && periodicBookingCtrl.addPeriodicBooking()" novalidate>
@@ -127,7 +127,7 @@
             </div>
         </div>
         <div class="input-group">
-            <div style="width:50%;float: right;margin-bottom:20px;">
+            <div style="margin-bottom:20px;">
                 <label>Salle :</label><br>
                 <select ng-model="periodicBookingCtrl.periodicBookingRoom" required>
                      <option ng-repeat="room in rooms track by $index" value="{{room.room}}">    {{room.room}}
@@ -139,8 +139,27 @@
         <img ng-show="dataLoading === true" src="/images/loading.svg" 
             alt="Recherche en cours..." style="width: 5%; height: 5%"/>
       </form>
+   
+     <!-- <p>
+         Réservation périodique de <b>{{periodicBookingCtrl.periodicBookingRoom}}</b><br>Les <b>{{periodicBookingCtrl.periodicDay}}</b><br>Du <b>{{periodicBookingCtrl.selectedStartingDate}}</b><br>Au <b>{{periodicBookingCtrl.selectedEndingDate}}</b><br>De <b>{{(periodicBookingCtrl.periodicBookingScheduleStart+'h').replace(".5h", "h30")}}</b> à <b>{{(periodicBookingCtrl.periodicBookingScheduleEnd+'h').replace(".5h", "h30")}}</b><br>
+         Durée: <b>{{periodicBookingCtrl.periodicBookingWeeksDuration}}</b> semaines
+      </p>-->
+   </div>   
    </div>
-      <p>{{periodicBookingCtrl.periodicBookingStartingDay}} for {{periodicBookingCtrl.periodicBookingWeeksDuration}} weeks</p>
-      <p>from {{periodicBookingCtrl.periodicBookingScheduleStart}} to {{periodicBookingCtrl.periodicBookingScheduleEnd}}</p>
-
+   <div id="periodicBookings" class="col-xs-12 col-md-12"> 
+      <ul id="roomList" class="list-group">
+         <li class="list-group-item" ng-repeat="periodicBooking in formattedPeriodicBookings">
+            <button class="btn btn-danger" ng-click="periodicBookingCtrl.deletePeriodicBooking(periodicBooking.id)" style="float:right;margin-left:5px;">
+               Supprimer
+            </button>
+            <button ng-show="isAdmin === true" class="btn btn-success" ng-click="periodicBookingCtrl.validatePeriodicBooking(periodicBooking.id)" style="float:right;margin-left:5px;">
+               Valider
+            </button>
+            <div style="width:70%;">
+               Réservation périodique de la salle <b>{{periodicBooking.room}}</b><br>Les <b>{{periodicBooking.day}}</b><br>Du <b>{{periodicBooking.dateStart}}</b><br>Au <b>{{periodicBooking.dateEnd}}</b><br>De <b>{{periodicBooking.scheduleStart}}</b> à <b>{{periodicBooking.scheduleEnd}}</b><br>Durée: <b>{{periodicBooking.periodicBookingWeeksDuration}}</b> semaines               
+            </div>
+         </li>
+      </ul>
+   </div>
+      
 </div>

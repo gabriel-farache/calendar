@@ -11,6 +11,7 @@ angular
         $scope.periodicBookings  =[];
         $scope.timeoutTime = 5000;
         $scope.rooms = [];
+        $scope.formattedPeriodicBookings = [];
 
         this.periodicBookingStartingDay = undefined;
         this.periodicBookingStartingWeek = undefined;
@@ -40,6 +41,9 @@ angular
         this.selectedEndDay = undefined;
         this.selectedEndMonth = undefined;
         this.selectedEndYear = undefined;
+        this.selectedStartingDate = undefined;
+        this.selectedEndingDate = undefined;
+        this.periodicDay = undefined;
 
     this.schedulesLabels = ['0', '0:30', '1', '1:30', '2', '2:30', '3', '3:30', '4','4:30', '5', '5:30',
      '6', '6:30', '7', '7:30', '8', '8:30','9', '9:30', '10', '10:30', '11', '11:30', '12', '12:30',
@@ -91,10 +95,46 @@ angular
                     $scope.error = undefined;
                     $scope.dataLoading = false;
                     $scope.periodicBookings  = response.data;
-                    console.log($scope.periodicBookings);
+                    $scope.formatPeriodicBookings();
                 }, function(response){
                     $scope.handleErrorDB(response.status, response.data);
                 });
+        };
+
+        $scope.formatPeriodicBookings = function() {
+            $scope.formattedPeriodicBookings = [];
+            for(var i = 0; i < $scope.periodicBookings.length; i++){
+                var periodicBooking = $scope.periodicBookings[i];
+                var formatPeriodicBooking = {
+                    'day'       :   moment()
+                                        .date(periodicBooking.periodicBookingStartingDay)
+                                        .month(periodicBooking.periodicBookingStartingMonth)
+                                        .year(periodicBooking.periodicBookingStartingYear)
+                                        .format('dddd'),
+                    'dateStart' :   moment()
+                                        .date(periodicBooking.periodicBookingStartingDay)
+                                        .month(periodicBooking.periodicBookingStartingMonth)
+                                        .year(periodicBooking.periodicBookingStartingYear)
+                                        .format('ddd DD-MM-YYYY'),
+                    'dateEnd'    :  moment()
+                                        .date(periodicBooking.periodicBookingStartingDay)
+                                        .month(periodicBooking.periodicBookingStartingMonth)
+                                        .year(periodicBooking.periodicBookingStartingYear)
+                                        .add(periodicBooking.periodicBookingWeeksDuration,'week')
+                                        .format('ddd DD-MM-YYYY'),
+                    'scheduleStart': (periodicBooking.periodicBookingScheduleStart+'h')
+                                        .replace(".5h", "h30"),
+                    'scheduleEnd' :  (periodicBooking.periodicBookingScheduleEnd+'h')
+                                        .replace(".5h", "h30"),
+                    'periodicBookingWeeksDuration' : periodicBooking.periodicBookingWeeksDuration,
+                    'id'            : periodicBooking.id,
+                    'room'          : periodicBooking.room
+
+                };
+                console.log(formatPeriodicBooking);
+                $scope.formattedPeriodicBookings.push(formatPeriodicBooking);
+            }
+
         };
 
         this.addPeriodicBooking = function () {
@@ -112,7 +152,7 @@ angular
                 .then(function() {
                     $scope.error = undefined;
                     $scope.dataLoading = false;
-                    $scope.periodicBookings.push(newPeriodicBooking);
+                    $scope.getPeriodicBookings();
                     $scope.message = "Réservation périodique soumise.";
                     $timeout(function () { $scope.message = undefined; }, $scope.timeoutTime);
                 }, function(response){
@@ -121,9 +161,9 @@ angular
                 });
         };
 
-        this.deletePeriodicBooking = function(periodicBooking) {
+        this.deletePeriodicBooking = function(periodicBookingID) {
             $scope.dataLoading = true;
-            databaseService.deletePeriodicBookingDB(periodicBooking.id, $scope.username, $scope.authToken)
+            databaseService.deletePeriodicBookingDB(periodicBookingID, $scope.username, $scope.authToken)
                 .then(function() {
                     $scope.error = undefined;
                     $scope.dataLoading = false;
@@ -136,9 +176,9 @@ angular
                 });
         };
 
-        this.validatePeriodicBooking = function(periodicBooking) {
+        this.validatePeriodicBooking = function(periodicBookingID) {
             $scope.dataLoading = true;
-            databaseService.validatePeriodicBookingDB(periodicBooking.id, $scope.username, $scope.authToken)
+            databaseService.validatePeriodicBookingDB(periodicBookingID, $scope.username, $scope.authToken)
                 .then(function() {
                     $scope.error = undefined;
                     $scope.dataLoading = false;
@@ -229,6 +269,13 @@ angular
             this.selectedStartMonth = monthDay.month;
             this.selectedStartYear = year;
 
+            this.selectedStartingDate = moment().date(this.periodicBookingStartingDay)
+                                .week(this.periodicBookingStartingWeek)
+                                .year(this.periodicBookingStartingYear).format('ddd DD-MM-YYYY');
+            this.periodicDay = moment().date(this.periodicBookingStartingDay)
+                                .week(this.periodicBookingStartingWeek)
+                                .year(this.periodicBookingStartingYear).format('dddd');
+
         };
 
         this.selectEndingDay = function(monthDay, week, year){
@@ -241,6 +288,9 @@ angular
             this.selectedEndMonth = monthDay.month;
             this.selectedEndYear = year;
             this.periodicBookingWeeksDuration = endingDay.diff(startingDay, 'week');
+            this.selectedEndingDate = moment().date(this.periodicBookingStartingDay)
+                                .week(this.periodicBookingStartingWeek)
+                                .year(this.periodicBookingStartingYear).format('ddd DD-MM-YYYY');
         };
 
         $scope.handleErrorDB = function(status, data){
