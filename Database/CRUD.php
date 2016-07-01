@@ -617,12 +617,12 @@ function update_booker($db)
     $oldBookerName  = $data->oldName;
     $collection = $db->selectCollection(USER_COLLECTION);
     //update the Room collection
-    $err         = updateBookerIntoBookerCollection($db, $oldBookerName, $newBookerName, $newBookerColor);
+    $err = updateBookerIntoBookerCollection($db, $oldBookerName, $newBookerName, $newBookerColor);
     if (is_null($err["err"]) === TRUE) {
         $err = updateBookerIntoBookingCollection($db, $oldBookerName, $newBookerName);
         if (is_null($err["err"]) === TRUE) {
             $arr = array(
-                'msg' => "Room Updated Successfully!!!",
+                'msg' => "Booker Updated Successfully!!!",
                 'error' => ''
             );
             $jsn = json_encode($arr);
