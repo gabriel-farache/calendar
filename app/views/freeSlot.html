@@ -73,19 +73,28 @@
 	            <div  style="width:50%;float: left;margin-bottom:20px;">
 	                <label style="">{{'FREE_SLOT_SCHEDULE_FROM_LABEL' | i18n}}</label><br>
 	                <select ng-model="freeSlotCtrl.scheduleStart" required>
-	                    <option ng-repeat="timeStart in freeSlotCtrl.schedules track by $index" value="{{timeStart}}">{{freeSlotCtrl.schedulesLabels[$index]}}</option>
+	                    <option ng-repeat="timeStart in freeSlotCtrl.schedules track by $index"
+                      ng-disabled="freeSlotCtrl.scheduleEnd !== undefined && timeStart >= freeSlotCtrl.scheduleEnd"
+                       value="{{timeStart}}">{{freeSlotCtrl.schedulesLabels[$index]}}</option>
 	                </select>
 	            </div>
 	            <div style="width:50%;float: right;margin-bottom:20px;">
 	                <label>{{'FREE_SLOT_SCHEDULE_TO_LABEL' | i18n}}</label><br>
 	                <select ng-model="freeSlotCtrl.scheduleEnd" required>
-	                    <option ng-repeat="timeEnd in freeSlotCtrl.schedules track by $index" value="{{timeEnd}}">{{freeSlotCtrl.schedulesLabels[$index]}}</option>
+	                    <option ng-repeat="timeEnd in freeSlotCtrl.schedules track by $index" 
+                      ng-disabled="freeSlotCtrl.scheduleStart !== undefined && timeEnd <= freeSlotCtrl.scheduleStart"
+                      value="{{timeEnd}}">{{freeSlotCtrl.schedulesLabels[$index]}}</option>
 	                </select>
 	            </div>
 	        </div>
 	        <input class="btn btn-success" ng-hide="dataLoading === true" type="submit" value="Chercher" style="margin-bottom:20px;" required/>                  
 	        <img ng-show="dataLoading === true" src="/images/loading.svg" 
 	            alt="Recherche en cours..." style="width: 5%; height: 5%"/>
+          <div>
+              <div ng-messages="searchFreeSlotForm.$error" style="color:maroon" role="alert">
+                 <div ng-message="required">Vous devez renseigner tous les champs</div>
+              </div>
+           </div>
 	    </form>
 	    
 	</div>

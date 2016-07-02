@@ -12,6 +12,7 @@ angular
   .module('calendarApp', [
     'ngAria',
     'ngCookies',
+    'ngMessages',
     'ngRoute',
     'angularMoment',
     'ngSanitize',

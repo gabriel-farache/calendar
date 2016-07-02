@@ -313,4 +313,10 @@ angular
         $scope.removeMessage = function() {
           $scope.message = undefined;
         };
+
+        this.daysAreSelected = function() {
+            return (this.selectedStartingDate !== undefined && 
+                this.periodicBookingWeeksDuration !== undefined);
+        };
+
     });

@@ -79,21 +79,25 @@
                      ng-submit="bookingDetailForm.$valid && calendarCtrl.addBooking()" novalidate>
                      <div class="input-group" >
                         <label>{{'CALENDAR_BOOKING_LABEL' | i18n}}</label>
-                        <select style="width:90%;" ng-model="booking.day" ng-disabled="username === undefined || username === ''">
+                        <select style="width:90%;" ng-model="booking.day" ng-disabled="username === undefined || username === ''" required>
                            <option ng-repeat="day in calendarCtrl.days track by $index" value="{{day}}">{{calendarCtrl.daysDisplay[$index]}}</option>
                         </select>
                      </div>
                      <div class="input-group">
                         <div  style="width:50%;float: left;">
                            <label style="">{{'CALENDAR_SCHEDULE_FROM_LABEL' | i18n}}</label>
-                           <select ng-model="booking.scheduleStart" ng-disabled="username === undefined || username === ''">
-                              <option ng-repeat="timeStart in calendarCtrl.schedules track by $index" value="{{timeStart}}">{{calendarCtrl.schedulesLabels[$index]}}</option>
+                           <select ng-model="booking.scheduleStart" ng-disabled="username === undefined || username === ''" required>
+                              <option ng-repeat="timeStart in calendarCtrl.schedules track by $index" 
+                              ng-disabled="booking.scheduleEnd !== undefined && timeStart >= booking.scheduleEnd"
+                              value="{{timeStart}}">{{calendarCtrl.schedulesLabels[$index]}}</option>
                            </select>
                         </div>
                         <div style="width:50%;float: right;">
                            <label>{{'CALENDAR_SCHEDULE_TO_LABEL' | i18n}}</label><br>
-                           <select ng-model="booking.scheduleEnd" ng-disabled="username === undefined || username === ''">
-                              <option ng-repeat="timeEnd in calendarCtrl.schedules track by $index" value="{{timeEnd}}">{{calendarCtrl.schedulesLabels[$index]}}</option>
+                           <select ng-model="booking.scheduleEnd" ng-disabled="username === undefined || username === ''" required>
+                              <option ng-repeat="timeEnd in calendarCtrl.schedules track by $index"
+                              ng-disabled="booking.scheduleStart !== undefined && timeEnd <= booking.scheduleStart"
+                               value="{{timeEnd}}">{{calendarCtrl.schedulesLabels[$index]}}</option>
                            </select>
                         </div>
                      </div>
@@ -110,21 +114,33 @@
                         <input type="checkbox" name="isValidated" ng-checked="booking.isValidated === true" disabled/>
                          {{'CALENDAR_VALIDATED_LABEL' | i18n}}
                      </div>
-                     <input class="btn btn-success" ng-hide="dataLoading === true || booking.bookedBy === username && booking.isValidated === true" type="submit" 
-                     value="{{'CALENDAR_BOOK_LABEL' | i18n}}" style="margin: 3px;" required/>                  
+                     <input class="btn btn-success" 
+                     ng-hide="dataLoading === true || booking.bookedBy === username && booking.isValidated === true" 
+                     type="submit" 
+                     ng-disabled="bookingDetailForm.$invalid || booking.day === undefined"
+                     value="{{'CALENDAR_BOOK_LABEL' | i18n}}" 
+                     style="margin: 3px;" required/>                  
                      <img ng-show="dataLoading === true" src="/images/loading.svg" 
                         alt="Authentification en cours..." style="width: 5%; height: 5%"/>
-                     <a ng-click="calendarCtrl.validateBooking()" style="padding:0px;">
-                        <button ng-show="isAdmin === true && isExistingBookingSelected === true && booking.isValidated === false"
-                        class="btn btn-info" style="white-space: normal;margin: 3px;" >
-                           {{'CALENDAR_VALIDATE_BOOKING_LABEL' | i18n}}
-                        </button>
-                     </a>
+                     <div>
+                        <div ng-messages="bookingDetailForm.$error" style="color:maroon" role="alert">
+                           <div ng-message="required">Vous devez renseigner tous les champs</div>
+                        </div>
+                        <div ng-show="booking.day === undefined" style="color:maroon;" role="alert">
+                           Vous devez choisir une date
+                        </div>
+                     </div>               
                      <a ng-click="calendarCtrl.deleteBooking()" style="padding:0px;margin:0px;">
-                           <button ng-show="booking.bookedBy === username && dataLoading !== true" 
+                           <button ng-show="booking.bookedBy === username && dataLoading !== true && isExistingBookingSelected" 
                            class="btn btn-danger" style="white-space: normal;padding:4px;margin:0px;margin-top:3px;margin-bottom:3px" >
                               {{'CALENDAR_DELETE_BOOKING_LABEL' | i18n}}
                            </button>
+                     </a>
+                     <a ng-click="calendarCtrl.validateBooking()" style="padding:0px;">
+                        <button ng-show="isAdmin && isExistingBookingSelected && !booking.isValidated"
+                        class="btn btn-info" style="white-space: normal;margin: 3px;" >
+                           {{'CALENDAR_VALIDATE_BOOKING_LABEL' | i18n}}
+                        </button>
                      </a>
                   </form>
                </div>

@@ -111,18 +111,20 @@
    <div id="perdiodicInfo" class="col-xs-6 col-md-4">
       <form name="selectSchedulesForm"
          style="width:100%;"
-        ng-submit="selectSchedulesForm.$valid && periodicBookingCtrl.addPeriodicBooking()" novalidate>
+        ng-submit="selectSchedulesForm.$valid && periodicBookingCtrl.daysAreSelected() && periodicBookingCtrl.addPeriodicBooking()" novalidate>
         <div class="input-group">
             <div  style="width:50%;float: left;margin-bottom:20px;">
                 <label style="">{{'FREE_SLOT_SCHEDULE_FROM_LABEL' | i18n}}</label><br>
                 <select ng-model="periodicBookingCtrl.periodicBookingScheduleStart" required>
-                    <option ng-repeat="timeStart in periodicBookingCtrl.schedules track by $index" value="{{timeStart}}">{{periodicBookingCtrl.schedulesLabels[$index]}}</option>
+                    <option ng-repeat="timeStart in periodicBookingCtrl.schedules track by $index" 
+                    ng-disabled="periodicBookingCtrl.periodicBookingScheduleEnd !== undefined && timeStart >= periodicBookingCtrl.periodicBookingScheduleEnd"
+                    value="{{timeStart}}">{{periodicBookingCtrl.schedulesLabels[$index]}}</option>
                 </select>
             </div>
             <div style="width:50%;float: right;margin-bottom:20px;">
                 <label>{{'FREE_SLOT_SCHEDULE_TO_LABEL' | i18n}}</label><br>
                 <select ng-model="periodicBookingCtrl.periodicBookingScheduleEnd" required>
-                    <option ng-repeat="timeEnd in periodicBookingCtrl.schedules track by $index" value="{{timeEnd}}">{{periodicBookingCtrl.schedulesLabels[$index]}}</option>
+                    <option ng-repeat="timeEnd in periodicBookingCtrl.schedules track by $index" ng-disabled="periodicBookingCtrl.periodicBookingScheduleStart !== undefined && timeEnd <= periodicBookingCtrl.periodicBookingScheduleStart" value="{{timeEnd}}">{{periodicBookingCtrl.schedulesLabels[$index]}}</option>
                 </select>
             </div>
         </div>
@@ -135,9 +137,17 @@
                 </select>
             </div>
         </div>
-        <input class="btn btn-success" ng-hide="dataLoading === true" type="submit" value="Réserver" style="margin-bottom:20px;" required/>                  
+        <input ng-disabled="selectSchedulesForm.$invalid || !periodicBookingCtrl.daysAreSelected()" class="btn btn-success" ng-hide="dataLoading === true" type="submit" value="Réserver" style="margin-bottom:20px;margin-right:5px;float:left;" required/>                  
         <img ng-show="dataLoading === true" src="/images/loading.svg" 
             alt="Recherche en cours..." style="width: 5%; height: 5%"/>
+         <div>
+            <div ng-messages="selectSchedulesForm.$error" style="color:maroon" role="alert">
+               <div ng-message="required">Vous devez renseigner tous les champs</div>
+            </div>
+            <div ng-show="periodicBookingCtrl.daysAreSelected() === false" style="color:maroon;" role="alert">
+               Vous devez choisir une date de début et de fin
+            </div>
+         </div>
       </form>
    
      <!-- <p>
