@@ -12,22 +12,22 @@
          <a style="float: right" ng-click="removeMessageAdmin()">x</a>
    </div>
    <div class="container-fluid" style="width:100%;">
-       <ul class="nav nav-pills">
-            <li class="active"><a data-toggle="pill" href="#adminAuthKeyGenerator">
+       <ul class="nav nav-pills" role="pilllist">
+            <li class="active"><a data-toggle="pill" data-target="#adminAuthKeyGenerator">
                 {{'ADMIN_GENERATING_ADMIN_TOKEN_TITLE' | i18n}}</a></li>
-            <li><a data-toggle="pill" href="#metrics">
+            <li><a data-toggle="pill" data-target="#metrics">
                 {{'ADMIN_METRICS_TITLE' | i18n}}
             </a></li>
-            <li><a data-toggle="pill" href="#roomManagement" ng-click="initRooms()">
+            <li><a data-toggle="pill" data-target="#roomManagement" ng-click="initRooms()">
                 {{'ADMIN_ROOM_MANAGEMENT_TITLE' | i18n}}
             </a></li>
-            <li><a data-toggle="pill" href="#bookerManagement" ng-click="initBookers()">
+            <li><a data-toggle="pill" data-target="#bookerManagement" ng-click="initBookers()">
                 {{'ADMIN_USER_MANAGEMENT_TITLE' | i18n}}
             </a></li>
         </ul>
 
         <img ng-show="dataLoading === true" src="/images/loading.svg" 
-                alt="Authentification en cours..." style="width: 35%; height: 35%"/>
+                alt="Authentification en cours..." style="width: 15%; height: 15%"/>
 
         <div class="tab-content">
             <div ng-hide="dataLoading === true" id="adminAuthKeyGenerator" class="tab-pane fade in active">
@@ -78,7 +78,7 @@
                     </button>
                 </a>
             </div>
-            <div ng-hide="dataLoading === true" id="bookerManagement" class="tab-pane fade">
+            <div ng-hide="dataLoading" id="bookerManagement" class="tab-pane fade">
                 <h2>{{'ADMIN_USERS_LABEL' | i18n}}</h2>
                 <ul id="bookersList" class="list-group">
                     <li class="list-group-item" ng-repeat="booker in bookers">
