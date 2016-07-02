@@ -107,7 +107,6 @@ angular
             for(var i = 0; i < $scope.periodicBookings.length; i++){
                 try {
                     var periodicBooking = $scope.periodicBookings[i];
-                    console.log(periodicBooking);
                     var formatPeriodicBooking = {
                         'day'       :   moment()
                                             .date(periodicBooking.periodicBookingStartingDay)
@@ -134,7 +133,6 @@ angular
                         'room'          : periodicBooking.room
 
                     };
-                    console.log(formatPeriodicBooking);
                     $scope.formattedPeriodicBookings.push(formatPeriodicBooking);
                 } catch (e) {
                     console.log(e);
