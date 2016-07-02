@@ -1,4 +1,6 @@
 <?php
+DEFINE("ROOM_COLLECTION", "Room");
+
 function get_rooms($db)
 {
     $collection = $db->selectCollection(ROOM_COLLECTION);

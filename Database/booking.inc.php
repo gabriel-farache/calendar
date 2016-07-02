@@ -1,4 +1,6 @@
 <?php
+DEFINE("BOOKING_COLLECTION", "Booking");
+
 function add_booking($db)
 {
     $data          = json_decode(file_get_contents("php://input"));

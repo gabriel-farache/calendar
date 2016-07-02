@@ -1,4 +1,6 @@
 <?php
+DEFINE("USER_COLLECTION", "User");
+
 function get_bookers($db)
 {
     $collection = $db->selectCollection(USER_COLLECTION);

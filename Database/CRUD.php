@@ -4,10 +4,6 @@ set_error_handler('myErrorHandler');
 register_shutdown_function('fatalErrorShutdownHandler');
 error_reporting(E_ALL & ~ E_ERROR);
 
-DEFINE("BOOKING_COLLECTION", "Booking");
-DEFINE("PERIODIC_BOOKING_COLLECTION", "PeriodicBooking");
-DEFINE("USER_COLLECTION", "User");
-DEFINE("ROOM_COLLECTION", "Room");
 DEFINE("USER_TOKEN_COLLECTION", "UserToken");
 DEFINE("ADMIN_TOKEN_COLLECTION", "AdminToken");
 
@@ -32,15 +28,18 @@ function fatalErrorShutdownHandler()
   }
 }
 
-include('freeSlot.inc.php');
-include('authenticate.inc.php');
-include('register.inc.php');
-include('periodicBooking.inc.php');
-include('room.inc.php');
-include('booker.inc.php');
-include('booking.inc.php');
+
 
 try {
+
+    include('freeSlot.inc.php');
+    include('authenticate.inc.php');
+    include('register.inc.php');
+    include('periodicBooking.inc.php');
+    include('room.inc.php');
+    include('booker.inc.php');
+    include('booking.inc.php');
+
     $host     = "localhost";
     $port     = 27017;
     $user     = "root";

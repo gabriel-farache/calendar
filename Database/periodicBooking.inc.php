@@ -1,4 +1,6 @@
 <?php
+DEFINE("PERIODIC_BOOKING_COLLECTION", "PeriodicBooking");
+
 function get_periodic_bookings($db) {
     $data        = json_decode(file_get_contents("php://input"));
     $booker = $data->booker;
