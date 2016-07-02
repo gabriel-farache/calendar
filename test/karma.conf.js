@@ -26,6 +26,8 @@ module.exports = function(config) {
       'bower_components/angular-aria/angular-aria.js',
       'bower_components/angular-cookies/angular-cookies.js',
       'bower_components/angular-route/angular-route.js',
+      'bower_components/angular-messages/angular-messages.js',
+      'bower_components/angular-sanitize/angular-sanitize.js',
       'bower_components/moment/moment.js',
       'bower_components/angular-momentjs/angular-momentjs.js',
       'bower_components/d3/d3.js',
