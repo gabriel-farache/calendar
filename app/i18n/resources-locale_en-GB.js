@@ -98,6 +98,11 @@
    "VALIDATION_EMAIL_SUBJECT": "Booking validated - The <BOOKING_DAY> from <BOOKING_SCHEDULE_START> to <BOOKING_SCHEDULE_END>",
    "VALIDATION_EMAIL_BODY": "Dear, <br>We are pleased to inform you that you booking of the <BOOKING_DAY> from <BOOKING_SCHEDULE_START> to <BOOKING_SCHEDULE_END> has been validated.<br>Kind regards,<br>The mayor. ",
 
+   "CANCEL_EMAIL_SUBJECT": "Booking cancelled - The <BOOKING_DAY> from <BOOKING_SCHEDULE_START> to <BOOKING_SCHEDULE_END>",
+   "CANCEL_EMAIL_BODY": "Dear, <br>We are regretfully informing you that you booking of the <BOOKING_DAY> from <BOOKING_SCHEDULE_START> to <BOOKING_SCHEDULE_END> has been cancelled.<br>Kind regards,<br>The mayor. ",
+
+
+
    "VALIDATION_PERIODIC_BOOKING_EMAIL_SUBJECT" : "Réservation périodique validée - les <BOOKING_DAY> de <BOOKING_SCHEDULE_START> à <BOOKING_SCHEDULE_END> pendant <BOOKING_WEEK_DURATION> semaines",
    "VALIDATION_EMAIL_BODY": "Bonjour, <br>Nous avons le plaisir de vous informer que votre réservation périodique des <BOOKING_DAY> de <BOOKING_SCHEDULE_START> à <BOOKING_SCHEDULE_END>  pendant <BOOKING_WEEK_DURATION> semaines est validée.<br>Cordialement,<br>La Mairie. "
 
