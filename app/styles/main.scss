@@ -85,12 +85,7 @@ span{
      padding:4em 0 0 0;
     display:inline-block
 }
-.nav.nav-pills > li.active a {
-    border: 0;
-}
-.nav.nav-pills li:not(:last-child) a {
-    border-right: 1px solid #ccc;
-}
+
 
 .nav.nav-pills li a {
   border-radius: 0; /* avoid curved divisor corner */

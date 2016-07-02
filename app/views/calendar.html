@@ -11,14 +11,23 @@
          {{messageAdmin}}
          <a style="float: right" ng-click="removeMessageAdmin()">x</a>
    </div>
-   <ul class="nav nav-pills" style="margin-bottom: 5px;padding:0px;">
-      <li ng-repeat="room in rooms track by $index" 
-         ng-class="{active: room.room === currentRoom}"
-         style="margin-bottom: 0px;padding:0px;"
-         >
-         <a data-toggle="tab"
-         style="padding:5px;margin:0px;" 
-         ng-click="calendarCtrl.selectRoom($index)">{{room.room}}</a>
+   <ul class="nav nav-pills" style="margin-bottom:15px;">
+      <li role="presentation" 
+      class="dropdown" 
+      ng-repeat="(building, buildingRooms) in buildingsRooms track by $index" 
+      ng-class="{active: building === currentBuilding}">
+         <a class="dropdown-toggle" style="padding:5px;margin:0px;display:inline;" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" >
+            {{building}}<span class="caret"style="padding:1px;"></span>
+         </a>
+         <ul class="dropdown-menu" >
+            <li ng-repeat="room in buildingRooms.buildingRooms track by $index" 
+            ng-class="{active: room === currentRoom}"
+            >
+               <a data-toggle="tab"
+               style="padding:5px;margin:0px;display:inline;"  
+               ng-click="calendarCtrl.selectRoom(room, building)">{{room}}</a>
+            </li>
+         </ul>
       </li>
    </ul> 
    <div class="innerInfoPage" >

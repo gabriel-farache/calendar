@@ -22,7 +22,9 @@ angular.module('calendarApp')
     $scope.weekStartEndDates = '';
     $scope.bookerColorsStyles = [];
     $scope.rooms = [];
+    $scope.buildingsRooms = {};
     $scope.currentRoom = undefined;
+    $scope.currentBuilding = undefined;
     $scope.error = undefined;
     $scope.dataLoading = false;
     $scope.messageAdmin = undefined;
@@ -98,11 +100,25 @@ angular.module('calendarApp')
         var rooms = data.data;
         $scope.rooms = rooms;
         $scope.currentRoom = rooms[0].room;
+        $scope.currentBuilding = $scope.rooms[0].building;
         $scope.initWeekBookings();
+        $scope.initBuildingsRooms();
         $scope.error = undefined;
       },function(response){
         $scope.handleErrorDB(response.status, response.data);
       });
+    };
+
+    $scope.initBuildingsRooms = function() {
+      $scope.buildingsRooms = {};
+      for(var i = 0; i < $scope.rooms.length; i++){
+        var room = $scope.rooms[i];
+        if($scope.buildingsRooms[room.building] === undefined){
+          $scope.buildingsRooms[room.building] = {'buildingRooms': []};
+        }
+        $scope.buildingsRooms[room.building].buildingRooms.push(room.room);  
+        
+      }
     };
 
     this.initBookers = function() {
@@ -189,8 +205,9 @@ angular.module('calendarApp')
                                 weekData.monthDays[6].month;
     };
 
-    this.selectRoom = function(roomIndex) {
-      $scope.currentRoom = $scope.rooms[roomIndex].room;
+    this.selectRoom = function(room, building) {
+      $scope.currentRoom = room;
+      $scope.currentBuilding = building;
       $scope.initWeekBookings();
     };
 

@@ -10,7 +10,8 @@ function get_rooms($db)
             $data = array();
             foreach ($cursor as $doc) {
                 $data[] = array(
-                    "room" => $doc["room"]
+                    "room" => $doc["room"],
+                    "building" => $doc["building"]
                 );
             }
             $jsn = json_encode($data);
