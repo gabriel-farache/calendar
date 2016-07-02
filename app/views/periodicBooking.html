@@ -114,7 +114,7 @@
         ng-submit="selectSchedulesForm.$valid && periodicBookingCtrl.daysAreSelected() && periodicBookingCtrl.periodicBookingWeeksDuration > 0 && periodicBookingCtrl.addPeriodicBooking()" novalidate>
         <div class="input-group">
             <div  style="width:50%;float: left;margin-bottom:20px;">
-                <label style="">{{'FREE_SLOT_SCHEDULE_FROM_LABEL' | i18n}}</label><br>
+                <label style="">{{'PERIODIC_BOOKING_SCHEDULE_FROM_LABEL' | i18n}}</label><br>
                 <select ng-model="periodicBookingCtrl.periodicBookingScheduleStart" required>
                     <option ng-repeat="timeStart in periodicBookingCtrl.schedules track by $index" 
                     ng-disabled="periodicBookingCtrl.periodicBookingScheduleEnd !== undefined && timeStart >= periodicBookingCtrl.periodicBookingScheduleEnd"
@@ -122,7 +122,7 @@
                 </select>
             </div>
             <div style="width:50%;float: right;margin-bottom:20px;">
-                <label>{{'FREE_SLOT_SCHEDULE_TO_LABEL' | i18n}}</label><br>
+                <label>{{'PERIODIC_BOOKING_SCHEDULE_TO_LABEL' | i18n}}</label><br>
                 <select ng-model="periodicBookingCtrl.periodicBookingScheduleEnd" required>
                     <option ng-repeat="timeEnd in periodicBookingCtrl.schedules track by $index" ng-disabled="periodicBookingCtrl.periodicBookingScheduleStart !== undefined && timeEnd <= periodicBookingCtrl.periodicBookingScheduleStart" value="{{timeEnd}}">{{periodicBookingCtrl.schedulesLabels[$index]}}</option>
                 </select>
@@ -130,25 +130,26 @@
         </div>
         <div class="input-group">
             <div style="margin-bottom:20px;">
-                <label>Salle :</label><br>
+                <label>{{'PERIODIC_BOOKING_ROOM_LABEL' | i18n}}</label><br>
                 <select ng-model="periodicBookingCtrl.periodicBookingRoom" required>
-                     <option ng-repeat="room in rooms track by $index" value="{{room.room}}">    {{room.room}}
+                     <option ng-repeat="room in rooms track by $index" value="{{room.room}}"> 
+                        {{room.room}}
                      </option>
                 </select>
             </div>
         </div>
-        <input ng-disabled="selectSchedulesForm.$invalid || !periodicBookingCtrl.daysAreSelected() || periodicBookingCtrl.periodicBookingWeeksDuration <= 0" class="btn btn-success" ng-hide="dataLoading === true" type="submit" value="Réserver" style="margin-bottom:20px;margin-right:5px;float:left;" required/>                  
+        <input ng-disabled="selectSchedulesForm.$invalid || !periodicBookingCtrl.daysAreSelected() || periodicBookingCtrl.periodicBookingWeeksDuration <= 0" class="btn btn-success" ng-hide="dataLoading === true" type="submit" value="{{'PERIODIC_BOOKING_BOOK_LABEL' | i18n}}" style="margin-bottom:20px;margin-right:5px;float:left;" required/>                  
         <img ng-show="dataLoading === true" src="/images/loading.svg" 
-            alt="Recherche en cours..." style="width: 5%; height: 5%"/>
+            alt="..." style="width: 5%; height: 5%"/>
          <div>
             <div ng-messages="selectSchedulesForm.$error" style="color:maroon" role="alert">
-               <div ng-message="required">Vous devez renseigner tous les champs</div>
+               <div ng-message="required">{{'PERIODIC_BOOKING_FORM_ERROR' | i18n}}</div>
             </div>
             <div ng-show="periodicBookingCtrl.daysAreSelected() === false" style="color:maroon;" role="alert">
-               Vous devez choisir une date de début et de fin
+               {{'PERIODIC_BOOKING_SELECTED_DAY_ERROR' | i18n}}
             </div>
             <div ng-show="periodicBookingCtrl.periodicBookingWeeksDuration <= 0" style="color:maroon;" role="alert">
-               Vous devez selectionner une semaine après celle en cours
+               {{'PERIODIC_BOOKING_WEEK_DURATION_ERROR'| i18n}}
             </div>
          </div>
       </form>
@@ -163,13 +164,13 @@
       <ul id="roomList" class="list-group">
          <li class="list-group-item" ng-repeat="periodicBooking in formattedPeriodicBookings">
             <button class="btn btn-danger" ng-click="periodicBookingCtrl.deletePeriodicBooking(periodicBooking.id)" style="float:right;margin-left:5px;">
-               Supprimer
+               {{'PERIODIC_BOOKING_DELETE_BOOKING_LABEL'| i18n}}
             </button>
             <button ng-show="isAdmin === true" class="btn btn-success" ng-click="periodicBookingCtrl.validatePeriodicBooking(periodicBooking.id)" style="float:right;margin-left:5px;">
-               Valider
+               {{'PERIODIC_BOOKING_VALIDATE_BOOKING_LABEL'| i18n}}
             </button>
             <div style="width:70%;">
-               Réservation périodique de la salle <b>{{periodicBooking.room}}</b><br>Les <b>{{periodicBooking.day}}</b><br>Du <b>{{periodicBooking.dateStart}}</b><br>Au <b>{{periodicBooking.dateEnd}}</b><br>De <b>{{periodicBooking.scheduleStart}}</b> à <b>{{periodicBooking.scheduleEnd}}</b><br>Durée: <b>{{periodicBooking.periodicBookingWeeksDuration}}</b> semaines               
+               {{'PERIODIC_BOOKING_DISPLAY_INTRO_LABEL' | i18n}} <b>{{periodicBooking.room}}</b><br>{{'PERIODIC_BOOKING_DISPLAY_DAY_LABEL' | i18n}} <b>{{periodicBooking.day}}</b><br>{{'PERIODIC_BOOKING_DISPLAY_DAY_START_LABEL'| i18n}} <b>{{periodicBooking.dateStart}}</b><br>{{'PERIODIC_BOOKING_DISPLAY_DAY_END_LABEL' | i18n}} <b>{{periodicBooking.dateEnd}}</b><br>{{'PERIODIC_BOOKING_SCHEDULE_FROM_LABEL' | i18n}} <b>{{periodicBooking.scheduleStart}}</b> {{'PERIODIC_BOOKING_SCHEDULE_TO_LABEL' | i18n}} <b>{{periodicBooking.scheduleEnd}}</b><br>{{'PERIODIC_BOOKING_DISPLAY_DURATION_LABEL' | i18n}} <b>{{periodicBooking.periodicBookingWeeksDuration}}</b> {{'PERIODIC_BOOKING_DISPLAY_WEEK_LABEL' | i18n}}               
             </div>
          </li>
       </ul>

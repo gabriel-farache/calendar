@@ -87,12 +87,12 @@
 	                </select>
 	            </div>
 	        </div>
-	        <input class="btn btn-success" ng-hide="dataLoading === true" type="submit" value="Chercher" style="margin-bottom:20px;" required/>                  
+	        <input class="btn btn-success" ng-hide="dataLoading === true" type="submit" value="{{'FREE_SLOT_SEARCH_LABEL' | i18n}}" style="margin-bottom:20px;" required/>                  
 	        <img ng-show="dataLoading === true" src="/images/loading.svg" 
-	            alt="Recherche en cours..." style="width: 5%; height: 5%"/>
+	            alt="..." style="width: 5%; height: 5%"/>
           <div>
               <div ng-messages="searchFreeSlotForm.$error" style="color:maroon" role="alert">
-                 <div ng-message="required">Vous devez renseigner tous les champs</div>
+                 <div ng-message="required">{{'FREE_SLOT_FORM_ERROR' | i18n}}</div>
               </div>
            </div>
 	    </form>
@@ -115,7 +115,7 @@
 	                        </button>
 	                    </a>
 	                    <img ng-show="slotsStatuses[$index].isLoadingData === true" src="/images/loading.svg" style="width: 2%; height: 2%;float: right;"
-		            alt="R&eacute;servation en cours..." />
+		            alt="..." />
 	                    <button class="btn btn-success" 
 								ng-show="username !== undefined && slotsStatuses[$index].isLoadingData !== true && slotsStatuses[$index].isNewlyBooked === true"
 	                    		style="vertical-align:middle;float: right;">

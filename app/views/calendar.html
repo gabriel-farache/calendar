@@ -121,13 +121,13 @@
                      value="{{'CALENDAR_BOOK_LABEL' | i18n}}" 
                      style="margin: 3px;" required/>                  
                      <img ng-show="dataLoading === true" src="/images/loading.svg" 
-                        alt="Authentification en cours..." style="width: 5%; height: 5%"/>
+                        alt="..." style="width: 5%; height: 5%"/>
                      <div>
                         <div ng-messages="bookingDetailForm.$error" style="color:maroon" role="alert">
-                           <div ng-message="required">Vous devez renseigner tous les champs</div>
+                           <div ng-message="required">{{'CALENDAR_FORM_ERROR' | i18n}}</div>
                         </div>
                         <div ng-show="booking.day === undefined" style="color:maroon;" role="alert">
-                           Vous devez choisir une date
+                           {{'CALENDAR_SELECTED_DAY_ERROR' | i18n}}
                         </div>
                      </div>               
                      <a ng-click="calendarCtrl.deleteBooking()" style="padding:0px;margin:0px;">
