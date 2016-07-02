@@ -1,5 +1,5 @@
 <div class="container-fluid table-responsive" ng-init="calendarCtrl.initCalendar()"style="height:100%;">
-    <div style="height: calc(7% - 50px);" ng-show="error !== undefined || messageAdmin !== undefined || message !== undefined">
+    <div >
         <div class="alert alert-danger" ng-show="error !== undefined" style="padding:2px;margin-bottom:2px;">
             {{error}}
             <a style="float: right" ng-click="removeErrorMessage()">x</a>
@@ -12,25 +12,7 @@
             {{messageAdmin}}
             <a style="float: right" ng-click="removeMessageAdmin()">x</a>
         </div>
-        <ul class="nav nav-pills" style="margin-bottom:15px;">
-            <li role="presentation" 
-                class="dropdown" 
-                ng-repeat="(building, buildingRooms) in buildingsRooms track by $index" 
-                ng-class="{active: building === currentBuilding}">
-                <a class="dropdown-toggle" style="padding:5px;margin:0px;display:inline;" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" >
-                {{building}}<span class="caret"style="padding:1px;"></span>
-                </a>
-                <ul class="dropdown-menu" >
-                    <li ng-repeat="room in buildingRooms.buildingRooms track by $index" 
-                        ng-class="{active: room === currentRoom}"
-                        >
-                        <a data-toggle="tab"
-                            style="padding:5px;margin:0px;display:inline;"  
-                            ng-click="calendarCtrl.selectRoom(room, building)">{{room}}</a>
-                    </li>
-                </ul>
-            </li>
-        </ul>
+        
     </div>
     <div class="innerInfoPage" >
         <div   class="container-fluid innerInfoContent" style="overflow-y:scroll;overflow-x: hidden;font-size:12px;margin: 0px;padding:0px;float: left;">
@@ -184,6 +166,25 @@
     </div>
     <div class="innerCalendarPage" style="margin: 0;margin-bottom:10px;width:85%;float: right;" >
       <div class="innerCalendarContent">
+         <ul class="nav nav-pills" style="margin-bottom:15px;">
+            <li role="presentation" 
+                class="dropdown" 
+                ng-repeat="(building, buildingRooms) in buildingsRooms track by $index" 
+                ng-class="{active: building === currentBuilding}">
+                <a class="dropdown-toggle" style="padding:5px;margin:0px;display:inline;" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" >
+                {{building}}<span class="caret"style="padding:1px;"></span>
+                </a>
+                <ul class="dropdown-menu" >
+                    <li ng-repeat="room in buildingRooms.buildingRooms track by $index" 
+                        ng-class="{active: room === currentRoom}"
+                        >
+                        <a data-toggle="tab"
+                            style="padding:5px;margin:0px;display:inline;"  
+                            ng-click="calendarCtrl.selectRoom(room, building)">{{room}}</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
         <p>
             {{weekStartEndDates}}
             <button class="btn btn-default" style="padding:3px;" ng-click="calendarCtrl.initWeekData(calendarCtrl.todayMonth, calendarCtrl.todayYear)">
