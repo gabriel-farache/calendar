@@ -56,28 +56,57 @@ table.fixed td { overflow: hidden; }
 .innerCalendarPage{
     margin: 0;
     padding: 0;
-    height: 73%;
+    height: 83%;
+    /* Firefox */
+    height: -moz-calc(100% - 50px);
+    /* WebKit */
+    height: -webkit-calc(100% - 50px);
+    /* Opera */
+    height: -o-calc(100% - 50px);
+    /* Standard */
+    height: calc(100% - 50px);
     display: block;
 }
 .innerCalendarContent{
     padding:0;
     position:absolute;
     overflow: scroll; overflow-x:hidden;
-    height:73%;
+    /* Firefox */
+    height: -moz-calc(100% - 50px);
+    /* WebKit */
+    height: -webkit-calc(100% - 50px);
+    /* Opera */
+    height: -o-calc(100% - 50px);
+    /* Standard */
+    height: calc(100% - 50px);
     width: 83%;
     /*-webkit-overflow-scrolling: touch;*/    
 }
 .innerInfoPage{
     margin: 0;
     padding: 0;
-    height: 82%;
+    /* Firefox */
+    height: -moz-calc(100% - 50px);
+    /* WebKit */
+    height: -webkit-calc(100% - 50px);
+    /* Opera */
+    height: -o-calc(100% - 50px);
+    /* Standard */
+    height: calc(100% - 50px);
     display: block;
 }
 .innerInfoContent{
     padding:0;
     position:absolute;
     overflow: scroll; overflow-x:hidden;
-    height:82%;
+    /* Firefox */
+    height: -moz-calc(100% - 50px);
+    /* WebKit */
+    height: -webkit-calc(100% - 50px);
+    /* Opera */
+    height: -o-calc(100% - 50px);
+    /* Standard */
+    height: calc(100% - 50px);
     width: 14.5%;
     /*-webkit-overflow-scrolling: touch;*/    
 }

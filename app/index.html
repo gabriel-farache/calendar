@@ -15,16 +15,16 @@
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
   </head>
-  <body ng-app="calendarApp">
+  <body ng-app="calendarApp" style="height:100%;">
     <!--[if lte IE 8]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
     <!-- Add your site or application content here -->
-    <div class="header" style="margin-bottom: 5px;" ng-controller="headerController as headerCtrl">
+    <div class="header" style="margin-bottom: 5px;height:50px;" ng-controller="headerController as headerCtrl" >
       <nav class="navbar navbar-default navbar-static-top" 
-            style="margin-bottom:0px;max-height: 50px;">
-          <div class="container-fluid">
+            style="margin-bottom:0px;max-height:50px;">
+          <div class="container-fluid" >
             <ul class="nav navbar-nav navbar-left">
                 <li>
                     <a class="navbar-brand" href="/calendar">
@@ -85,7 +85,7 @@
         </nav>
     </div>
 
-    <div ng-view="">
+    <div ng-view="" >
 
     </div>
 
