@@ -145,6 +145,9 @@ try {
                     case 'add_periodic_booking':
                         add_periodic_booking($GLOBALS['db']);
                         break;
+                    case 'get_periodic_booking':
+                        get_periodic_booking($GLOBALS['db']);
+                        break;
                     case 'delete_periodic_booking':
                         delete_periodic_booking($GLOBALS['db']);
                         break;

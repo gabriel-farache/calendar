@@ -221,6 +221,15 @@ function DatabaseService($http) {
       return ($http.post(URL,params));
     }
 
+    function getPeriodicBookingDB(periodicBookingID, authToken) {
+      var URL = serverAddr+'CRUD.php?action=get_periodic_booking';
+      var params = {
+        'periodicBookingID'  : periodicBookingID,
+        authToken: authToken 
+      };
+      return ($http.post(URL,params));
+    }
+
     function addPeriodicBookingDB(newPeriodicBooking, bookerName, authToken) {
       var URL = serverAddr+'CRUD.php?action=add_periodic_booking';
       var params = {
@@ -250,6 +259,7 @@ function DatabaseService($http) {
       var URL = serverAddr+'CRUD.php?action=validate_periodic_booking';
       var params = {
         'periodicBookingID' : periodicBookingID,
+        'isValidated' : true,
         authToken: authToken 
       };
       return ($http.post(URL,params));
@@ -283,6 +293,7 @@ function DatabaseService($http) {
     service.addPeriodicBookingDB      = addPeriodicBookingDB;
     service.deletePeriodicBookingDB   = deletePeriodicBookingDB;
     service.validatePeriodicBookingDB = validatePeriodicBookingDB;
+    service.getPeriodicBookingDB              = getPeriodicBookingDB;
 
     return service;
  }

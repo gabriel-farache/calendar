@@ -83,9 +83,7 @@ angular
             var rooms = data.data;
             $scope.rooms = rooms;
             $scope.error = undefined;
-          },function(response){
-            $scope.handleErrorDB(response.status, response.data);
-          });
+          },$scope.handleErrorDBCallback);
         };
 
         $scope.getPeriodicBookings = function() {
@@ -97,9 +95,7 @@ angular
                     $scope.dataLoading = false;
                     $scope.periodicBookings  = response.data;
                     $scope.formatPeriodicBookings();
-                }, function(response){
-                    $scope.handleErrorDB(response.status, response.data);
-                });
+                },$scope.handleErrorDBCallback);
         };
 
         $scope.formatPeriodicBookings = function() {
@@ -130,7 +126,8 @@ angular
                                             .replace(".5h", "h30"),
                         'periodicBookingWeeksDuration' : periodicBooking.periodicBookingWeeksDuration,
                         'id'            : periodicBooking.id,
-                        'room'          : periodicBooking.room
+                        'room'          : periodicBooking.room,
+                        'isValidated'   : periodicBooking.isValidated
 
                     };
                     $scope.formattedPeriodicBookings.push(formatPeriodicBooking);
@@ -159,10 +156,7 @@ angular
                     $scope.getPeriodicBookings();
                     $scope.message = "Réservation périodique soumise.";
                     $timeout(function () { $scope.message = undefined; }, $scope.timeoutTime);
-                }, function(response){
-                    $scope.dataLoading = false;
-                    $scope.handleErrorDB(response.status, response.data);
-                });
+                },$scope.handleErrorDBCallback);
         };
 
         this.deletePeriodicBooking = function(periodicBookingID) {
@@ -174,10 +168,7 @@ angular
                     $scope.getPeriodicBookings();
                     $scope.message = "Réservation périodique supprimée.";
                     $timeout(function () { $scope.message = undefined; }, $scope.timeoutTime);
-                }, function(response){
-                    $scope.dataLoading = false;
-                    $scope.handleErrorDB(response.status, response.data);
-                });
+                },$scope.handleErrorDBCallback);
         };
 
         this.validatePeriodicBooking = function(periodicBookingID) {
@@ -186,14 +177,48 @@ angular
                 .then(function() {
                     $scope.error = undefined;
                     $scope.dataLoading = false;
+                    $scope.propagatePerdiodicBookingValidation(periodicBookingID);
                     $scope.getPeriodicBookings();
-                    $scope.sendConfirmationEmail();
+                    databaseService.getPeriodicBookingDB(periodicBookingID, $scope.authToken)
+                        .then(function(response) {
+                            $scope.sendConfirmationEmail(response.data);
+                        }, $scope.handleErrorDBCallback);
                     $scope.message = "Réservation périodique validée.";
                     $timeout(function () { $scope.message = undefined; }, $scope.timeoutTime);
-                }, function(response){
+                }, $scope.handleErrorDBCallback);
+        };
+
+        $scope.propagatePerdiodicBookingValidation = function(periodicBookingID) {
+            databaseService.getPeriodicBookingDB(periodicBookingID, $scope.authToken)
+                .then(function(response) {
+                    var periodicBooking = response.data;
+                    var newBookingDate = moment()
+                                            .date(periodicBooking.periodicBookingStartingDay)
+                                            .month(periodicBooking.periodicBookingStartingMonth)
+                                            .year(periodicBooking.periodicBookingStartingYear);
+                    for(var i = 0; i < periodicBooking.periodicBookingWeeksDuration; i++){
+                        $scope.dataLoading = true;
+                        var newBooking = {
+                            room: periodicBooking.room,
+                            scheduleStart: periodicBooking.periodicBookingScheduleStart,
+                            scheduleEnd: periodicBooking.periodicBookingScheduleEnd,
+                            day: newBookingDate.format('ddd DD-MM-YYYY'),
+                            week: newBookingDate.week(),
+                            year: newBookingDate.year(),
+                            bookedBy: periodicBooking.bookedBy,
+                            isValidated: true,
+                            isPeriodic: true
+                        };
+                        newBookingDate.add(1, 'week');
+                        console.log(newBooking);
+                        databaseService.addBookingDB(newBooking, $scope.authToken)
+                            .then(function () {
+                            },$scope.handleErrorDBCallback);
+                    }
                     $scope.dataLoading = false;
-                    $scope.handleErrorDB(response.status, response.data);
-                });
+                    sharedService.prepForNewBookingAddedBroadcast();
+                },$scope.handleErrorDBCallback);
+
         };
 
         $scope.sendConfirmationEmail = function(periodicBooking){
@@ -218,9 +243,7 @@ angular
 
                 emailService.sendEmail(from, to, cc, subject, body, $scope.authToken);
 
-            }, function(response){
-                $scope.handleErrorDB(response.status, response.data);
-            });
+            },$scope.handleErrorDBCallback);
         };
 
         this.initCalendar = function () {
@@ -296,6 +319,10 @@ angular
             this.selectedEndingDate = moment().date(this.periodicBookingStartingDay)
                                 .week(this.periodicBookingStartingWeek)
                                 .year(this.periodicBookingStartingYear).format('ddd DD-MM-YYYY');
+        };
+
+        $scope.handleErrorDBCallback = function(response){
+          $scope.handleErrorDB(response.status, response.data); 
         };
 
         $scope.handleErrorDB = function(status, data){

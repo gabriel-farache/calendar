@@ -14,6 +14,15 @@ function SharedService($rootScope) {
         $rootScope.$broadcast('handleBroadcast');
     };
 
+    sharedService.prepForNewBookingAddedBroadcast = function() {
+        this.broadcastNewBookingAdded();
+    };
+
+    sharedService.broadcastNewBookingAdded = function() {
+        $rootScope.$broadcast('newBookingsAddedBroadcast');
+    };
+    
+
     return sharedService;
 }
 

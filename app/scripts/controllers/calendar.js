@@ -76,6 +76,10 @@ angular.module('calendarApp')
           $scope.booking.bookedBy = $scope.username === $scope.guestName ? undefined : $scope.username;
       });
 
+     $scope.$on('newBookingsAddedBroadcast', function() {
+          $scope.initWeekBookings();
+      });
+
     var interval = $interval(function () { $scope.initWeekBookings();}, $scope.intervalRefreshCalendarTime);
     $scope.$on('$destroy', function () { $interval.cancel(interval); });
     this.initCalendar = function () {
@@ -555,32 +559,35 @@ angular.module('calendarApp')
           var bookingCancelled = bookingsCancelled[i];
           if(bookingCancelled.id !== bookingValidatedID) {
             databaseService.getBookerEmailDB(bookingCancelled.bookedBy, $scope.authToken).
-            then(function(response) {
-              var to = response.data.email;
-              var from = 'admin@admin.fr';
-              var cc = '';
-              var scheduleStart = (bookingCancelled.scheduleStart+'h').replace(".5h", "h30");
-              var scheduleEnd = (bookingCancelled.scheduleEnd+'h').replace(".5h", "h30");
-              var subject = globalizationService.getLocalizedString("CANCEL_EMAIL_SUBJECT");
-              var body = globalizationService.getLocalizedString("CANCEL_EMAIL_BODY");
-              subject = subject.replace("<BOOKING_DAY>", bookingCancelled.day)
-                      .replace("<BOOKING_SCHEDULE_START>", scheduleStart)
-                      .replace("<BOOKING_SCHEDULE_END>", scheduleEnd);
-
-               body = body.replace("<BOOKING_DAY>", bookingCancelled.day)
-                      .replace("<BOOKING_SCHEDULE_START>", scheduleStart)
-                      .replace("<BOOKING_SCHEDULE_END>", scheduleEnd);
-
-              emailService.sendEmail(from, to, cc, subject, body, $scope.authToken);
-
-            }, function(response){
-              $scope.handleErrorDB(response.status, response.data);
-            });
+            then($scope.sendCancelationEmail(bookingCancelled),$scope.handleErrorDBCallback);
           }
         }
       }
           
       };
+
+      $scope.sendCancelationEmail = function (response, bookingCancelled) {
+        var to = response.data.email;
+        var from = 'admin@admin.fr';
+        var cc = '';
+        var scheduleStart = (bookingCancelled.scheduleStart+'h').replace(".5h", "h30");
+        var scheduleEnd = (bookingCancelled.scheduleEnd+'h').replace(".5h", "h30");
+        var subject = globalizationService.getLocalizedString("CANCEL_EMAIL_SUBJECT");
+        var body = globalizationService.getLocalizedString("CANCEL_EMAIL_BODY");
+        subject = subject.replace("<BOOKING_DAY>", bookingCancelled.day)
+                .replace("<BOOKING_SCHEDULE_START>", scheduleStart)
+                .replace("<BOOKING_SCHEDULE_END>", scheduleEnd);
+
+         body = body.replace("<BOOKING_DAY>", bookingCancelled.day)
+                .replace("<BOOKING_SCHEDULE_START>", scheduleStart)
+                .replace("<BOOKING_SCHEDULE_END>", scheduleEnd);
+
+        emailService.sendEmail(from, to, cc, subject, body, $scope.authToken);
+            };
+
+      $scope.handleErrorDBCallback = function(response){
+          $scope.handleErrorDB(response.status, response.data); 
+        };
 
     $scope.handleErrorDB = function(status, data){
       if(data !== undefined && 

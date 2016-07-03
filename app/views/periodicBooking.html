@@ -166,7 +166,7 @@
             <button class="btn btn-danger" ng-click="periodicBookingCtrl.deletePeriodicBooking(periodicBooking.id)" style="float:right;margin-left:5px;">
                {{'PERIODIC_BOOKING_DELETE_BOOKING_LABEL'| i18n}}
             </button>
-            <button ng-show="isAdmin === true" class="btn btn-success" ng-click="periodicBookingCtrl.validatePeriodicBooking(periodicBooking.id)" style="float:right;margin-left:5px;">
+            <button ng-show="isAdmin === true && !periodicBooking.isValidated" class="btn btn-success" ng-click="periodicBookingCtrl.validatePeriodicBooking(periodicBooking.id)" style="float:right;margin-left:5px;">
                {{'PERIODIC_BOOKING_VALIDATE_BOOKING_LABEL'| i18n}}
             </button>
             <div style="width:70%;">

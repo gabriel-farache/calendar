@@ -23,7 +23,9 @@ function get_periodic_bookings($db) {
                     "periodicBookingStartingDay" => $doc["periodicBookingStartingDay"],
                     "periodicBookingStartingMonth" => $doc["periodicBookingStartingMonth"],
                     "periodicBookingStartingYear" => $doc["periodicBookingStartingYear"],
-                    "room"  => $doc["room"]
+                    "room"  => $doc["room"],
+                    "isValidated" => $doc["isValidated"],
+                    "bookedBy" => $doc["bookedBy"],
                 );
             }
             $jsn = json_encode($data);
@@ -46,6 +48,52 @@ function get_periodic_bookings($db) {
     
     print_r($jsn);
 }
+
+function get_periodic_booking($db)
+{
+    $data       = json_decode(file_get_contents("php://input"));
+    $periodicBookingID  = $data->periodicBookingID;
+    $collection = $db->selectCollection(PERIODIC_BOOKING_COLLECTION);
+    $err        = $db->lastError();
+    if (is_null($err["err"]) === TRUE) {
+        $mongo_qry = array(
+            '_id' => new MongoId($periodicBookingID)
+        );
+        $periodicBooking   = $collection->findOne($mongo_qry);
+        $err       = $db->lastError();
+        if (is_null($err["err"]) === TRUE) {
+            $data = array(
+                "id" => $periodicBooking["_id"]->{'$id'},
+                "periodicBookingScheduleStart" => $periodicBooking["periodicBookingScheduleStart"],
+                "periodicBookingScheduleEnd" => $periodicBooking["periodicBookingScheduleEnd"],
+                "periodicBookingWeeksDuration" => $periodicBooking["periodicBookingWeeksDuration"],
+                "periodicBookingStartingDay" => $periodicBooking["periodicBookingStartingDay"],
+                "periodicBookingStartingMonth" => $periodicBooking["periodicBookingStartingMonth"],
+                "periodicBookingStartingYear" => $periodicBooking["periodicBookingStartingYear"],
+                "bookedBy" => $periodicBooking["bookedBy"],
+                "isValidated" => $periodicBooking["isValidated"],
+                "room"  => $periodicBooking["room"]
+            );
+            $jsn  = json_encode($data);
+        } else {
+            header("HTTP/1.1 418 I am a teapot");
+            $arr = array(
+                'msg' => "",
+                'error' => $err["err"]
+            );
+            $jsn = json_encode($arr);
+        }
+    } else {
+        header("HTTP/1.1 418 I am a teapot");
+        $arr = array(
+            'msg' => "",
+            'error' => $err["err"]
+        );
+        $jsn = json_encode($arr);
+    }
+    print_r($jsn);
+}
+
 
 function add_periodic_booking($db) {
     $data        = json_decode(file_get_contents("php://input"));
@@ -142,7 +190,7 @@ function delete_periodic_booking($db) {
 
 function validate_periodic_booking($db) {
     $data       = json_decode(file_get_contents("php://input"));
-    $periodicBookingID = $data->id;
+    $periodicBookingID = $data->periodicBookingID;
     $collection = $db->selectCollection(PERIODIC_BOOKING_COLLECTION);
     $err        = $db->lastError();
     if (is_null($err["err"]) === TRUE) {
