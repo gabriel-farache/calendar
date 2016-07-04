@@ -15,7 +15,7 @@
         
     </div>
     <div class="innerInfoPage" >
-        <div   class="container-fluid innerInfoContent" style="overflow-y:scroll;overflow-x: hidden;font-size:12px;margin: 0px;padding:0px;float: left;">
+        <div   class="container-fluid innerInfoContent">
             <table class="table-responsive table-hover" 
                 style="margin-left: 2px;margin-bottom:5px;padding:0px;width:100%;" align="center">
                 <tr>
@@ -164,8 +164,8 @@
             </div>
         </div>
     </div>
-    <div class="innerCalendarPage" style="margin: 0;margin-bottom:10px;width:85%;float: right;" >
-      <div class="innerCalendarContent">
+    <div class="innerCalendarHeaderPage" style="margin: 0;margin-bottom:10px;width:85%;float: right;" >
+      <div class="innerCalendarHeaderContent">
          <ul class="nav nav-pills" style="margin-bottom:15px;">
             <li role="presentation" 
                 class="dropdown" 
@@ -193,17 +193,17 @@
         </p>
         <div >
             <table class="table-responsive table-bordered table-hover" 
-                style="margin: 0px;width:98.5%;" border>
+                style="margin: 0px;width:100%;" border>
                 <tr class="active" >
                     <th style="width:2%;"></th>
                     <th style="text-align: center;width:14%;" ng-repeat="day in calendarCtrl.daysDisplay track by $index">{{ day }}</th>
                 </tr>
             </table>
-            <div style="height:10px;">
             </div>
-        </div>
-        <div  >
-            <div 
+     </div>
+  </div>
+        <div class="innerCalendarPage" style="margin: 0;margin-bottom:10px;width:85%;float: right;">
+            <div class="innerCalendarContent"
                 style="margin: 0;overflow: auto;border-bottom: 1px solid #e5e5e5;border-top: 1px solid #e5e5e5;">
                 <table id="bookingsSlotsTable" class="table-responsive table-bordered table-hover" style="margin: 0;width:100%;">
                     <tbody style="border-top: none;">

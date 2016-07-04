@@ -127,7 +127,8 @@ angular
                         'periodicBookingWeeksDuration' : periodicBooking.periodicBookingWeeksDuration,
                         'id'            : periodicBooking.id,
                         'room'          : periodicBooking.room,
-                        'isValidated'   : periodicBooking.isValidated
+                        'isValidated'   : periodicBooking.isValidated,
+                        'bookedBy'  : periodicBooking.bookedBy
 
                     };
                     $scope.formattedPeriodicBookings.push(formatPeriodicBooking);
