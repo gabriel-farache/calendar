@@ -166,10 +166,19 @@
             <button class="btn btn-danger" ng-click="periodicBookingCtrl.deletePeriodicBooking(periodicBooking.id)" style="float:right;margin-left:5px;">
                {{'PERIODIC_BOOKING_DELETE_BOOKING_LABEL'| i18n}}
             </button>
-            <button ng-show="isAdmin === true && !periodicBooking.isValidated" class="btn btn-success" ng-click="periodicBookingCtrl.validatePeriodicBooking(periodicBooking.id)" style="float:right;margin-left:5px;">
+            <button ng-show="isAdmin === true && bookingConflitLoading[periodicBooking.id] !== true &&  !periodicBooking.isValidated" class="btn btn-info" ng-click="periodicBookingCtrl.findConflictedSlotsWithPerdiodicBooking(periodicBooking.id)" style="float:right;margin-left:5px;">
+               {{'PERIODIC_BOOKING_CHECK_BOOKING_CONFLICTS_LABEL' | i18n}}
+            </button>
+            <img ng-show="bookingConflitLoading[periodicBooking.id] === true" src="/images/loading.svg" 
+            alt="..." style="width: 5%; height: 5%; float:right;margin-left:5px;"/>
+            <button ng-show="isAdmin === true && nbConflicts[periodicBooking.id] !== undefined && bookingConflitLoading[periodicBooking.id] !== true &&  !periodicBooking.isValidated && nbConflicts[periodicBooking.id] <= 0" class="btn btn-success" ng-click="periodicBookingCtrl.validatePeriodicBooking(periodicBooking.id)" style="float:right;margin-left:5px;">
                {{'PERIODIC_BOOKING_VALIDATE_BOOKING_LABEL'| i18n}}
             </button>
-            <div style="width:70%;">
+            <button ng-show="isAdmin === true && nbConflicts[periodicBooking.id] !== undefined && bookingConflitLoading[periodicBooking.id] !== true &&  !periodicBooking.isValidated && nbConflicts[periodicBooking.id] > 0" class="btn btn-warning" ng-click="periodicBookingCtrl.validatePeriodicBooking(periodicBooking.id)" style="float:right;margin-left:5px;">
+               {{'PERIODIC_BOOKING_VALIDATE_BOOKING_WITH_CONFLICTS_LABEL'| i18n}} <b>{{nbConflicts[periodicBooking.id]}} {{'PERIODIC_BOOKING_CONFLICTS_LABEL' | i18n}}</b>
+            </button>
+  
+
                {{'PERIODIC_BOOKING_DISPLAY_INTRO_LABEL' | i18n}} <b>{{periodicBooking.room}}</b><br>{{'PERIODIC_BOOKING_DISPLAY_DAY_LABEL' | i18n}} <b>{{periodicBooking.day}}</b><br>{{'PERIODIC_BOOKING_DISPLAY_DAY_START_LABEL'| i18n}} <b>{{periodicBooking.dateStart}}</b><br>{{'PERIODIC_BOOKING_DISPLAY_DAY_END_LABEL' | i18n}} <b>{{periodicBooking.dateEnd}}</b><br>{{'PERIODIC_BOOKING_SCHEDULE_FROM_LABEL' | i18n}} <b>{{periodicBooking.scheduleStart}}</b> {{'PERIODIC_BOOKING_SCHEDULE_TO_LABEL' | i18n}} <b>{{periodicBooking.scheduleEnd}}</b><br>{{'PERIODIC_BOOKING_DISPLAY_DURATION_LABEL' | i18n}} <b>{{periodicBooking.periodicBookingWeeksDuration}}</b> {{'PERIODIC_BOOKING_DISPLAY_WEEK_LABEL' | i18n}}<br>Réserver par: <b>{{periodicBooking.bookedBy}}</b>              
             </div>
          </li>

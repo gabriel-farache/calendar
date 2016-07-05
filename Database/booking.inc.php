@@ -11,7 +11,9 @@ function add_booking($db)
     $week          = $data->week;
     $year          = $data->year;
     $bookedBy      = $data->bookedBy;
-    
+    $isValidated    = $data->isValidated;
+    $isPeriodic     = $data->isPeriodic;
+
     $collection = $db->selectCollection(BOOKING_COLLECTION);
     $err        = $db->lastError();
     if (is_null($err["err"]) === TRUE) {
@@ -23,7 +25,8 @@ function add_booking($db)
             "week" => (int) $week,
             "year" => (int) $year,
             "bookedBy" => $bookedBy,
-            "isValidated" => false
+            "isValidated" => $isValidated,
+            "isPeriodic"    => $isPeriodic
         );
         $collection->insert($newBooking);
         $err = $db->lastError();
@@ -75,8 +78,59 @@ function get_booking($db)
                 "week" => $booking["week"],
                 "year" => $booking["year"],
                 "bookedBy" => $booking["bookedBy"],
-                "isValidated" => $booking["isValidated"]
+                "isValidated" => $booking["isValidated"],
+                "isPeriodic"    => $booking["isPeriodic"]
             );
+            $jsn  = json_encode($data);
+        } else {
+            header("HTTP/1.1 418 I am a teapot");
+            $arr = array(
+                'msg' => "",
+                'error' => $err["err"]
+            );
+            $jsn = json_encode($arr);
+        }
+    } else {
+        header("HTTP/1.1 418 I am a teapot");
+        $arr = array(
+            'msg' => "",
+            'error' => $err["err"]
+        );
+        $jsn = json_encode($arr);
+    }
+    print_r($jsn);
+}
+
+function get_day_bookings($db)
+{
+    $data       = json_decode(file_get_contents("php://input"));
+    $day  = $data->day;
+    $room  = $data->room;
+    $collection = $db->selectCollection(BOOKING_COLLECTION);
+    $err        = $db->lastError();
+    if (is_null($err["err"]) === TRUE) {
+        $mongo_qry = array(
+            'day' => $day,
+            'room' => $room
+        );
+        $cursor   = $collection->find($mongo_qry);
+        $err       = $db->lastError();
+        if (is_null($err["err"]) === TRUE) {
+            $data = array();
+            foreach ($cursor as $doc) {
+                $data[] = array(
+                    "id" => $doc["_id"]->{'$id'},
+                    "room" => $doc["room"],
+                    "scheduleStart" => $doc["scheduleStart"],
+                    "scheduleEnd" => $doc["scheduleEnd"],
+                    "day" => $doc["day"],
+                    "week" => $doc["week"],
+                    "year" => $doc["year"],
+                    "bookedBy" => $doc["bookedBy"],
+                    "isValidated" => $doc["isValidated"],
+                    "isPeriodic"    => $booking["isPeriodic"]
+                );
+            }
             $jsn  = json_encode($data);
         } else {
             header("HTTP/1.1 418 I am a teapot");
@@ -116,7 +170,8 @@ function get_all_booking($db)
                     "week" => $doc["week"],
                     "year" => $doc["year"],
                     "bookedBy" => $doc["bookedBy"],
-                    "isValidated" => $doc["isValidated"]
+                    "isValidated" => $doc["isValidated"],
+                    "isPeriodic"    => $doc["isPeriodic"]
                 );
             }
             $jsn = json_encode($data);
@@ -169,7 +224,8 @@ function get_week_booking($db)
                     "week" => $doc["week"],
                     "year" => $doc["year"],
                     "bookedBy" => $doc["bookedBy"],
-                    "isValidated" => $doc["isValidated"]
+                    "isValidated" => $doc["isValidated"],
+                    "isPeriodic"    => $doc["isPeriodic"]
                 );
             }
             $jsn = json_encode($data);
@@ -193,6 +249,77 @@ function get_week_booking($db)
     
 }
 
+
+function get_conflicted_bookings($db){
+    $data       = json_decode(file_get_contents("php://input"));
+    $bookingID  = $data->id;
+    $bookingDay  = $data->day;
+    $bookingYear  = (int)$data->year;
+    $bookingScheduleStart = (float)$data->scheduleStart;
+    $bookingScheduleEnd  = (float)$data->scheduleEnd;
+    $bookingRoom = $data->room;
+
+    $collection = $db->selectCollection(BOOKING_COLLECTION);
+    $err        = $db->lastError();
+    if (is_null($err["err"]) === TRUE) {
+        if($bookingID === null){
+            $mongo_qry = array(
+                'day' => $bookingDay,
+                'year' => (int) $bookingYear,
+                'room' => $bookingRoom,
+                'scheduleStart' => array('$gte' => $bookingScheduleStart),
+                'scheduleEnd' => array('$lte' => $bookingScheduleEnd)
+            ); 
+        }else {
+            $mongo_qry = array(
+                'day' => $bookingDay,
+                'year' => (int) $bookingYear,
+                'room' => $bookingRoom,
+                'scheduleStart' => array('$gte' => $bookingScheduleStart),
+                'scheduleEnd' => array('$lte' => $bookingScheduleEnd),
+                '_id' => array('$ne' => new MongoId($bookingID))
+            ); 
+
+        }
+
+        $cursor    = $collection->find($mongo_qry);
+            $err       = $db->lastError();
+            if (is_null($err["err"]) === TRUE) {
+                $data = array();
+                foreach ($cursor as $doc) {
+                    $data[] = array(
+                        "id" => $doc["_id"]->{'$id'},
+                        "room" => $doc["room"],
+                        "scheduleStart" => $doc["scheduleStart"],
+                        "scheduleEnd" => $doc["scheduleEnd"],
+                        "day" => $doc["day"],
+                        "week" => $doc["week"],
+                        "year" => $doc["year"],
+                        "bookedBy" => $doc["bookedBy"],
+                        "isValidated" => $doc["isValidated"],
+                        "isPeriodic"    => $doc["isPeriodic"]
+                    );
+                }
+                $jsn = json_encode($data);
+            } else {
+                header("HTTP/1.1 418 I am a teapot");
+                $arr = array(
+                    'msg' => "",
+                    'error' => $err["err"]
+                );
+                $jsn = json_encode($arr);
+            }
+        } else {
+            header("HTTP/1.1 418 I am a teapot");
+            $arr = array(
+                'msg' => "",
+                'error' => $err["err"]
+            );
+            $jsn = json_encode($arr);
+        }
+
+    print_r($jsn);
+}
 
 function delete_booking($db)
 {
@@ -296,7 +423,8 @@ function update_booking($db)
             "week" => $data->week,
             "year" => $data->year,
             "bookedBy" => $data->bookedBy,
-            "isValidated" => $data->isValidated
+            "isValidated" => $data->isValidated,
+            "isPeriodic"    => $data->isPeriodic
         );
         $newdata        = array(
             '$set' => $updatedBooking

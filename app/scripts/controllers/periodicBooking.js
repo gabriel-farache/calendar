@@ -2,8 +2,9 @@
 
 angular
     .module('calendarApp')
-    .controller('periodicBookingController', function PeriodicBookingController($scope, $cookieStore, $timeout, $location, moment, sharedService, databaseService, globalizationService, emailService, authenticationService) {
+    .controller('periodicBookingController', function PeriodicBookingController($scope, $cookieStore, $timeout, $location, moment, sharedService, databaseService, globalizationService, emailService, authenticationService, commonService) {
         moment.locale('fr');
+        $scope.callerName = 'PeriodicBooking';
         $scope.dataLoading = false;
         $scope.week = '';
         $scope.year = '';
@@ -12,6 +13,10 @@ angular
         $scope.timeoutTime = 5000;
         $scope.rooms = [];
         $scope.formattedPeriodicBookings = [];
+        $scope.bookingsSharingSlotToBeCancelled = [];
+        $scope.bookingConflitLoading = [];
+        $scope.warningBookingSharingSlot = 'Récupération des conflits.<br>Merci de patienter...';
+        $scope.nbConflicts = [];
 
         this.periodicBookingStartingDay = undefined;
         this.periodicBookingStartingWeek = undefined;
@@ -162,14 +167,92 @@ angular
 
         this.deletePeriodicBooking = function(periodicBookingID) {
             $scope.dataLoading = true;
-            databaseService.deletePeriodicBookingDB(periodicBookingID, $scope.username, $scope.authToken)
-                .then(function() {
-                    $scope.error = undefined;
-                    $scope.dataLoading = false;
-                    $scope.getPeriodicBookings();
-                    $scope.message = "Réservation périodique supprimée.";
-                    $timeout(function () { $scope.message = undefined; }, $scope.timeoutTime);
+
+             databaseService.getPeriodicBookingDB(periodicBookingID, $scope.authToken)
+                .then(function(response) {
+                    var currentWeek = moment().isoWeek();
+                    var periodicBooking  = response.data;
+                    var dayStr = moment().date(periodicBooking.periodicBookingStartingDay)
+                                            .month(periodicBooking.periodicBookingStartingMonth)
+                                            .year(periodicBooking.periodicBookingStartingYear)
+                                            .format('ddd');
+                    var dayStarted = moment().date(periodicBooking.periodicBookingStartingDay)
+                                            .month(periodicBooking.periodicBookingStartingMonth)
+                                            .year(periodicBooking.periodicBookingStartingYear);
+
+                    //I added the -1 to mark the current week as ellapsed
+                    var ellapsedWeeks = moment().isoWeek() - dayStarted.isoWeek() - 1;
+                    var leftWeekDuration = periodicBooking.periodicBookingWeeksDuration - ellapsedWeeks;
+                    databaseService.deletePeriodicBookingDB(periodicBookingID, $scope.username,
+                                                currentWeek, dayStr, leftWeekDuration, $scope.authToken)
+                    .then(function() {
+                        $scope.error = undefined;
+                        $scope.dataLoading = false;
+                        $scope.getPeriodicBookings();
+                        $scope.message = "Réservation périodique supprimée.";
+                        $timeout(function () { $scope.message = undefined; }, $scope.timeoutTime);
+                    },$scope.handleErrorDBCallback);$scope.formatPeriodicBookings();
+            },$scope.handleErrorDBCallback);
+            
+        };
+
+        this.findConflictedSlotsWithPerdiodicBooking = function (periodicBookingID){
+            $scope.bookingConflitLoading[periodicBookingID] = true;
+            $scope.nbConflicts[periodicBookingID] = 0;
+            var nbQueries = 0;
+            $scope.bookingsSharingSlotToBeCancelled[periodicBookingID] = [];
+            databaseService.getPeriodicBookingDB(periodicBookingID, $scope.authToken)
+                .then(function(response) {
+                    $scope.bookingsSharingSlotToBeCancelled[periodicBookingID] = [];       
+                    var periodicBooking = response.data;
+                    var periodicBookingWeeksDuration = parseInt(periodicBooking.periodicBookingWeeksDuration);
+                    var newBookingDate = moment()
+                                            .date(periodicBooking.periodicBookingStartingDay)
+                                            .month(periodicBooking.periodicBookingStartingMonth)
+                                            .year(periodicBooking.periodicBookingStartingYear);
+
+                    for(var i = 0; i <= periodicBookingWeeksDuration; i++){
+                        var newBooking = {
+                            room: periodicBooking.room,
+                            scheduleStart: periodicBooking.periodicBookingScheduleStart,
+                            scheduleEnd: periodicBooking.periodicBookingScheduleEnd,
+                            day: newBookingDate.format('ddd DD-MM-YYYY'),
+                            week: newBookingDate.week(),
+                            year: newBookingDate.year(),
+                            bookedBy: periodicBooking.bookedBy,
+                            isValidated: true,
+                            isPeriodic: true
+                        };
+                        nbQueries++;
+                        databaseService.getConflictedBookingsDB(newBooking)
+                            .then(function(response){
+                                var conflictedBookings = response.data;
+                                $scope.nbConflicts[periodicBookingID] += conflictedBookings === undefined ?
+                                                                         0 : conflictedBookings.length;
+                                $scope.bookingsSharingSlotToBeCancelled[periodicBookingID].push(conflictedBookings);
+                                nbQueries--;
+                                if(nbQueries <= 0) {
+                                    $scope.bookingConflitLoading[periodicBookingID] = false;
+                                    $scope.bookingsSharingSlotToBeCancelled[periodicBookingID] = $scope.mergeBookingsSharingSlotToBeCancelled($scope.bookingsSharingSlotToBeCancelled[periodicBookingID]);
+                                    console.log($scope.bookingsSharingSlotToBeCancelled[periodicBookingID]);
+                                }
+                        }, $scope.handleErrorDBCallback);
+                        newBookingDate.add(1, 'week');
+                    }
                 },$scope.handleErrorDBCallback);
+        };
+
+        $scope.mergeBookingsSharingSlotToBeCancelled = function(bookingsSharingSlot) {
+            var mergedBookingSharing = [];
+            for(var i = 0; i < bookingsSharingSlot.length; i++){
+                var innerBookingsSharingSlot = bookingsSharingSlot[i];
+                for (var j = 0; j < innerBookingsSharingSlot.length; j++){
+                    mergedBookingSharing.push(innerBookingsSharingSlot[j]);
+                }
+            }
+
+            return mergedBookingSharing;
+            
         };
 
         this.validatePeriodicBooking = function(periodicBookingID) {
@@ -177,7 +260,6 @@ angular
             databaseService.validatePeriodicBookingDB(periodicBookingID, $scope.username, $scope.authToken)
                 .then(function() {
                     $scope.error = undefined;
-                    $scope.dataLoading = false;
                     $scope.propagatePerdiodicBookingValidation(periodicBookingID);
                     $scope.getPeriodicBookings();
                     databaseService.getPeriodicBookingDB(periodicBookingID, $scope.authToken)
@@ -189,7 +271,9 @@ angular
                 }, $scope.handleErrorDBCallback);
         };
 
+
         $scope.propagatePerdiodicBookingValidation = function(periodicBookingID) {
+            var nbQueries = 0;
             databaseService.getPeriodicBookingDB(periodicBookingID, $scope.authToken)
                 .then(function(response) {
                     var periodicBooking = response.data;
@@ -197,7 +281,18 @@ angular
                                             .date(periodicBooking.periodicBookingStartingDay)
                                             .month(periodicBooking.periodicBookingStartingMonth)
                                             .year(periodicBooking.periodicBookingStartingYear);
-                    for(var i = 0; i < periodicBooking.periodicBookingWeeksDuration; i++){
+
+                    console.log($scope.bookingsSharingSlotToBeCancelled[periodicBookingID]);
+
+                    commonService.sendCancelationEmails(periodicBooking.id, $scope.authToken,
+                        $scope.bookingsSharingSlotToBeCancelled[periodicBookingID],
+                      'CANCEL_EMAIL_SUBJECT', 'CANCEL_EMAIL_BODY', $scope.handleErrorDBCallback);
+
+                    commonService.cancelConflictedBookings($scope.authToken, periodicBooking.id,
+                        $scope.bookingsSharingSlotToBeCancelled[periodicBookingID], $scope.emptyFunction,
+                         $scope.handleErrorDBCallback);
+
+                    for(var i = 0; i <= periodicBooking.periodicBookingWeeksDuration; i++){
                         $scope.dataLoading = true;
                         var newBooking = {
                             room: periodicBooking.room,
@@ -211,14 +306,24 @@ angular
                             isPeriodic: true
                         };
                         newBookingDate.add(1, 'week');
-                        console.log(newBooking);
+                        nbQueries++;
                         databaseService.addBookingDB(newBooking, $scope.authToken)
-                            .then(function () {
-                            },$scope.handleErrorDBCallback);
+                            .then(function (response) {
+                                newBooking.id = response.data.id;
+                                commonService.validateBooking(newBooking, $scope.authToken, 
+                                    null, $scope.callerName , $scope.handleErrorDBCallback);
+                                nbQueries--;
+                                if(nbQueries <= 0){
+                                    $scope.dataLoading = false;
+                                }
+                        },$scope.handleErrorDBCallback);   
                     }
-                    $scope.dataLoading = false;
+                    
                     sharedService.prepForNewBookingAddedBroadcast();
                 },$scope.handleErrorDBCallback);
+        };
+
+        $scope.emptyFunction = function() {
 
         };
 
@@ -303,23 +408,40 @@ angular
             this.periodicDay = moment().date(this.periodicBookingStartingDay)
                                 .week(this.periodicBookingStartingWeek)
                                 .year(this.periodicBookingStartingYear).format('dddd');
+            if(this.selectedEndDay !== undefined &&
+                this.selectedEndWeek !== undefined &&
+                this.selectedEndYear !== undefined) {
+                var endingDay = moment().date(this.selectedEndDay)
+                                    .week(this.selectedEndWeek)
+                                    .year(this.selectedEndYear);
+                var startingDay = moment().date(monthDay.day).week(week).year(year);
+                this.periodicBookingWeeksDuration = endingDay.isoWeek() - startingDay.isoWeek();
+
+            }
 
         };
 
         this.selectEndingDay = function(monthDay, week, year){
-            var startingDay = moment().date(this.periodicBookingStartingDay)
-                                .week(this.periodicBookingStartingWeek)
-                                .year(this.periodicBookingStartingYear);
-            var endingDay = moment().date(monthDay.day).week(week).year(year);
-
             this.selectedEndDay = monthDay.day;
             this.selectedEndMonth = monthDay.month;
             this.selectedEndWeek = week;
             this.selectedEndYear = year;
-            this.periodicBookingWeeksDuration = endingDay.diff(startingDay, 'week');
-            this.selectedEndingDate = moment().date(this.periodicBookingStartingDay)
-                                .week(this.periodicBookingStartingWeek)
-                                .year(this.periodicBookingStartingYear).format('ddd DD-MM-YYYY');
+
+            this.selectedEndingDate = moment().date(this.selectedEndDay)
+                                    .week(this.selectedEndWeek)
+                                    .year(this.selectedEndYear).format('ddd DD-MM-YYYY');
+
+            if(this.periodicBookingStartingDay !== undefined &&
+                this.periodicBookingStartingWeek !== undefined &&
+                this.periodicBookingStartingYear !== undefined) {
+                var startingDay = moment().date(this.periodicBookingStartingDay)
+                                    .week(this.periodicBookingStartingWeek)
+                                    .year(this.periodicBookingStartingYear);
+                var endingDay = moment().date(monthDay.day).week(week).year(year);
+
+                
+                this.periodicBookingWeeksDuration = endingDay.isoWeek() - startingDay.isoWeek(); 
+            }
         };
 
         $scope.handleErrorDBCallback = function(response){

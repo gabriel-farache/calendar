@@ -7,7 +7,30 @@ function DatabaseService($http) {
         'id'        : index,
       };
         return ($http.post(URL,params));
-    }
+  }
+
+  function getDayBookingsDB(day, room) {
+      var URL = serverAddr+'CRUD.php?action=get_day_bookings';
+      var params = {
+        'day'        : day,
+        'room'       : room
+      };
+        return ($http.post(URL,params));
+  }
+
+  function getConflictedBookingsDB(booking) {
+    var URL = serverAddr+'CRUD.php?action=get_conflicted_bookings';
+      var params = {
+        'day'           : booking.day,
+        'room'          : booking.room,
+        'year'          : booking.year,
+        'scheduleStart' : booking.scheduleStart,
+        'scheduleEnd'   : booking.scheduleEnd,
+        'id'            : booking.id === undefined ? null : booking.id
+      };
+      return ($http.post(URL,params));
+  }
+
 
     function getAllBookingDB() {
       var URL = serverAddr+'CRUD.php?action=get_all_booking';
@@ -36,7 +59,9 @@ function DatabaseService($http) {
                 'week'          : booking.week,
                 'year'          : booking.year,
                 'bookedBy'      : booking.bookedBy,
-                'authToken'     : authToken
+                'authToken'     : authToken,
+                'isValidated'   : booking.isValidated === undefined ? false : booking.isValidated,
+                'isPeriodic'    : booking.isPeriodic === undefined ? false : booking.isPeriodic
             };
         return ($http.post(URL,params));
     }
@@ -246,11 +271,15 @@ function DatabaseService($http) {
       return ($http.post(URL,params));
     }
 
-    function deletePeriodicBookingDB(periodicBookingID, bookerName, authToken) {
+    function deletePeriodicBookingDB(periodicBookingID, bookerName, currentWeek, dayStr, leftWeekDuration, authToken) {
       var URL = serverAddr+'CRUD.php?action=delete_periodic_booking';
       var params = {
         'periodicBookingID' : periodicBookingID,
-        authToken: authToken 
+        'username' : bookerName,
+        'currentWeek' : currentWeek,
+        'dayStr' : dayStr,
+        'leftWeekDuration' : leftWeekDuration,
+        'authToken': authToken 
       };
       return ($http.post(URL,params));
     }
@@ -293,7 +322,9 @@ function DatabaseService($http) {
     service.addPeriodicBookingDB      = addPeriodicBookingDB;
     service.deletePeriodicBookingDB   = deletePeriodicBookingDB;
     service.validatePeriodicBookingDB = validatePeriodicBookingDB;
-    service.getPeriodicBookingDB              = getPeriodicBookingDB;
+    service.getPeriodicBookingDB      = getPeriodicBookingDB;
+    service.getConflictedBookingsDB   = getConflictedBookingsDB;
+    service.getDayBookingsDB          = getDayBookingsDB;
 
     return service;
  }

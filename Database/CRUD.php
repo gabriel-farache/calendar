@@ -64,6 +64,12 @@ try {
         case 'get_week_booking':
             get_week_booking($GLOBALS['db']);
             break;
+        case 'get_day_bookings':
+            get_day_bookings($GLOBALS['db']);
+            break;
+        case 'get_conflicted_bookings':
+            get_conflicted_bookings($GLOBALS['db']);
+            break;    
         case 'get_all_booking':
             get_all_booking($GLOBALS['db']);
             break;

@@ -8,8 +8,8 @@
  * Controller of the calendarApp
  */
 angular.module('calendarApp')
-  .controller('calendarController', function ($scope, $http, $window, $cookieStore, $timeout, $interval, moment, databaseService, sharedService, authenticationService, emailService, globalizationService) {
-    
+  .controller('calendarController', function ($scope, $http, $window, $cookieStore, $timeout, $interval, moment, databaseService, sharedService, authenticationService, emailService, globalizationService, commonService) {
+    $scope.callerName = 'Calendar';
     $scope.guestName = 'Visiteur';
     $scope.colorOfValidatedBooking = '#4caf50';
     $scope.colorOfValidatedBookingSelected = '#8bc34a';
@@ -36,7 +36,6 @@ angular.module('calendarApp')
     this.date = moment();
 
     this.numberOfDays = 7;
-    this.offsetFirstDayOfWeek = this.date.day(0).format('ddd') === this.dateDisplay.day(0).format('ddd') ? 0 : 1;
 
     this.dateDisplay.locale($window.navigator.userLanguage || $window.navigator.language);
     this.date.locale('fr');
@@ -175,7 +174,7 @@ angular.module('calendarApp')
       for(var i = 0; i < 6; i++){
         var monthDays =  [];
         var week = moment().week(firstMonthWeek + i);
-        var weekNumber = week.week();
+        var weekNumber = week.isoWeek();
         week.startOf('week').date();
         //create the days of the week
         for(var j = 0; j < 7; j++){
@@ -441,59 +440,27 @@ angular.module('calendarApp')
     };
 
     this.validateBooking = function () {
-      var bookingToValidate = $scope.booking;
-		  databaseService.validateBookingDB(bookingToValidate.id, $scope.authToken).then(function () {
-        $scope.messageAdmin = "Réservation validé.";
-        $timeout(function () { $scope.messageAdmin = undefined; }, $scope.timeoutTime);
-        bookingToValidate.isValidated = true;
-          //remove booking on the sharing a slot with the validated booking
-          var bookingsSharingSlot = $scope.getBookingsSharingSlot(bookingToValidate);
-          $scope.sendEmails(bookingToValidate, bookingsSharingSlot);
-
-          if(bookingsSharingSlot !== false) {
-            var bookingToValidateID = bookingToValidate.id;
-            var bookingToRemoveIds= [];
-            for (var i = 0; i < bookingsSharingSlot.length; i++){
-              var bookingsSharingSlotID = bookingsSharingSlot[i].id;
-              if(bookingToValidateID !== bookingsSharingSlotID){
-                bookingToRemoveIds.push(bookingsSharingSlot[i].id);
-              }
-            }
-            databaseService.deleteBookingsDB(bookingToRemoveIds, $scope.authToken)
-              .then(function (){
-                $scope.initWeekBookings();
-              }, function (response) {
-                  $scope.handleErrorDB(response.status, response.data);
-              });
-          }
-        },function(response){
-          $scope.handleErrorDB(response.status, response.data);          
-        });
+      commonService.validateBooking($scope.booking, $scope.authToken,
+        $scope.calendar, $scope.callerName, $scope.handleErrorDBCallback);
     };
 
-    $scope.getBookingsSharingSlot = function (booking) {
-      var bookingsSharingSlot = false;
-      if($scope.calendar !== undefined && booking !== undefined) {
-        var start = parseFloat(booking.scheduleStart);
-        var bookingID = booking.id;
-        var end = parseFloat(booking.scheduleEnd);
-        for (var i = 0; i < $scope.calendar.length; i++) {
-          var detail = $scope.calendar[i];
-          var dStart = detail.scheduleStart;
-          var dEnd = parseFloat(detail.scheduleEnd);
-          if(bookingID !== detail.id &&
-            booking.day === detail.day &&
-            parseInt(booking.year) === parseInt(detail.year) &&
-            dStart < end && start < dEnd) {
-            if(bookingsSharingSlot === false){
-              bookingsSharingSlot = [];
-            }
-            bookingsSharingSlot.push(angular.copy(detail));
-          }
-        }
+    $scope.$on('BookingValidated', function() {
+      if($scope.callerName === sharedService.callerName){
+        var booking = sharedService.booking;
+        var calendar = sharedService.calendar;
+        var bookingsSharingSlotToBeCancelled = [];
+
+        commonService.getBookingsSharingSlot(booking, calendar, bookingsSharingSlotToBeCancelled);
+        commonService.sendEmails(booking, bookingsSharingSlotToBeCancelled, $scope.authToken,
+                'VALIDATION_EMAIL_SUBJECT', 'VALIDATION_EMAIL_BODY',
+                'CANCEL_EMAIL_SUBJECT', 'CANCEL_EMAIL_BODY', $scope.handleErrorDBCallback);
+        commonService.cancelConflictedBookings($scope.authToken ,booking.id,
+          bookingsSharingSlotToBeCancelled, $scope.initWeekBookings, $scope.handleErrorDBCallback);
+        $scope.messageAdmin = 'Réservation validée !';
+        $scope.dataLoading = false;
       }
-      return bookingsSharingSlot;
-    };
+    });
+
 
     this.isBookingValidated = function(bookingId){
       var isValidated = false;
@@ -523,71 +490,9 @@ angular.module('calendarApp')
       return parseInt(rowspanString);
     };
 
-    $scope.sendEmails = function(bookingValidated, bookingsCancelled){
-      $scope.sendConfirmationEmail(bookingValidated);
-      $scope.sendCancelationEmails(bookingValidated.id, bookingsCancelled);  
+    $scope.handleErrorDBCallback = function(response){
+        $scope.handleErrorDB(response.status, response.data); 
     };
-
-    $scope.sendConfirmationEmail = function(booking){
-      databaseService.getBookerEmailDB(booking.bookedBy, $scope.authToken).
-      then(function(response) {
-        var to = response.data.email;
-        var from = 'admin@admin.fr';
-        var cc = '';
-        var scheduleStart = (booking.scheduleStart+'h').replace(".5h", "h30");
-        var scheduleEnd = (booking.scheduleEnd+'h').replace(".5h", "h30");
-        var subject = globalizationService.getLocalizedString("VALIDATION_EMAIL_SUBJECT");
-        var body = globalizationService.getLocalizedString("VALIDATION_EMAIL_BODY");
-        subject = subject.replace("<BOOKING_DAY>", booking.day)
-                .replace("<BOOKING_SCHEDULE_START>", scheduleStart)
-                .replace("<BOOKING_SCHEDULE_END>", scheduleEnd);
-
-         body = body.replace("<BOOKING_DAY>", booking.day)
-                .replace("<BOOKING_SCHEDULE_START>", scheduleStart)
-                .replace("<BOOKING_SCHEDULE_END>", scheduleEnd);
-
-        emailService.sendEmail(from, to, cc, subject, body, $scope.authToken);
-
-      }, function(response){
-        $scope.handleErrorDB(response.status, response.data);
-      });
-    };
-
-    $scope.sendCancelationEmails = function(bookingValidatedID, bookingsCancelled) {
-      if(bookingsCancelled !== undefined){
-        for(var i = 0; i < bookingsCancelled.length; i++) {
-          var bookingCancelled = bookingsCancelled[i];
-          if(bookingCancelled.id !== bookingValidatedID) {
-            databaseService.getBookerEmailDB(bookingCancelled.bookedBy, $scope.authToken).
-            then($scope.sendCancelationEmail(bookingCancelled),$scope.handleErrorDBCallback);
-          }
-        }
-      }
-          
-      };
-
-      $scope.sendCancelationEmail = function (response, bookingCancelled) {
-        var to = response.data.email;
-        var from = 'admin@admin.fr';
-        var cc = '';
-        var scheduleStart = (bookingCancelled.scheduleStart+'h').replace(".5h", "h30");
-        var scheduleEnd = (bookingCancelled.scheduleEnd+'h').replace(".5h", "h30");
-        var subject = globalizationService.getLocalizedString("CANCEL_EMAIL_SUBJECT");
-        var body = globalizationService.getLocalizedString("CANCEL_EMAIL_BODY");
-        subject = subject.replace("<BOOKING_DAY>", bookingCancelled.day)
-                .replace("<BOOKING_SCHEDULE_START>", scheduleStart)
-                .replace("<BOOKING_SCHEDULE_END>", scheduleEnd);
-
-         body = body.replace("<BOOKING_DAY>", bookingCancelled.day)
-                .replace("<BOOKING_SCHEDULE_START>", scheduleStart)
-                .replace("<BOOKING_SCHEDULE_END>", scheduleEnd);
-
-        emailService.sendEmail(from, to, cc, subject, body, $scope.authToken);
-            };
-
-      $scope.handleErrorDBCallback = function(response){
-          $scope.handleErrorDB(response.status, response.data); 
-        };
 
     $scope.handleErrorDB = function(status, data){
       if(data !== undefined && 
