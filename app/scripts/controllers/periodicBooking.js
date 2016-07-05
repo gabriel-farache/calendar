@@ -138,7 +138,8 @@ angular
                     };
                     $scope.formattedPeriodicBookings.push(formatPeriodicBooking);
                 } catch (e) {
-                    console.log(e);
+                    $scope.error = e;
+                    $timeout(function () { $scope.error = undefined; }, $scope.timeoutTime);
                 }
             }
 
@@ -234,7 +235,6 @@ angular
                                 if(nbQueries <= 0) {
                                     $scope.bookingConflitLoading[periodicBookingID] = false;
                                     $scope.bookingsSharingSlotToBeCancelled[periodicBookingID] = $scope.mergeBookingsSharingSlotToBeCancelled($scope.bookingsSharingSlotToBeCancelled[periodicBookingID]);
-                                    console.log($scope.bookingsSharingSlotToBeCancelled[periodicBookingID]);
                                 }
                         }, $scope.handleErrorDBCallback);
                         newBookingDate.add(1, 'week');
@@ -281,8 +281,6 @@ angular
                                             .date(periodicBooking.periodicBookingStartingDay)
                                             .month(periodicBooking.periodicBookingStartingMonth)
                                             .year(periodicBooking.periodicBookingStartingYear);
-
-                    console.log($scope.bookingsSharingSlotToBeCancelled[periodicBookingID]);
 
                     commonService.sendCancelationEmails(periodicBooking.id, $scope.authToken,
                         $scope.bookingsSharingSlotToBeCancelled[periodicBookingID],
