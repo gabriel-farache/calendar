@@ -168,7 +168,7 @@ angular.module('calendarApp')
       var date = this.date.month(newMonth);
       this.dateDisplay.month(newMonth);
       date.year(newYear);
-      var firstMonthWeek = date.startOf('month').week();
+      var firstMonthWeek = date.startOf('month').isoWeek();
       this.monthWeeks = [];
       //create the week before the month, the 4 weeks of the month and the week after the month
       for(var i = 0; i < 6; i++){
@@ -195,17 +195,36 @@ angular.module('calendarApp')
 
     this.setWeek = function(indexOfWeeksArray) {
       var weekData = this.monthWeeks[indexOfWeeksArray];
-      $scope.week = weekData.week;
-      $scope.year = weekData.year;
-      this.initCalendarDays();
-      if($scope.currentRoom !== undefined){
-        $scope.initWeekBookings();
-      }
-      $scope.weekStartEndDates = weekData.monthDays[0].day + ' ' + 
-                                weekData.monthDays[0].month +
+      var newWeekDate = moment().isoWeek(weekData.week).year(weekData.year);
+      var currentWeekDate = moment().isoWeek($scope.week).year($scope.year);
+
+      if(newWeekDate.month() !== currentWeekDate.month()){
+        this.initWeekData(newWeekDate.month());
+        $scope.week = newWeekDate.isoWeek();
+        $scope.year = newWeekDate.year();
+        this.initCalendarDays();
+        if($scope.currentRoom !== undefined){
+          $scope.initWeekBookings();
+        }
+
+        $scope.weekStartEndDates = newWeekDate.isoWeekday(1).format('DD') + ' ' + 
+                                newWeekDate.format("MMMM") +
                                 ' - ' + 
-                                weekData.monthDays[6].day + ' ' +
-                                weekData.monthDays[6].month;
+                                newWeekDate.isoWeekday(7).format('DD') + ' ' +
+                                newWeekDate.format("MMMM");
+      } else {
+        $scope.week = weekData.week;
+        $scope.year = weekData.year;
+        this.initCalendarDays();
+        if($scope.currentRoom !== undefined){
+          $scope.initWeekBookings();
+        }
+        $scope.weekStartEndDates = weekData.monthDays[0].day + ' ' + 
+                                  weekData.monthDays[0].month +
+                                  ' - ' + 
+                                  weekData.monthDays[6].day + ' ' +
+                                  weekData.monthDays[6].month;
+      }   
     };
 
     this.selectRoom = function(room, building) {

@@ -126,6 +126,15 @@ angular.module('calendarApp')
     };
 
     this.selectDay = function(monthDay, week, year){
+      if(this.selectedDay !== undefined &&
+          this.selectedWeek !== undefined &&
+          this.selectedYear !== undefined) {
+
+          if(monthDay.month !== this.selectedMonth){
+              this.initWeekData(monthDay.month, year);
+          }
+      }
+
       this.selectedDay = monthDay.day;
       this.selectedWeek = week;
       this.selectedMonth = monthDay.month;

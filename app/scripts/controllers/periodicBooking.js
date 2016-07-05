@@ -394,6 +394,15 @@ angular
         };
 
         this.selectStartingDay = function(monthDay, week, year){
+            if(this.periodicBookingStartingDay !== undefined &&
+                this.periodicBookingStartingWeek !== undefined &&
+                this.periodicBookingStartingYear !== undefined) {
+
+                if(monthDay.month !== this.selectedStartMonth){
+                    this.initWeekData(monthDay.month, true, year);
+                }
+            }
+
             this.periodicBookingStartingDay = monthDay.day;
             this.periodicBookingStartingWeek = week;
             this.periodicBookingStartingYear = year;
@@ -419,9 +428,20 @@ angular
 
             }
 
+            
+
         };
 
         this.selectEndingDay = function(monthDay, week, year){
+            if(this.selectedEndDay !== undefined &&
+                this.selectedEndWeek !== undefined &&
+                this.selectedEndYear !== undefined) {
+
+                if(monthDay.month !== this.selectedEndMonth){
+                    this.initWeekData(monthDay.month, false, year);
+                }
+            }
+
             this.selectedEndDay = monthDay.day;
             this.selectedEndMonth = monthDay.month;
             this.selectedEndWeek = week;
