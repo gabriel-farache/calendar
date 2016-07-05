@@ -1,3 +1,4 @@
+/*jslint bitwise: true */
 'use strict';
 
 
@@ -129,3 +130,4 @@ angular
     .factory('authenticationService', AuthenticationService);
 
 AuthenticationService.$inject = ['$http', '$cookieStore', '$rootScope', '$timeout', 'databaseService', 'sharedService'];
+/*jslint bitwise: false */
