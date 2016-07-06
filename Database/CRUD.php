@@ -11,10 +11,7 @@ function myErrorHandler($code, $message, $file, $line) {
     header("HTTP/1.1 503 Service unavailable");
     if($GLOBALS['errorAlreadyHappened'] == FALSE) {
         $GLOBALS['errorAlreadyHappened'] = TRUE;
-        $arr = array(
-            'error' => $message." on line: ".$line
-        );
-        $jsn = json_encode($arr);
+        $jsn = handleCommonErr("HTTP/1.1 503 Service unavailable", "Unexpected error", $message." on line: ".$line." in file: ".$file);
         print_r($jsn);
     }
 }
@@ -175,12 +172,7 @@ try {
     }
 }
 catch (Exception $e) {
-    header("HTTP/1.1 503 Service unavailable");
-    $arr = array(
-        'msg' => "",
-        'error' => $e->getMessage()
-    );
-    $jsn = json_encode($arr);
+    $jsn = handleCommonErr("HTTP/1.1 503 Service unavailable", "Unexpected error", $e->getMessage());
     print_r($jsn);
 }
 
@@ -272,6 +264,26 @@ function isAdminAction($action)
       $action == 'validate_periodic_booking');
 }
 
+
+function handleMongoErr($header, $msg, $err) {
+    header($header);
+    $arr = array(
+        'msg' => $msg,
+        'error' => $err,
+        'hasError' => true
+    );
+    return json_encode($arr);
+}
+
+function handleCommonErr($header, $msg, $err) {
+    header($header);
+    $arr = array(
+        'msg' => $msg,
+        'error' => $err,
+        'hasError' => true
+    );
+    return json_encode($arr);
+}
 
 ?>
 

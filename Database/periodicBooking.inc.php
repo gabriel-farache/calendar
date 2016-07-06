@@ -30,20 +30,10 @@ function get_periodic_bookings($db) {
             }
             $jsn = json_encode($data);
         } else {
-            header("HTTP/1.1 418 I am a teapot");
-            $arr = array(
-                'msg' => "",
-                'error' => $err
-            );
-            $jsn = json_encode($arr);
+            $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
         }
     } else {
-        header("HTTP/1.1 418 I am a teapot");
-        $arr = array(
-            'msg' => "",
-            'error' => $err
-        );
-        $jsn = json_encode($arr);
+        $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
     }
     
     print_r($jsn);
@@ -81,20 +71,10 @@ function getPeriodicBooking($db, $periodicBookingID)
             );
             $jsn  = json_encode($data);
         } else {
-            header("HTTP/1.1 418 I am a teapot");
-            $arr = array(
-                'msg' => "",
-                'error' => $err["err"]
-            );
-            $jsn = json_encode($arr);
+            $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
         }
     } else {
-        header("HTTP/1.1 418 I am a teapot");
-        $arr = array(
-            'msg' => "",
-            'error' => $err["err"]
-        );
-        $jsn = json_encode($arr);
+        $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
     }
     return $jsn;
 }
@@ -137,20 +117,10 @@ function add_periodic_booking($db) {
             );
             $jsn = json_encode($arr);
         } else {
-            header("HTTP/1.1 424 Method failure");
-            $arr = array(
-                'msg' => "",
-                'error' => $err
-            );
-            $jsn = json_encode($arr);
+            $jsn = handleMongoErr("HTTP/1.1 424 Method failure", "", $err);
         }
     } else {
-        header("HTTP/1.1 424 Method failure");
-        $arr = array(
-            'msg' => "",
-            'error' => $err
-        );
-        $jsn = json_encode($arr);
+        $jsn = handleMongoErr("HTTP/1.1 424 Method failure", "", $err);
     }
     print_r($jsn);
 }
@@ -172,12 +142,7 @@ function delete_periodic_booking($db) {
                          (int)$currentWeek, $dayStr, $leftWeekDuration);
         }
     } else {
-        header("HTTP/1.1 418 I am a teapot");
-        $arr = array(
-            'msg' => "",
-            'error' => $err
-        );
-        $jsn = json_encode($arr);
+        $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
     }
     
     print_r($jsn);
@@ -193,12 +158,7 @@ function delete_periodic_booking_entry($db, $collection, $periodicBookingID, $us
     if (is_null($err["err"]) === TRUE) {
 
     } else {
-        header("HTTP/1.1 418 I am a teapot");
-        $arr = array(
-            'msg' => "",
-            'error' => $err
-        );
-        $jsn = json_encode($arr);
+        $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
     }
 
     return $jsn;
@@ -245,35 +205,17 @@ function delete_booking_booked_for_periodic_booking($db, $periodicBooking, $curr
                     );
                     $jsn = json_encode($arr);
                 } else {
-                    header("HTTP/1.1 418 I am a teapot");
-                    $arr = array(
-                        'msg' => "Error when executing part 2",
-                        'error' => $err
-                    );
-                    $jsn = json_encode($arr);
+                    $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "Error when executing part 2", $err);
                 } 
             } else {
-                header("HTTP/1.1 418 I am a teapot");
-                $arr = array(
-                    'msg' => "Error when executing part 1",
-                    'error' => $err
-                );
-                $jsn = json_encode($arr);
+                $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "Error when executing part 1", $err);
             }
         } else {
-            $arr = array(
-                'msg' => "Error when getting the collection",
-                'error' => $err
-            );
-            $jsn = json_encode($arr);
+            $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "Error when getting the collection", $err);
         }
 
     } else {
-        $arr = array(
-            'msg' => "The periodic Booking ID is not set or the booking is not validated",
-            'error' => $periodicBooking
-        );
-        $jsn = json_encode($arr);
+        $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "The periodic Booking ID is not set or the booking is not validated", $periodicBooking);
     }
 
     return $jsn;
@@ -301,20 +243,10 @@ function validate_periodic_booking($db) {
             );
             $jsn = json_encode($arr);
         } else {
-            header("HTTP/1.1 418 I am a teapot");
-            $arr = array(
-                'msg' => "",
-                'error' => $err
-            );
-            $jsn = json_encode($arr);
+            $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
         }
     } else {
-        header("HTTP/1.1 418 I am a teapot");
-        $arr = array(
-            'msg' => "",
-            'error' => $err
-        );
-        $jsn = json_encode($arr);
+        $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
     }
     print_r($jsn);
 }

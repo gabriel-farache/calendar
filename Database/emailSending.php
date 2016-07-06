@@ -32,12 +32,7 @@ if(isValidAndAdminToken($adminAuthToken)){
     
     print_r($jsn);
 } else {
-    header("HTTP/1.1 401 Unauthorized");
-    $arr = array(
-        'errorCode' => "-1",
-        'error' => 'Not a valid admin action.'
-    );
-    $jsn = json_encode($arr);
+    $jsn = handleCommonErr("HTTP/1.1 401 Unauthorized", "Not a valid admin action.", -1);
     print_r($jsn);
 }
 

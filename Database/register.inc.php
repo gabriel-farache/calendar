@@ -46,38 +46,21 @@ function register($db)
                 );
                 $jsn = json_encode($arr);
             } else {
-                header("HTTP/1.1 401 Unauthorized");
-                $arr = array(
-                    'msg' => "",
-                    'error' => $err
-                );
-                $jsn = json_encode($arr);
+                $jsn = handleMongoErr("HTTP/1.1 401 Unauthorized", "", $err);
             }
             
         } else {
             if (is_null($result) !== TRUE) {
-                header("HTTP/1.1 409 Conflict");
-                $arr = array(
-                    'msg' => "",
-                    'error' => "The user '" . $username . "' already exists"
-                );
-                $jsn = json_encode($arr);
+                $jsn = handleMongoErr("HTTP/1.1 409 Conflict",
+                    "The user '" . $username . "' already exists",
+                    $err);
             } else {
-                header("HTTP/1.1 409 Conflict");
-                $arr = array(
-                    'msg' => "",
-                    'error' => $err
-                );
-                $jsn = json_encode($arr);
+                $jsn = handleMongoErr("HTTP/1.1 409 Conflict", "", $err);
             }
         }
         
     } else {
-        header("HTTP/1.1 401 Unauthorized");
-        $arr = array(
-            'error' => 'The admin token is not good: ' . $generatedAdminToken
-        );
-        $jsn = json_encode($arr);
+        $jsn = handleMongoErr("401 Unauthorized", "The admin token is not good: ' . $generatedAdminToken", $err);
     }
     print_r($jsn);
 }

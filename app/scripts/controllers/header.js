@@ -7,12 +7,6 @@ angular
         $scope.username = $scope.guestName;
         $scope.isAdmin = false;
 
-        $scope.$on('handleBroadcast', function() {
-	        var message = sharedService.message;
-	        $scope.username = message.username;
-	        $scope.username = $scope.username === undefined ? $scope.guestName : $scope.username;
-	        $scope.isAdmin = message.isAdmin;
-	    });
 
     	var globalsCookies = $cookieStore.get('globals');
       	if(globalsCookies !== undefined) {
@@ -26,4 +20,15 @@ angular
 	        $scope.isAdmin = false;
             $location.path('/');
         };
+
+        function handleBroadcastCallbackFunction() {
+            var message = sharedService.message;
+            $scope.username = message.username;
+            $scope.username = $scope.username === undefined ? $scope.guestName : $scope.username;
+            $scope.isAdmin = message.isAdmin;
+        }
+
+        $scope.$on('handleBroadcast', handleBroadcastCallbackFunction);
+
+
     });

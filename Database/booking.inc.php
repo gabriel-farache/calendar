@@ -38,20 +38,10 @@ function add_booking($db)
             );
             $jsn = json_encode($arr);
         } else {
-            header("HTTP/1.1 424 Method failure");
-            $arr = array(
-                'msg' => "",
-                'error' => $err
-            );
-            $jsn = json_encode($arr);
+            $jsn = handleMongoErr("HTTP/1.1 424 Method failure", "", $err);
         }
     } else {
-        header("HTTP/1.1 424 Method failure");
-        $arr = array(
-            'msg' => "",
-            'error' => $err
-        );
-        $jsn = json_encode($arr);
+        $jsn = handleMongoErr("HTTP/1.1 424 Method failure", "", $err);
     }
     print_r($jsn);
 }
@@ -83,20 +73,10 @@ function get_booking($db)
             );
             $jsn  = json_encode($data);
         } else {
-            header("HTTP/1.1 418 I am a teapot");
-            $arr = array(
-                'msg' => "",
-                'error' => $err["err"]
-            );
-            $jsn = json_encode($arr);
+            $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
         }
     } else {
-        header("HTTP/1.1 418 I am a teapot");
-        $arr = array(
-            'msg' => "",
-            'error' => $err["err"]
-        );
-        $jsn = json_encode($arr);
+        $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
     }
     print_r($jsn);
 }
@@ -133,20 +113,10 @@ function get_day_bookings($db)
             }
             $jsn  = json_encode($data);
         } else {
-            header("HTTP/1.1 418 I am a teapot");
-            $arr = array(
-                'msg' => "",
-                'error' => $err["err"]
-            );
-            $jsn = json_encode($arr);
+            $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
         }
     } else {
-        header("HTTP/1.1 418 I am a teapot");
-        $arr = array(
-            'msg' => "",
-            'error' => $err["err"]
-        );
-        $jsn = json_encode($arr);
+        $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
     }
     print_r($jsn);
 }
@@ -176,20 +146,10 @@ function get_all_booking($db)
             }
             $jsn = json_encode($data);
         } else {
-            header("HTTP/1.1 418 I am a teapot");
-            $arr = array(
-                'msg' => "",
-                'error' => $err
-            );
-            $jsn = json_encode($arr);
+            $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
         }
     } else {
-        header("HTTP/1.1 418 I am a teapot");
-        $arr = array(
-            'msg' => "",
-            'error' => $err
-        );
-        $jsn = json_encode($arr);
+        $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
     }
     print_r($jsn);
     
@@ -230,20 +190,10 @@ function get_week_booking($db)
             }
             $jsn = json_encode($data);
         } else {
-            header("HTTP/1.1 418 I am a teapot");
-            $arr = array(
-                'msg' => "",
-                'error' => $err["err"]
-            );
-            $jsn = json_encode($arr);
+            $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
         }
     } else {
-        header("HTTP/1.1 418 I am a teapot");
-        $arr = array(
-            'msg' => "",
-            'error' => $err["err"]
-        );
-        $jsn = json_encode($arr);
+        $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
     }
     print_r($jsn);
     
@@ -302,20 +252,10 @@ function get_conflicted_bookings($db){
                 }
                 $jsn = json_encode($data);
             } else {
-                header("HTTP/1.1 418 I am a teapot");
-                $arr = array(
-                    'msg' => "",
-                    'error' => $err["err"]
-                );
-                $jsn = json_encode($arr);
+                $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
             }
         } else {
-            header("HTTP/1.1 418 I am a teapot");
-            $arr = array(
-                'msg' => "",
-                'error' => $err["err"]
-            );
-            $jsn = json_encode($arr);
+            $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
         }
 
     print_r($jsn);
@@ -341,20 +281,10 @@ function delete_booking($db)
             );
             $jsn = json_encode($arr);
         } else {
-            header("HTTP/1.1 418 I am a teapot");
-            $arr = array(
-                'msg' => "",
-                'error' => $err
-            );
-            $jsn = json_encode($arr);
+            $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
         }
     } else {
-        header("HTTP/1.1 418 I am a teapot");
-        $arr = array(
-            'msg' => "",
-            'error' => $err
-        );
-        $jsn = json_encode($arr);
+        $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
     }
     
     print_r($jsn);
@@ -387,20 +317,10 @@ function delete_bookings($db)
             );
             $jsn = json_encode($arr);
         } else {
-            header("HTTP/1.1 418 I am a teapot");
-            $arr = array(
-                'msg' => "",
-                'error' => $errors
-            );
-            $jsn = json_encode($arr);
+            $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
         }
     } else {
-        header("HTTP/1.1 418 I am a teapot");
-        $arr = array(
-            'msg' => "",
-            'error' => $err
-        );
-        $jsn = json_encode($arr);
+        $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
     }
     print_r($jsn);
 }
@@ -440,20 +360,10 @@ function update_booking($db)
             );
             $jsn = json_encode($arr);
         } else {
-            header("HTTP/1.1 418 I am a teapot");
-            $arr = array(
-                'msg' => "",
-                'error' => $err
-            );
-            $jsn = json_encode($arr);
+            $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
         }
     } else {
-        header("HTTP/1.1 418 I am a teapot");
-        $arr = array(
-            'msg' => "",
-            'error' => $err
-        );
-        $jsn = json_encode($arr);
+        $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
     }
     print_r($jsn);
 }
@@ -481,20 +391,10 @@ function validate_booking($db)
             );
             $jsn = json_encode($arr);
         } else {
-            header("HTTP/1.1 418 I am a teapot");
-            $arr = array(
-                'msg' => "",
-                'error' => $err
-            );
-            $jsn = json_encode($arr);
+            $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
         }
     } else {
-        header("HTTP/1.1 418 I am a teapot");
-        $arr = array(
-            'msg' => "",
-            'error' => $err
-        );
-        $jsn = json_encode($arr);
+        $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
     }
     print_r($jsn);
 }

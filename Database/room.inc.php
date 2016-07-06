@@ -18,20 +18,10 @@ function get_rooms($db)
             }
             $jsn = json_encode($data);
         } else {
-            header("HTTP/1.1 418 I am a teapot");
-            $arr = array(
-                'msg' => "",
-                'error' => $err
-            );
-            $jsn = json_encode($arr);
+            $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
         }
     } else {
-        header("HTTP/1.1 418 I am a teapot");
-        $arr = array(
-            'msg' => "",
-            'error' => $err
-        );
-        $jsn = json_encode($arr);
+        $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
     }
     print_r($jsn);
 }
@@ -53,20 +43,10 @@ function update_room($db)
             );
             $jsn = json_encode($arr);
         } else {
-            header("HTTP/1.1 418 I am a teapot");
-            $arr = array(
-                'msg' => "",
-                'error' => $err
-            );
-            $jsn = json_encode($arr);
+            $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
         }
     } else {
-        header("HTTP/1.1 418 I am a teapot");
-        $arr = array(
-            'msg' => "",
-            'error' => $err
-        );
-        $jsn = json_encode($arr);
+        $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
     }
     
     print_r($jsn);
@@ -92,20 +72,10 @@ function add_room($db)
             );
             $jsn = json_encode($arr);
         } else {
-            header("HTTP/1.1 418 I am a teapot");
-            $arr = array(
-                'msg' => "",
-                'error' => $err
-            );
-            $jsn = json_encode($arr);
+            $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
         }
     } else {
-        header("HTTP/1.1 418 I am a teapot");
-        $arr = array(
-            'msg' => "",
-            'error' => $err
-        );
-        $jsn = json_encode($arr);
+        $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
     }
     
     print_r($jsn);
@@ -170,20 +140,10 @@ function delete_room($db)
             );
             $jsn = json_encode($arr);
         } else {
-            header("HTTP/1.1 418 I am a teapot");
-            $arr = array(
-                'msg' => "",
-                'error' => $err
-            );
-            $jsn = json_encode($arr);
+            $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
         }
     } else {
-        header("HTTP/1.1 418 I am a teapot");
-        $arr = array(
-            'msg' => "",
-            'error' => $err
-        );
-        $jsn = json_encode($arr);
+        $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
     }
     
     print_r($jsn);

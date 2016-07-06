@@ -53,29 +53,14 @@ function get_free_rooms_for_slot($db)
                 $jsn = json_encode($freeRooms);
                 
             } else {
-                header("HTTP/1.1 418 I am a teapot");
-                $arr = array(
-                    'msg' => "",
-                    'error' => $err
-                );
-                $jsn = json_encode($arr);
+                $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
             }
             
         } else {
-            header("HTTP/1.1 418 I am a teapot");
-            $arr = array(
-                'msg' => "",
-                'error' => $err
-            );
-            $jsn = json_encode($arr);
+            $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
         }
     } else {
-        header("HTTP/1.1 418 I am a teapot");
-        $arr = array(
-            'msg' => "",
-            'error' => $err
-        );
-        $jsn = json_encode($arr);
+        $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
     }
     print_r($jsn);
 }

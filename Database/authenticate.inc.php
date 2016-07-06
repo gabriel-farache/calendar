@@ -17,17 +17,10 @@ function authenticate($db)
         $isAdmin = $user['isAdmin'];
         return (createAuthenticationToken($db, $isAdmin));
     } else {
-        header("HTTP/1.1 401 Unauthorized");
         if (is_null($user) === TRUE) {
-            $arr = array(
-                'error' => "Le compte '" . utf8_encode($username) . "' n'exite pas."
-            );
-            $jsn = json_encode($arr);
+            $jsn = handleMongoErr("HTTP/1.1 401 Unauthorized", "The user ".$username." does not exist or wrong password", $err);
         } else {
-            $arr = array(
-                'error' => $err
-            );
-            $jsn = json_encode($arr);
+            $jsn = handleMongoErr("HTTP/1.1 401 Unauthorized", "", $err);
         }
     }
     print_r($jsn);
@@ -57,12 +50,10 @@ function createAuthenticationToken($db, $isAdmin)
         );
         $jsn = json_encode($arr);
     } else {
-        //header("HTTP/1.1 401 Unauthorized");
-        $arr = array(
-            'msg' => "",
-            'error' => 'Error when inserting token: ' . $token . ' endAvailability: ' . $endAvailability . '<br>' . $qryToken . '<br>' . $err
-        );
-        $jsn = json_encode($arr);
+        $jsn = handleMongoErr("HTTP/1.1 401 Unauthorized",
+         "Error when inserting token: ' . $token . ' endAvailability: ' . $endAvailability . '<br>' . $qryToken",
+          $err);
+
     }
     print_r($jsn);
 }

@@ -15,7 +15,6 @@ angular
         $scope.formattedPeriodicBookings = [];
         $scope.bookingsSharingSlotToBeCancelled = [];
         $scope.bookingConflitLoading = [];
-        $scope.warningBookingSharingSlot = 'Récupération des conflits.<br>Merci de patienter...';
         $scope.nbConflicts = [];
 
         this.periodicBookingStartingDay = undefined;
@@ -35,10 +34,6 @@ angular
         this.todayMonth = this.dateStart.month();
         this.todayYear = this.dateStart.year();
         this.monthWeeks = [[],[]];
-        this.selectedDay = this.todayDate;
-        this.selectedMonth = this.todayMonth;
-        this.selectedWeek = this.todayWeek;
-        this.selectedYear = this.todayYear;
         this.day = this.dateStart.format('ddd DD-MM-YYYY');
         this.selectedStartDay = undefined;
         this.selectedStartMonth = undefined;
