@@ -1,7 +1,7 @@
 
 'use strict';
 angular.module('calendarApp')
-  .controller('adminConsoleController', function ($scope, $cookieStore, $timeout, $sce, databaseService, sharedService, authenticationService) {
+  .controller('adminConsoleController', function ($scope, $cookieStore, $timeout, $sce, databaseService, sharedService, authenticationService, globalizationService) {
         $scope.adminToken = '';
         $scope.adminTokenEndTime = '';
         $scope.error = undefined;
@@ -34,8 +34,8 @@ angular.module('calendarApp')
                     },$scope.handleErrorDBCallback);
             } else {
                 $scope.dataLoading = false;
-                $scope.error = 'Clef d\'authentification inconnu';
-                $timeout(function () { $scope.error = undefined; }, $scope.timeoutTime); 
+                $scope.error = globalizationService.getLocalizedString('ADMIN_UNKNOWN_AUTH_KEY_MSG');
+                $timeout($scope.removeErrorMessage, $scope.timeoutTime); 
             }
             
         };
@@ -70,8 +70,8 @@ angular.module('calendarApp')
                 then(function() {
                     $scope.dataLoading = false;
                     $scope.initRooms();
-                    $scope.messageAdmin = 'Salle ajoutée.';
-                    $timeout(function () { $scope.messageAdmin = undefined; }, $scope.timeoutTime); 
+                    $scope.messageAdmin = globalizationService.getLocalizedString('ADMIN_ROOM_UPDATED_MSG');
+                    $timeout($scope.removeAdminMessage, $scope.timeoutTime); 
                 },$scope.handleErrorDBCallback);
         };
 
@@ -81,14 +81,14 @@ angular.module('calendarApp')
                 then(function() {
                     $scope.dataLoading = false;
                     $scope.initRooms();
-                    $scope.messageAdmin = 'Salle supprimée.';
-                    $timeout(function () { $scope.messageAdmin = undefined; }, $scope.timeoutTime); 
+                    $scope.messageAdmin = globalizationService.getLocalizedString('ADMIN_ROOM_DELETED_MSG');
+                    $timeout($scope.removeAdminMessage, $scope.timeoutTime); 
                 },$scope.handleErrorDBCallback);
         };
 
         this.addNewRoom = function() {
             var newRoom = {
-                name: 'Nouvelle salle',
+                name: globalizationService.getLocalizedString('ADMIN_NEW_ROOM_MSG'),
                 oldName: undefined,
                 isNew: true
             };
@@ -126,8 +126,8 @@ angular.module('calendarApp')
                 then(function() {
                     $scope.dataLoading = false;
                     $scope.initBookers();
-                    $scope.messageAdmin = 'Utilisateur mis à jour.';
-                    $timeout(function () { $scope.messageAdmin = undefined; }, $scope.timeoutTime); 
+                    $scope.messageAdmin = globalizationService.getLocalizedString('ADMIN_USER_UPDATED_MSG');
+                    $timeout($scope.removeAdminMessage, $scope.timeoutTime); 
                 },$scope.handleErrorDBCallback);
         };
 
@@ -137,8 +137,8 @@ angular.module('calendarApp')
                 then(function() {
                     $scope.dataLoading = false;
                     $scope.initBookers();
-                    $scope.messageAdmin = 'Utilisateur supprimé.';
-                    $timeout(function () { $scope.messageAdmin = undefined; }, $scope.timeoutTime); 
+                    $scope.messageAdmin = globalizationService.getLocalizedString('ADMIN_USER_DELETED_MSG');
+                    $timeout($scope.removeAdminMessage, $scope.timeoutTime); 
                 },$scope.handleErrorDBCallback);
         };
 
@@ -154,7 +154,7 @@ angular.module('calendarApp')
       }
       $scope.dataLoading = false;
       $scope.error = data.error;
-      $timeout(function () {  }, $scope.timeoutTime); 
+      $timeout($scope.removeErrorMessage, $scope.timeoutTime); 
     };
 
     $scope.removeErrorMessage = function() {

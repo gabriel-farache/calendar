@@ -29,6 +29,8 @@
    "CALENDAR_BOOKERS" : "Bookers",
    "CALENDAR_FORM_ERROR": "You must fill all the fields",
    "CALENDAR_SELECTED_DAY_ERROR": "You must select a date",
+   "CALENDAR_BOOKING_DELETED_MSG" : "Booking deleted.",
+   "CALENDAR_BOOKING_VALIDATED_MSG" : "Booking validated!",
 
    "FREE_SLOT_SELECTED_DAY_LABEL": "",
    "FREE_SLOT_SCHEDULE_FROM_LABEL": "From: ",
@@ -77,12 +79,19 @@
    "ADMIN_DELETE_USER_LABEL" : "Delete",
    "ADMIN_UPDATE_USER_LABEL" : "Update",
    "ADMIN_VALIDATE_USER_LABEL" : "Validate",
+   "ADMIN_USER_DELETED_MSG": "User deleted.",
+   "ADMIN_USER_UPDATED_MSG" : "User updated.",
+   "ADMIN_UNKNOWN_AUTH_KEY_MSG" : "Unknown authentication key!",
+   "ADMIN_ROOM_UPDATED_MSG" : "Room added.",
+   "ADMIN_ROOM_DELETED_MSG" : "Room deleted.",
+   "ADMIN_NEW_ROOM_MSG" : "New room",
 
    "LOGIN_TITLE" : "Login",
    "LOGIN_USERNAME_LABEL" : "Username",
    "LOGIN_PASSWORD_LABEL" : "Password",
    "LOGIN_LOGIN_LABEL" : "Login",
    "LOGIN_REGISTER_LABEL" : "Register",
+   "LOGIN_ENCODE_PASSWORD_ERROR_MSG" : "Error when encoding password",
 
    "REGISTER_TITLE" : "Register",
    "REGISTER_EMAIL_LABEL" : "Contact email: ",
@@ -99,6 +108,7 @@
    "USER_PASSWORD_LABEL" : "Password: ",
    "USER_NEW_PASSWORD_LABEL" : "New password (optionnal): ",
    "USER_VALIDATE_LABEL" : "Validate",
+   "USER_UPDATE_SUCCESSFUL_MSG" : "Paramètres mis à jour.",
 
    "VALIDATION_EMAIL_SUBJECT": "Booking validated - The <BOOKING_DAY> from <BOOKING_SCHEDULE_START> to <BOOKING_SCHEDULE_END>",
    "VALIDATION_EMAIL_BODY": "Dear, <br>We are pleased to inform you that you booking of the <BOOKING_DAY> from <BOOKING_SCHEDULE_START> to <BOOKING_SCHEDULE_END> has been validated.<br>Kind regards,<br>The mayor. ",

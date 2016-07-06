@@ -1,6 +1,6 @@
 'use strict';
 angular.module('calendarApp')
-  .controller('userConsoleController', function ($scope, $cookieStore, $timeout, databaseService, sharedService, authenticationService) {
+  .controller('userConsoleController', function ($scope, $cookieStore, $timeout, databaseService, sharedService, authenticationService, globalizationService) {
     $scope.timeoutTime = 10000;
     $scope.isUpdating = false;
     $scope.booker = {};
@@ -32,21 +32,31 @@ angular.module('calendarApp')
     this.updateBookerSettings = function() {
         $scope.dataLoading = true;
         $scope.booker.password = authenticationService.encodeDecode.encode($scope.booker.password);
-        if($scope.booker.newPassword !== undefined) {
-            $scope.booker.newPassword = authenticationService.encodeDecode.encode($scope.booker.newPassword);
-        }
-        databaseService.updateBookerSettingsDB($scope.booker, $scope.authToken).
-            then(function() {
-                $scope.message = 'Paramètres mis à jour.';
-                $scope.isUpdating = false;
-                $scope.dataLoading = false;
-                $scope.booker.newPassword = undefined;
-                $scope.booker.password = undefined;
-                authenticationService.SetCredentials($scope.booker.booker, $scope.authToken, $scope.isAdmin);
-                $timeout(function () { $scope.message = undefined; }, $scope.timeoutTime);
-                $scope.initUser();
-            },$scope.handleErrorDBCallback);
 
+        if($scope.booker.password !== undefined){
+            if($scope.booker.newPassword !== undefined) {
+                $scope.booker.newPassword = authenticationService.encodeDecode.encode($scope.booker.newPassword);
+            }
+            if($scope.booker.newPassword !== undefined){
+                databaseService.updateBookerSettingsDB($scope.booker, $scope.authToken).
+                    then(function() {
+                        $scope.message = globalizationService.getLocalizedString('USER_UPDATE_SUCCESSFUL_MSG');
+                        $scope.isUpdating = false;
+                        $scope.dataLoading = false;
+                        $scope.booker.newPassword = undefined;
+                        $scope.booker.password = undefined;
+                        authenticationService.SetCredentials($scope.booker.booker, $scope.authToken, $scope.isAdmin);
+                        $timeout($scope.removeMessage, $scope.timeoutTime);
+                        $scope.initUser();
+                },$scope.handleErrorDBCallback);
+            } else {
+                $scope.error = globalizationService.getLocalizedString('LOGIN_ENCODE_PASSWORD_ERROR_MSG');
+                $timeout($scope.removeErrorMessage, $scope.timeoutTime); 
+            }
+        } else {
+            $scope.error = globalizationService.getLocalizedString('LOGIN_ENCODE_PASSWORD_ERROR_MSG');
+            $timeout($scope.removeErrorMessage, $scope.timeoutTime); 
+        }
     };
 
     this.enableUpdateSettings = function() {
@@ -65,7 +75,7 @@ angular.module('calendarApp')
       }
       $scope.dataLoading = false;
       $scope.error = data.error;
-      $timeout(function () {  }, $scope.timeoutTime); 
+      $timeout($scope.removeErrorMessage, $scope.timeoutTime); 
     };
 
     $scope.removeErrorMessage = function() {

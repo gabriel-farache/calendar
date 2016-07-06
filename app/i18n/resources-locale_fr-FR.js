@@ -29,8 +29,8 @@
    "CALENDAR_BOOKERS" : "Associations",
    "CALENDAR_FORM_ERROR": "Vous devez renseigner tous les champs",
    "CALENDAR_SELECTED_DAY_ERROR": "Vous devez choisir une date",
-   "CALENDAR_FORM_ERROR": "You must fill all the fields",
-   "CALENDAR_SELECTED_DAY_ERROR": "You must select a date",
+   "CALENDAR_BOOKING_DELETED_MSG" : "Réservation supprimée.",
+   "CALENDAR_BOOKING_VALIDATED_MSG" : "Réservation validée !",
 
    "FREE_SLOT_SELECTED_DAY_LABEL": "Le : ",
    "FREE_SLOT_SCHEDULE_FROM_LABEL": "De : ",
@@ -79,12 +79,19 @@
    "ADMIN_DELETE_USER_LABEL" : "Supprimer",
    "ADMIN_UPDATE_USER_LABEL" : "Modifier",
    "ADMIN_VALIDATE_USER_LABEL" : "Valider",
+   "ADMIN_USER_DELETED_MSG": "Utilisateur supprimé.",
+   "ADMIN_USER_UPDATED_MSG" : "Utilisateur mis à jour.",
+   "ADMIN_UNKNOWN_AUTH_KEY_MSG" : "Clef d'authentification inconnu",
+   "ADMIN_ROOM_UPDATED_MSG" : "Salle ajoutée.",
+   "ADMIN_ROOM_DELETED_MSG" : "Salle supprimée.",
+   "ADMIN_NEW_ROOM_MSG" : "Nouvelle salle",
 
    "LOGIN_TITLE" : "Authentification",
    "LOGIN_USERNAME_LABEL" : "Nom d'utilisateur",
    "LOGIN_PASSWORD_LABEL" : "Mot de passe",
    "LOGIN_LOGIN_LABEL" : "S'authentifier",
    "LOGIN_REGISTER_LABEL" : "S'enregistrer",
+   "LOGIN_ENCODE_PASSWORD_ERROR_MSG" : "Erreur lors de l'encodage du mot de passe",
 
    "REGISTER_TITLE" : "S'enregistrer",
    "REGISTER_EMAIL_LABEL" : "Address email de contact : ",
@@ -101,6 +108,7 @@
    "USER_PASSWORD_LABEL" : "Mot de passe : ",
    "USER_NEW_PASSWORD_LABEL" : "Nouveau mot de passe (optionnel) : ",
    "USER_VALIDATE_LABEL" : "Valider",
+   "USER_UPDATE_SUCCESSFUL_MSG" : "Paramètres mis à jour.",
    
    "VALIDATION_EMAIL_SUBJECT": "Réservation validée - le <BOOKING_DAY> de <BOOKING_SCHEDULE_START> à <BOOKING_SCHEDULE_END>",
    "VALIDATION_EMAIL_BODY": "Bonjour, <br>Nous avons le plaisir de vous informer que votre réservation du <BOOKING_DAY> de <BOOKING_SCHEDULE_START> à <BOOKING_SCHEDULE_END> est validée.<br>Cordialement,<br>La Mairie. ",

@@ -3,7 +3,7 @@
 
 angular
     .module('calendarApp')
-    .controller('loginController', function LoginController($scope, $location, $routeParams, $timeout, authenticationService) {
+    .controller('loginController', function LoginController($scope, $location, $routeParams, $timeout, authenticationService, globalizationService) {
         $scope.username = '';
         this.password = '';
         $scope.dataLoading = false;
@@ -22,12 +22,17 @@ angular
         $scope.error = undefined;
         $scope.dataLoading = true;
         var encodedPassword = authenticationService.encodeDecode.encode(this.password);
-        authenticationService.Login($scope.username,encodedPassword).
-            then(function (response) {
-                    var data = response.data;
-                    authenticationService.SetCredentials($scope.username, data.token, data.isAdmin);
-                    $location.path('/');
-                },$scope.handleErrorDBCallback);
+        if(encodedPassword !== undefined){
+          authenticationService.Login($scope.username,encodedPassword).
+              then(function (response) {
+                      var data = response.data;
+                      authenticationService.SetCredentials($scope.username, data.token, data.isAdmin);
+                      $location.path('/');
+                  },$scope.handleErrorDBCallback);
+        } else {
+          $scope.error = globalizationService.getLocalizedString('LOGIN_ENCODE_PASSWORD_ERROR_MSG');
+          $timeout($scope.removeErrorMessage, $scope.timeoutTime); 
+        }
     };
     
     $scope.handleErrorDBCallback = function(response){
@@ -42,7 +47,7 @@ angular
       }
       $scope.dataLoading = false;
       $scope.error = data.error;
-      $timeout(function () {  }, $scope.timeoutTime); 
+      $timeout($scope.removeErrorMessage, $scope.timeoutTime); 
     };
 
     $scope.removeErrorMessage = function() {

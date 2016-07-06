@@ -465,7 +465,7 @@ angular.module('calendarApp')
                 'CANCEL_EMAIL_SUBJECT', 'CANCEL_EMAIL_BODY', $scope.handleErrorDBCallback);
         commonService.cancelConflictedBookings($scope.authToken ,booking.id,
           bookingsSharingSlotToBeCancelled, $scope.initWeekBookings, $scope.handleErrorDBCallback);
-        $scope.messageAdmin = 'Réservation validée !';
+        $scope.messageAdmin = globalizationService.getLocalizedString('CALENDAR_BOOKING_VALIDATED_MSG');
         $scope.dataLoading = false;
       }
     });
@@ -487,8 +487,8 @@ angular.module('calendarApp')
       databaseService.deleteBookingDB($scope.booking.id, $scope.username, $scope.authToken)
       .then( function(){
         $scope.initWeekBookings();
-        $scope.message = 'Réservation supprimée.';
-        $timeout(function () { $scope.message = undefined; }, $scope.timeoutTime);
+        $scope.message = globalizationService.getLocalizedString('CALENDAR_BOOKING_DELETED_MSG');
+        $timeout($scope.removeMessage, $scope.timeoutTime);
       },$scope.handleErrorDBCallback);
     };
 
@@ -505,7 +505,7 @@ angular.module('calendarApp')
       }
       $scope.dataLoading = false;
       $scope.error = data.error;
-      $timeout(function () {  }, $scope.timeoutTime); 
+      $timeout($scope.removeErrorMessage, $scope.timeoutTime); 
     };
 
     $scope.removeErrorMessage = function() {

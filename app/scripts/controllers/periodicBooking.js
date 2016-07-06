@@ -159,7 +159,7 @@ angular
                     $scope.dataLoading = false;
                     $scope.getPeriodicBookings();
                     $scope.message = 'Réservation périodique soumise.';
-                    $timeout(function () { $scope.message = undefined; }, $scope.timeoutTime);
+                    $timeout($scope.removeMessage, $scope.timeoutTime);
                 },$scope.handleErrorDBCallback);
         };
 
@@ -188,7 +188,7 @@ angular
                         $scope.dataLoading = false;
                         $scope.getPeriodicBookings();
                         $scope.message = 'Réservation périodique supprimée.';
-                        $timeout(function () { $scope.message = undefined; }, $scope.timeoutTime);
+                        $timeout($scope.removeMessage, $scope.timeoutTime);
                     },$scope.handleErrorDBCallback);$scope.formatPeriodicBookings();
             },$scope.handleErrorDBCallback);
             
@@ -269,7 +269,7 @@ angular
                             $scope.sendConfirmationEmail(response.data);
                         }, $scope.handleErrorDBCallback);
                     $scope.message = 'Réservation périodique validée.';
-                    $timeout(function () { $scope.message = undefined; }, $scope.timeoutTime);
+                    $timeout($scope.removeMessage, $scope.timeoutTime);
                 }, $scope.handleErrorDBCallback);
         };
 
@@ -478,7 +478,7 @@ angular
           }
           $scope.dataLoading = false;
           $scope.error = data.error;
-          $timeout(function () { $scope.error = undefined; }, $scope.timeoutTime); 
+          $timeout($scope.removeErrorMessage, $scope.timeoutTime); 
         };
 
         $scope.removeErrorMessage = function() {
