@@ -14,3 +14,13 @@ rsconf = {
 
 
 rs.initiate(rsconf);
+
+
+npm install --global yo
+npm install -g grunt-cli bower yo generator-karma generator-angular compass
+npm install grunt --save-dev
+npm install grunt-contrib-jshint --save-dev
+npm install --save-dev time-grunt
+npm install --save-dev jit-grunt
+npm install --save-dev jshint-stylish
+sudo apt-get install mongodb-server
