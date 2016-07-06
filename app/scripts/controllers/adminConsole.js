@@ -31,11 +31,7 @@ angular.module('calendarApp')
                         $scope.dataLoading = false;
                         $scope.adminToken = data.adminToken;
                         $scope.adminTokenEndTime = data.adminTokenEndTime;
-                    }, function (response) {
-                        $scope.dataLoading = false;
-                        $scope.handleErrorDB(response.status, response.data);
-                    }
-                );
+                    },$scope.handleErrorDBCallback);
             } else {
                 $scope.dataLoading = false;
                 $scope.error = 'Clef d\'authentification inconnu';
@@ -60,9 +56,7 @@ angular.module('calendarApp')
                     $scope.rooms.push(newRoom);
                 }
                 $scope.error = undefined;
-            },function(response){
-                $scope.handleErrorDB(response.status, response.data);
-            });
+            },$scope.handleErrorDBCallback);
         };
 
 
@@ -76,11 +70,9 @@ angular.module('calendarApp')
                 then(function() {
                     $scope.dataLoading = false;
                     $scope.initRooms();
-                    $scope.messageAdmin = "Salle ajoutée.";
+                    $scope.messageAdmin = 'Salle ajoutée.';
                     $timeout(function () { $scope.messageAdmin = undefined; }, $scope.timeoutTime); 
-                }, function(response) {
-                    $scope.handleErrorDB(response.status, response.data);
-                });
+                },$scope.handleErrorDBCallback);
         };
 
         this.deleteRoomDB = function(room) {
@@ -89,16 +81,14 @@ angular.module('calendarApp')
                 then(function() {
                     $scope.dataLoading = false;
                     $scope.initRooms();
-                    $scope.messageAdmin = "Salle supprimée.";
+                    $scope.messageAdmin = 'Salle supprimée.';
                     $timeout(function () { $scope.messageAdmin = undefined; }, $scope.timeoutTime); 
-                }, function(response) {
-                    $scope.handleErrorDB(response.status, response.data);
-                });
+                },$scope.handleErrorDBCallback);
         };
 
         this.addNewRoom = function() {
             var newRoom = {
-                name: "Nouvelle salle",
+                name: 'Nouvelle salle',
                 oldName: undefined,
                 isNew: true
             };
@@ -123,9 +113,7 @@ angular.module('calendarApp')
                     $scope.bookers.push(newBooker);
                 }
                 $scope.error = undefined;
-            },function(response){
-                $scope.handleErrorDB(response.status, response.data);
-            });
+            },$scope.handleErrorDBCallback);
         };
 
         this.modifyBooker = function(booker){
@@ -138,11 +126,9 @@ angular.module('calendarApp')
                 then(function() {
                     $scope.dataLoading = false;
                     $scope.initBookers();
-                    $scope.messageAdmin = "Utilisateur mis à jour.";
+                    $scope.messageAdmin = 'Utilisateur mis à jour.';
                     $timeout(function () { $scope.messageAdmin = undefined; }, $scope.timeoutTime); 
-                }, function(response) {
-                    $scope.handleErrorDB(response.status, response.data);
-                });
+                },$scope.handleErrorDBCallback);
         };
 
         this.deleteBookerDB = function(booker) {
@@ -151,33 +137,37 @@ angular.module('calendarApp')
                 then(function() {
                     $scope.dataLoading = false;
                     $scope.initBookers();
-                    $scope.messageAdmin = "Utilisateur supprimé.";
+                    $scope.messageAdmin = 'Utilisateur supprimé.';
                     $timeout(function () { $scope.messageAdmin = undefined; }, $scope.timeoutTime); 
-                }, function(response) {
-                    $scope.handleErrorDB(response.status, response.data);
-                });
+                },$scope.handleErrorDBCallback);
         };
 
-        $scope.handleErrorDB = function(status, data){
-          if(data.errorCode === -1) {
-            authenticationService.ClearCredentials();
-          }
-          $scope.dataLoading = false;
-          $scope.error = data.error;
-          $timeout(function () { $scope.error = undefined; }, $scope.timeoutTime); 
-        };
+    $scope.handleErrorDBCallback = function(response){
+        $scope.handleErrorDB(response.status, response.data); 
+    };
 
-        $scope.removeErrorMessage = function() {
-          $scope.error = undefined;
-        };
+    $scope.handleErrorDB = function(status, data){
+      if(data !== undefined && 
+          data.errorCode !== undefined && 
+          data.errorCode === -1) {
+        authenticationService.ClearCredentials();
+      }
+      $scope.dataLoading = false;
+      $scope.error = data.error;
+      $timeout(function () {  }, $scope.timeoutTime); 
+    };
 
-        $scope.removeAdminMessage = function() {
-          $scope.messageAdmin = undefined;
-        };
+    $scope.removeErrorMessage = function() {
+      $scope.error = undefined;
+    };
 
-        $scope.removeMessage = function() {
-          $scope.message = undefined;
-        };
+    $scope.removeAdminMessage = function() {
+      $scope.messageAdmin = undefined;
+    };
+
+    $scope.removeMessage = function() {
+      $scope.message = undefined;
+    };
 
 });
 

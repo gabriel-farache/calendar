@@ -16,6 +16,8 @@ angular
         $scope.bookingsSharingSlotToBeCancelled = [];
         $scope.bookingConflitLoading = [];
         $scope.nbConflicts = [];
+        $scope.nbQueriesConflicts = [];
+        $scope.nbQueriesPropagate = [];
 
         this.periodicBookingStartingDay = undefined;
         this.periodicBookingStartingWeek = undefined;
@@ -121,9 +123,9 @@ angular
                                             .add(periodicBooking.periodicBookingWeeksDuration,'week')
                                             .format('ddd DD-MM-YYYY'),
                         'scheduleStart': (periodicBooking.periodicBookingScheduleStart+'h')
-                                            .replace(".5h", "h30"),
+                                            .replace('.5h', 'h30'),
                         'scheduleEnd' :  (periodicBooking.periodicBookingScheduleEnd+'h')
-                                            .replace(".5h", "h30"),
+                                            .replace('.5h', 'h30'),
                         'periodicBookingWeeksDuration' : periodicBooking.periodicBookingWeeksDuration,
                         'id'            : periodicBooking.id,
                         'room'          : periodicBooking.room,
@@ -134,7 +136,7 @@ angular
                     $scope.formattedPeriodicBookings.push(formatPeriodicBooking);
                 } catch (e) {
                     $scope.error = e;
-                    $timeout(function () { $scope.error = undefined; }, $scope.timeoutTime);
+                    $timeout($scope.removeErrorMessage, $scope.timeoutTime);
                 }
             }
 
@@ -143,20 +145,20 @@ angular
         this.addPeriodicBooking = function () {
             $scope.dataLoading = true;
             var newPeriodicBooking = {
-                    "periodicBookingStartingDay" : this.periodicBookingStartingDay,
-                    "periodicBookingScheduleStart" : this.periodicBookingScheduleStart,
-                    "periodicBookingScheduleEnd" : this.periodicBookingScheduleEnd,
-                    "periodicBookingStartingMonth" : this.selectedStartMonth,
-                    "periodicBookingStartingYear" : this.selectedStartYear,
-                    "periodicBookingWeeksDuration" : this.periodicBookingWeeksDuration,
-                    "room" : this.periodicBookingRoom
+                    'periodicBookingStartingDay' : this.periodicBookingStartingDay,
+                    'periodicBookingScheduleStart' : this.periodicBookingScheduleStart,
+                    'periodicBookingScheduleEnd' : this.periodicBookingScheduleEnd,
+                    'periodicBookingStartingMonth' : this.selectedStartMonth,
+                    'periodicBookingStartingYear' : this.selectedStartYear,
+                    'periodicBookingWeeksDuration' : this.periodicBookingWeeksDuration,
+                    'room' : this.periodicBookingRoom
                 };
             databaseService.addPeriodicBookingDB(newPeriodicBooking, $scope.username, $scope.authToken)
                 .then(function() {
                     $scope.error = undefined;
                     $scope.dataLoading = false;
                     $scope.getPeriodicBookings();
-                    $scope.message = "Réservation périodique soumise.";
+                    $scope.message = 'Réservation périodique soumise.';
                     $timeout(function () { $scope.message = undefined; }, $scope.timeoutTime);
                 },$scope.handleErrorDBCallback);
         };
@@ -185,7 +187,7 @@ angular
                         $scope.error = undefined;
                         $scope.dataLoading = false;
                         $scope.getPeriodicBookings();
-                        $scope.message = "Réservation périodique supprimée.";
+                        $scope.message = 'Réservation périodique supprimée.';
                         $timeout(function () { $scope.message = undefined; }, $scope.timeoutTime);
                     },$scope.handleErrorDBCallback);$scope.formatPeriodicBookings();
             },$scope.handleErrorDBCallback);
@@ -195,7 +197,7 @@ angular
         this.findConflictedSlotsWithPerdiodicBooking = function (periodicBookingID){
             $scope.bookingConflitLoading[periodicBookingID] = true;
             $scope.nbConflicts[periodicBookingID] = 0;
-            var nbQueries = 0;
+            $scope.nbQueriesConflicts[periodicBookingID] = 0;
             $scope.bookingsSharingSlotToBeCancelled[periodicBookingID] = [];
             databaseService.getPeriodicBookingDB(periodicBookingID, $scope.authToken)
                 .then(function(response) {
@@ -219,22 +221,27 @@ angular
                             isValidated: true,
                             isPeriodic: true
                         };
-                        nbQueries++;
+                        $scope.nbQueriesConflicts[periodicBookingID]++;
                         databaseService.getConflictedBookingsDB(newBooking)
-                            .then(function(response){
-                                var conflictedBookings = response.data;
-                                $scope.nbConflicts[periodicBookingID] += conflictedBookings === undefined ?
-                                                                         0 : conflictedBookings.length;
-                                $scope.bookingsSharingSlotToBeCancelled[periodicBookingID].push(conflictedBookings);
-                                nbQueries--;
-                                if(nbQueries <= 0) {
-                                    $scope.bookingConflitLoading[periodicBookingID] = false;
-                                    $scope.bookingsSharingSlotToBeCancelled[periodicBookingID] = $scope.mergeBookingsSharingSlotToBeCancelled($scope.bookingsSharingSlotToBeCancelled[periodicBookingID]);
-                                }
-                        }, $scope.handleErrorDBCallback);
+                            .then($scope.getConflictedBookingsDBCallback(periodicBookingID),
+                                $scope.handleErrorDBCallback);
                         newBookingDate.add(1, 'week');
                     }
                 },$scope.handleErrorDBCallback);
+        };
+
+        $scope.getConflictedBookingsDBCallback = function(periodicBookingID){
+            return (function(response){
+                var conflictedBookings = response.data;
+                $scope.nbConflicts[periodicBookingID] += conflictedBookings === undefined ?
+                                                         0 : conflictedBookings.length;
+                $scope.bookingsSharingSlotToBeCancelled[periodicBookingID].push(conflictedBookings);
+                $scope.nbQueriesConflicts[periodicBookingID]--;
+                if($scope.nbQueriesConflicts[periodicBookingID] <= 0) {
+                    $scope.bookingConflitLoading[periodicBookingID] = false;
+                    $scope.bookingsSharingSlotToBeCancelled[periodicBookingID] = $scope.mergeBookingsSharingSlotToBeCancelled($scope.bookingsSharingSlotToBeCancelled[periodicBookingID]);
+                }
+            });       
         };
 
         $scope.mergeBookingsSharingSlotToBeCancelled = function(bookingsSharingSlot) {
@@ -261,14 +268,14 @@ angular
                         .then(function(response) {
                             $scope.sendConfirmationEmail(response.data);
                         }, $scope.handleErrorDBCallback);
-                    $scope.message = "Réservation périodique validée.";
+                    $scope.message = 'Réservation périodique validée.';
                     $timeout(function () { $scope.message = undefined; }, $scope.timeoutTime);
                 }, $scope.handleErrorDBCallback);
         };
 
 
         $scope.propagatePerdiodicBookingValidation = function(periodicBookingID) {
-            var nbQueries = 0;
+            $scope.nbQueriesPropagate[periodicBookingID] = 0;
             databaseService.getPeriodicBookingDB(periodicBookingID, $scope.authToken)
                 .then(function(response) {
                     var periodicBooking = response.data;
@@ -299,21 +306,25 @@ angular
                             isPeriodic: true
                         };
                         newBookingDate.add(1, 'week');
-                        nbQueries++;
+                        $scope.nbQueriesPropagate[periodicBookingID]++;
                         databaseService.addBookingDB(newBooking, $scope.authToken)
-                            .then(function (response) {
-                                newBooking.id = response.data.id;
-                                commonService.validateBooking(newBooking, $scope.authToken, 
-                                    null, $scope.callerName , $scope.handleErrorDBCallback);
-                                nbQueries--;
-                                if(nbQueries <= 0){
-                                    $scope.dataLoading = false;
-                                }
-                        },$scope.handleErrorDBCallback);   
+                            .then($scope.addBookingDBCallback(newBooking, periodicBookingID),$scope.handleErrorDBCallback);   
                     }
                     
                     sharedService.prepForNewBookingAddedBroadcast();
                 },$scope.handleErrorDBCallback);
+        };
+
+        $scope.addBookingDBCallback = function(newBooking, periodicBookingID){
+            return (function (response) {
+                    newBooking.id = response.data.id;
+                    commonService.validateBooking(newBooking, $scope.authToken, 
+                        null, $scope.callerName , $scope.handleErrorDBCallback);
+                    $scope.nbQueriesPropagate[periodicBookingID]--;
+                    if($scope.nbQueriesPropagate[periodicBookingID] <= 0){
+                        $scope.dataLoading = false;
+                    }
+            });       
         };
 
         $scope.emptyFunction = function() {
@@ -326,19 +337,19 @@ angular
                 var to = response.data.email;
                 var from = 'admin@admin.fr';
                 var cc = '';
-                var periodicBookingScheduleStart = (periodicBooking.periodicBookingScheduleStart+'h').replace(".5h", "h30");
-                var periodicBookingScheduleEnd = (periodicBooking.periodicBookingScheduleEnd+'h').replace(".5h", "h30");
-                var subject = globalizationService.getLocalizedString("VALIDATION_PERIODIC_BOOKING_EMAIL_SUBJECT");
-                var body = globalizationService.getLocalizedString("VALIDATION_PERIODIC_BOOKING_EMAIL_BODY");
-                subject = subject.replace("<BOOKING_DAY>", periodicBooking.periodicBookingStartingDay)
-                    .replace("<BOOKING_SCHEDULE_START>", periodicBookingScheduleStart)
-                    .replace("<BOOKING_SCHEDULE_END>", periodicBookingScheduleEnd)
-                    .replace("<BOOKING_WEEK_DURATION>", periodicBooking.periodicBookingWeeksDuration);
+                var periodicBookingScheduleStart = (periodicBooking.periodicBookingScheduleStart+'h').replace('.5h', 'h30');
+                var periodicBookingScheduleEnd = (periodicBooking.periodicBookingScheduleEnd+'h').replace('.5h', 'h30');
+                var subject = globalizationService.getLocalizedString('VALIDATION_PERIODIC_BOOKING_EMAIL_SUBJECT');
+                var body = globalizationService.getLocalizedString('VALIDATION_PERIODIC_BOOKING_EMAIL_BODY');
+                subject = subject.replace('<BOOKING_DAY>', periodicBooking.periodicBookingStartingDay)
+                    .replace('<BOOKING_SCHEDULE_START>', periodicBookingScheduleStart)
+                    .replace('<BOOKING_SCHEDULE_END>', periodicBookingScheduleEnd)
+                    .replace('<BOOKING_WEEK_DURATION>', periodicBooking.periodicBookingWeeksDuration);
 
-                body = body.replace("<BOOKING_DAY>", periodicBooking.periodicBookingStartingDay)
-                    .replace("<BOOKING_SCHEDULE_START>", periodicBookingScheduleStart)
-                    .replace("<BOOKING_SCHEDULE_END>", periodicBookingScheduleEnd)
-                    .replace("<BOOKING_WEEK_DURATION>", periodicBooking.periodicBookingWeeksDuration);
+                body = body.replace('<BOOKING_DAY>', periodicBooking.periodicBookingStartingDay)
+                    .replace('<BOOKING_SCHEDULE_START>', periodicBookingScheduleStart)
+                    .replace('<BOOKING_SCHEDULE_END>', periodicBookingScheduleEnd)
+                    .replace('<BOOKING_WEEK_DURATION>', periodicBooking.periodicBookingWeeksDuration);
 
                 emailService.sendEmail(from, to, cc, subject, body, $scope.authToken);
 

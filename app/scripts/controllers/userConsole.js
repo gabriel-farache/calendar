@@ -26,9 +26,7 @@ angular.module('calendarApp')
             then(function(response){
                 $scope.booker.email = response.data.email;
                 $scope.booker.newPassword = undefined;
-            }, function(response) {
-                $scope.handleErrorDB(response.status, response.data);
-            });
+            },$scope.handleErrorDBCallback);
     };
 
     this.updateBookerSettings = function() {
@@ -39,7 +37,7 @@ angular.module('calendarApp')
         }
         databaseService.updateBookerSettingsDB($scope.booker, $scope.authToken).
             then(function() {
-                $scope.message = "Paramètres mis à jour.";
+                $scope.message = 'Paramètres mis à jour.';
                 $scope.isUpdating = false;
                 $scope.dataLoading = false;
                 $scope.booker.newPassword = undefined;
@@ -47,14 +45,16 @@ angular.module('calendarApp')
                 authenticationService.SetCredentials($scope.booker.booker, $scope.authToken, $scope.isAdmin);
                 $timeout(function () { $scope.message = undefined; }, $scope.timeoutTime);
                 $scope.initUser();
-            }, function(response) {
-                $scope.handleErrorDB(response.status, response.data);
-            });
+            },$scope.handleErrorDBCallback);
 
     };
 
     this.enableUpdateSettings = function() {
         $scope.isUpdating = true;
+    };
+
+    $scope.handleErrorDBCallback = function(response){
+        $scope.handleErrorDB(response.status, response.data); 
     };
 
     $scope.handleErrorDB = function(status, data){

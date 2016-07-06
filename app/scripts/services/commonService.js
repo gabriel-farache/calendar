@@ -42,64 +42,70 @@ function CommonService(databaseService, emailService, globalizationService, shar
     }
 
 
-    function sendEmails(bookingValidated, bookingsCancelled, authToken, i18nVALIDATION_EMAIL_SUBJECT, i18nVALIDATION_EMAIL_BODY, i18nCANCEL_EMAIL_SUBJECT, i18nCANCEL_EMAIL_BODY, handleErrorDBCallback){
-      sendConfirmationEmail(bookingValidated, authToken, i18nVALIDATION_EMAIL_SUBJECT, i18nVALIDATION_EMAIL_BODY, handleErrorDBCallback);
-      sendCancelationEmails(bookingValidated.id, authToken, bookingsCancelled, i18nCANCEL_EMAIL_SUBJECT, i18nCANCEL_EMAIL_BODY, handleErrorDBCallback);  
+    function sendEmails(bookingValidated, bookingsCancelled, authToken, I18N_VALIDATION_EMAIL_SUBJECT, I18N_VALIDATION_EMAIL_BODY, I18N_CANCEL_EMAIL_SUBJECT, I18N_CANCEL_EMAIL_BODY, handleErrorDBCallback){
+      sendConfirmationEmail(bookingValidated, authToken, I18N_VALIDATION_EMAIL_SUBJECT, I18N_VALIDATION_EMAIL_BODY, handleErrorDBCallback);
+      sendCancelationEmails(bookingValidated.id, authToken, bookingsCancelled, I18N_CANCEL_EMAIL_SUBJECT, I18N_CANCEL_EMAIL_BODY, handleErrorDBCallback);  
     }
 
-    function sendConfirmationEmail(booking, authToken, i18nVALIDATION_EMAIL_SUBJECT, i18nVALIDATION_EMAIL_BODY, handleErrorDBCallback){
+    function sendConfirmationEmail(booking, authToken, I18N_VALIDATION_EMAIL_SUBJECT, I18N_VALIDATION_EMAIL_BODY, handleErrorDBCallback){
       databaseService.getBookerEmailDB(booking.bookedBy, authToken).
       then(function(response) {
         var to = response.data.email;
         var from = 'admin@admin.fr';
         var cc = '';
-        var scheduleStart = (booking.scheduleStart+'h').replace(".5h", "h30");
-        var scheduleEnd = (booking.scheduleEnd+'h').replace(".5h", "h30");
-        var subject = globalizationService.getLocalizedString(i18nVALIDATION_EMAIL_SUBJECT);
-        var body = globalizationService.getLocalizedString(i18nVALIDATION_EMAIL_BODY);
-        subject = subject.replace("<BOOKING_DAY>", booking.day)
-                .replace("<BOOKING_SCHEDULE_START>", scheduleStart)
-                .replace("<BOOKING_SCHEDULE_END>", scheduleEnd);
+        var scheduleStart = (booking.scheduleStart+'h').replace('.5h', 'h30');
+        var scheduleEnd = (booking.scheduleEnd+'h').replace('.5h', 'h30');
+        var subject = globalizationService.getLocalizedString(I18N_VALIDATION_EMAIL_SUBJECT);
+        var body = globalizationService.getLocalizedString(I18N_VALIDATION_EMAIL_BODY);
+        subject = subject.replace('<BOOKING_DAY>', booking.day)
+                .replace('<BOOKING_SCHEDULE_START>', scheduleStart)
+                .replace('<BOOKING_SCHEDULE_END>', scheduleEnd);
 
-         body = body.replace("<BOOKING_DAY>", booking.day)
-                .replace("<BOOKING_SCHEDULE_START>", scheduleStart)
-                .replace("<BOOKING_SCHEDULE_END>", scheduleEnd);
+         body = body.replace('<BOOKING_DAY>', booking.day)
+                .replace('<BOOKING_SCHEDULE_START>', scheduleStart)
+                .replace('<BOOKING_SCHEDULE_END>', scheduleEnd);
 
         emailService.sendEmail(from, to, cc, subject, body, authToken);
 
       }, handleErrorDBCallback);
     }
 
-    function sendCancelationEmails(bookingValidatedID, authToken, bookingsCancelled, i18nCANCEL_EMAIL_SUBJECT, i18nCANCEL_EMAIL_BODY, handleErrorDBCallback) {
+    function sendCancelationEmails(bookingValidatedID, authToken, bookingsCancelled, I18N_CANCEL_EMAIL_SUBJECT, I18N_CANCEL_EMAIL_BODY, handleErrorDBCallback) {
       if(bookingsCancelled !== undefined){
         for(var i = 0; i < bookingsCancelled.length; i++) {
           var bookingCancelled = bookingsCancelled[i];
           if(bookingCancelled.id !== bookingValidatedID) {
             databaseService.getBookerEmailDB(bookingCancelled.bookedBy, authToken).
-            then(function(response) {
-              sendCancelationEmail(response, bookingCancelled, authToken, i18nCANCEL_EMAIL_SUBJECT, i18nCANCEL_EMAIL_BODY);
-            }, handleErrorDBCallback);
+            then(cancellationEmailsCallback(bookingCancelled, authToken, I18N_CANCEL_EMAIL_SUBJECT, I18N_CANCEL_EMAIL_BODY),
+            handleErrorDBCallback);
           }
         }
       }
           
       }
 
-    function sendCancelationEmail (response, bookingCancelled, authToken, i18nCANCEL_EMAIL_SUBJECT, i18nCANCEL_EMAIL_BODY) {
+      function cancellationEmailsCallback(bookingCancelled, authToken, I18N_CANCEL_EMAIL_SUBJECT, I18N_CANCEL_EMAIL_BODY){
+        return (function(response) {
+                  sendCancelationEmail(response, bookingCancelled, authToken,
+                      I18N_CANCEL_EMAIL_SUBJECT, I18N_CANCEL_EMAIL_BODY);
+                });
+      }
+
+    function sendCancelationEmail (response, bookingCancelled, authToken, I18N_CANCEL_EMAIL_SUBJECT, I18N_CANCEL_EMAIL_BODY) {
         var to = response.data.email;
         var from = 'admin@admin.fr';
         var cc = '';
-        var scheduleStart = (bookingCancelled.scheduleStart+'h').replace(".5h", "h30");
-        var scheduleEnd = (bookingCancelled.scheduleEnd+'h').replace(".5h", "h30");
-        var subject = globalizationService.getLocalizedString(i18nCANCEL_EMAIL_SUBJECT);
-        var body = globalizationService.getLocalizedString(i18nCANCEL_EMAIL_BODY);
-        subject = subject.replace("<BOOKING_DAY>", bookingCancelled.day)
-            .replace("<BOOKING_SCHEDULE_START>", scheduleStart)
-            .replace("<BOOKING_SCHEDULE_END>", scheduleEnd);
+        var scheduleStart = (bookingCancelled.scheduleStart+'h').replace('.5h', 'h30');
+        var scheduleEnd = (bookingCancelled.scheduleEnd+'h').replace('.5h', 'h30');
+        var subject = globalizationService.getLocalizedString(I18N_CANCEL_EMAIL_SUBJECT);
+        var body = globalizationService.getLocalizedString(I18N_CANCEL_EMAIL_BODY);
+        subject = subject.replace('<BOOKING_DAY>', bookingCancelled.day)
+            .replace('<BOOKING_SCHEDULE_START>', scheduleStart)
+            .replace('<BOOKING_SCHEDULE_END>', scheduleEnd);
 
-        body = body.replace("<BOOKING_DAY>", bookingCancelled.day)
-            .replace("<BOOKING_SCHEDULE_START>", scheduleStart)
-            .replace("<BOOKING_SCHEDULE_END>", scheduleEnd);
+        body = body.replace('<BOOKING_DAY>', bookingCancelled.day)
+            .replace('<BOOKING_SCHEDULE_START>', scheduleStart)
+            .replace('<BOOKING_SCHEDULE_END>', scheduleEnd);
 
         emailService.sendEmail(from, to, cc, subject, body, authToken);
     }

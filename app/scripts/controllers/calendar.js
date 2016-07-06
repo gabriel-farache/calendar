@@ -107,9 +107,7 @@ angular.module('calendarApp')
         $scope.initWeekBookings();
         $scope.initBuildingsRooms();
         $scope.error = undefined;
-      },function(response){
-        $scope.handleErrorDB(response.status, response.data);
-      });
+      },$scope.handleErrorDBCallback);
     };
 
     $scope.initBuildingsRooms = function() {
@@ -129,9 +127,7 @@ angular.module('calendarApp')
       {
         $scope.bookerColorsStyles = data.data;
         $scope.error = undefined;
-      },function(response){
-        $scope.handleErrorDB(response.status, response.data);
-      });
+      },$scope.handleErrorDBCallback);
 
     };
 
@@ -141,9 +137,7 @@ angular.module('calendarApp')
       {
         $scope.calendar = data.data;
         $scope.error = undefined;
-      },function(response){
-        $scope.handleErrorDB(response.status, response.data);
-      });
+      },$scope.handleErrorDBCallback);
     };
 
     this.initCalendarDays = function () {
@@ -208,10 +202,10 @@ angular.module('calendarApp')
         }
 
         $scope.weekStartEndDates = newWeekDate.isoWeekday(1).format('DD') + ' ' + 
-                                newWeekDate.format("MMMM") +
+                                newWeekDate.format('MMMM') +
                                 ' - ' + 
                                 newWeekDate.isoWeekday(7).format('DD') + ' ' +
-                                newWeekDate.format("MMMM");
+                                newWeekDate.format('MMMM');
       } else {
         $scope.week = weekData.week;
         $scope.year = weekData.year;
@@ -337,9 +331,7 @@ angular.module('calendarApp')
 
               $scope.booking = bookingDB;
               $scope.error = undefined;
-          }, function(response){
-              $scope.handleErrorDB(response.status, response.data);
-          });
+          },$scope.handleErrorDBCallback);
         this.isNewBookingSelected = false;
         $scope.isExistingBookingSelected = true;
       }
@@ -450,9 +442,7 @@ angular.module('calendarApp')
           $scope.calendar.push(newBooking);
           $scope.dataLoading = false;
           $scope.error = undefined;
-        },function(response){
-          $scope.handleErrorDB(response.status, response.data);
-        });
+        },$scope.handleErrorDBCallback);
               
       $scope.booking = {};
       $scope.booking.bookedBy = $scope.username === $scope.guestName ? undefined : $scope.username;
@@ -497,17 +487,11 @@ angular.module('calendarApp')
       databaseService.deleteBookingDB($scope.booking.id, $scope.username, $scope.authToken)
       .then( function(){
         $scope.initWeekBookings();
-        $scope.message = "Réservation supprimée.";
+        $scope.message = 'Réservation supprimée.';
         $timeout(function () { $scope.message = undefined; }, $scope.timeoutTime);
-      }, function(response){
-        $scope.handleErrorDB(response.status, response.data);
-      });
+      },$scope.handleErrorDBCallback);
     };
 
-
-    this.getRowspanIntValue = function(rowspanString){
-      return parseInt(rowspanString);
-    };
 
     $scope.handleErrorDBCallback = function(response){
         $scope.handleErrorDB(response.status, response.data); 

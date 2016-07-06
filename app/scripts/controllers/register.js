@@ -20,18 +20,21 @@ function RegisterController($scope, $timeout, databaseService, authenticationSer
             authenticationService.encodeDecode.encode(this.password), this.adminToken)
             .then(function () {
                     $location.path('/loginout/login');
-                }, function (response) {
-                    $scope.handleErrorDB(response.status, response.data);
-                }
-            );
+                },$scope.handleErrorDBCallback);
     };
+    $scope.handleErrorDBCallback = function(response){
+        $scope.handleErrorDB(response.status, response.data); 
+    };
+
     $scope.handleErrorDB = function(status, data){
-      if(data.errorCode === -1) {
+      if(data !== undefined && 
+          data.errorCode !== undefined && 
+          data.errorCode === -1) {
         authenticationService.ClearCredentials();
       }
       $scope.dataLoading = false;
       $scope.error = data.error;
-      $timeout(function () { $scope.error = undefined; }, $scope.timeoutTime); 
+      $timeout(function () {  }, $scope.timeoutTime); 
     };
 
     $scope.removeErrorMessage = function() {
