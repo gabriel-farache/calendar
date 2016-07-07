@@ -46,9 +46,9 @@ try {
     $connection = new MongoClient("mongodb://" . $host . ":" . $port . "/?replicaSet=rs0");
     $db         = $connection->selectDB($database);
     
-    if (mysqli_connect_errno()) {
-        header("HTTP/1.1 503 Service Unavailable");
-        print_r('Could not connect: ' . mysqli_connect_errno());
+    $err        = $db->lastError();
+    if (is_null($err["err"]) !== TRUE) {
+        handleCommonErr("HTTP/1.1 503 Service Unavailable", "Error connection to mongoDB", $err)
     }
     
     $GLOBALS['db'] = $db;

@@ -1,3 +1,10 @@
+sudo mkdir /data/       
+sudo mkdir /data/rs0/   
+sudo mkdir /data/rs0/db0
+sudo mkdir /data/rs0/db1
+sudo mkdir /data/rs0/db2
+sudo chown -R pi /data/ 
+export LC_ALL=C
 mongod --port 27017 --dbpath /data/rs0/db0 --replSet rs0 --smallfiles --oplogSize 128 &
 mongod --port 27018 --dbpath /data/rs0/db1 --replSet rs0 --smallfiles --oplogSize 128 &
 mongod --port 27019 --dbpath /data/rs0/db2 --replSet rs0 --smallfiles --oplogSize 128 &
@@ -36,3 +43,8 @@ sudo apt-get install php5
 sudo rm /var/www/html/index.html
 echo "<?php phpinfo(); ?>" > /var/www/html/index.php
 sudo apt-get install mongodb-server
+
+
+sudo apt-get install php5 php5-cli libapache2-mod-php5
+sudo a2enmod header
+sudo a2enmod rewrite
