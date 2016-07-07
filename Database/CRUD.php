@@ -48,7 +48,7 @@ try {
     
     $err        = $db->lastError();
     if (is_null($err["err"]) !== TRUE) {
-        handleCommonErr("HTTP/1.1 503 Service Unavailable", "Error connection to mongoDB", $err)
+        handleCommonErr("HTTP/1.1 503 Service Unavailable", "Error connection to mongoDB", $err);
     }
     
     $GLOBALS['db'] = $db;
