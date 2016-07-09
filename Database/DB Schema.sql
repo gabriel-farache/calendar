@@ -1,0 +1,47 @@
+CREATE TABLE Booking (
+	id INT NOT NULL AUTO_INCREMENT,
+	room VARCHAR(255) NOT NULL,
+	scheduleStart DECIMAL(2,1) NOT NULL,
+	scheduleEnd DECIMAL(2,1) NOT NULL,
+	day VARCHAR(15) NOT NULL,
+	week INT NOT NULL,
+	year INT NOT NULL,
+	bookedBy VARCHAR(255) NOT NULL,
+	isValidated BOOL NOT NULL DEFAULT FALSE,
+	PRIMARY KEY(id)
+);
+
+CREATE TABLE Booker (
+	booker VARCHAR(255) NOT NULL,
+	
+	PRIMARY KEY(booker)
+);
+
+CREATE TABLE Room (
+	room VARCHAR(255) NOT NULL,
+	PRIMARY KEY (room)
+);
+
+
+CREATE TABLE User (
+	username VARCHAR(255) NOT NULL,
+	encodedPassword VARCHAR(255) NOT NULL,
+	isAdmin BOOL NOT NULL DEFAULT FALSE,
+	color VARCHAR(7) NOT NULL DEFAULT "#FFFFFF",
+	PRIMARY KEY(username)
+);
+
+CREATE TABLE UserToken (
+	token VARCHAR(255) NOT NULL,
+	endAvailability DATETIME NOT NULL,
+	isAdmin BOOL NOT NULL DEFAULT FALSE,
+	PRIMARY KEY(token)
+);
+CREATE TABLE AdminToken (
+	adminToken VARCHAR(255) NOT NULL,
+	adminTokenEndTime DATETIME NOT NULL,
+	PRIMARY KEY(adminToken)
+);
+
+
+
