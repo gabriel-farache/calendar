@@ -1,0 +1,28 @@
+db.User.insert( { booker:"Moza&iuml;que",password: "QXplcnR5",isAdmin: false, color: "#4caf50", email:"gabriel.farache@gmail.com"});
+db.User.insert( { booker:"APE",password: "QXplcnR5",isAdmin: false, color: "#f44336", email:"gabriel.farache@gmail.com"});
+db.User.insert( { booker:"ALAE",password: "QXplcnR5",isAdmin: false, color: "#9c27b0", email:"gabriel.farache@gmail.com"});
+db.User.insert( { booker:"&Eacute;cole",password: "QXplcnR5",isAdmin: false, color: "#00bcd4", email:"gabriel.farache@gmail.com"});
+db.User.insert( { booker:"4 vents",password: "QXplcnR5",isAdmin: false, color: "#f57c00", email:"gabriel.farache@gmail.com"});
+db.User.insert( { booker:"COC",password: "QXplcnR5",isAdmin: false, color: "#1976d2", email:"gabriel.farache@gmail.com"});
+db.User.insert( { booker:"ACCA",password: "QXplcnR5",isAdmin: false, color: "#795548", email:"gabriel.farache@gmail.com"});
+db.User.insert( { booker:"Comit&eacute; des f&ecirc;tes",password: "QXplcnR5",isAdmin: false, color: "#ffeb3b", email:"gabriel.farache@gmail.com"});
+db.User.insert( { booker:"ATP",password: "QXplcnR5",isAdmin: false, color: "#ff4081", email:"gabriel.farache@gmail.com"});
+db.User.insert( { booker:"Randoplaisir",password: "QXplcnR5",isAdmin: false, color: "#009688", email:"gabriel.farache@gmail.com"});
+db.User.insert( { booker:"Caminarem",password: "QXplcnR5",isAdmin: false, color: "#536dfe", email:"gabriel.farache@gmail.com"});
+db.User.insert( { booker:"Arabesque",password: "QXplcnR5",isAdmin: false, color: "#ffc107", email:"gabriel.farache@gmail.com"});
+db.User.insert( { booker:"Yoga",password: "QXplcnR5",isAdmin: false, color: "#cfd8dc", email:"gabriel.farache@gmail.com"});
+db.User.insert( { booker:"Sensactif",password: "QXplcnR5",isAdmin: false, color: "#ff5722", email:"gabriel.farache@gmail.com"});
+db.User.insert( { booker:"Mairie",password: "QXplcnR5",isAdmin: true, color: "#9e9e9e", email:"gabriel.farache@gmail.com"});
+
+
+db.Room.insert( { building: "Mairie", room:"Mairie : salle du conseil Gilbert Chapuis"});
+db.Room.insert( { building: "Mairie",room:"Mairie : salle du piano"});
+db.Room.insert( { building: "Mairie",room:"Mairie : sous - sol"});
+db.Room.insert( { building: "Maison des associations",room:"Maison des associations : salle 1"});
+db.Room.insert( { building: "Maison des associations",room:"Maison des associations : salle 2"});
+db.Room.insert( { building: "Maison des associations",room:"Maison des associations : salle 3"});
+db.Room.insert( { building: "Salle polyvalente",room:"Salle polyvalente : grande salle"});
+db.Room.insert( { building: "Salle polyvalente",room:"Salle polyvalente : salle du piano"});
+db.Room.insert( { building: "Salle polyvalente",room:"Salle polyvalente : salle de danse"});
+db.Room.insert( { building: "Vieille mairie",room:"Vieille mairie"});
+
