@@ -1,0 +1,188 @@
+<div class="container-fluid table-responsive" ng-init="periodicBookingCtrl.initPeriodicBooking()">
+    <div class="alert alert-danger" ng-show="error !== undefined" style="padding:2px;margin-bottom:2px;">
+         {{error}}
+         <a style="float: right" ng-click="removeErrorMessage()">x</a>
+   </div>
+   <div class="alert alert-success" ng-show="message !== undefined" style="padding:2px;margin-bottom:2px;">
+         {{message}}
+         <a style="float: right" ng-click="removeMessage()">x</a>
+   </div>
+   <div class="alert alert-success" ng-show="messageAdmin !== undefined" style="padding:2px;margin-bottom:2px;">
+         {{messageAdmin}}
+         <a style="float: right" ng-click="removeMessageAdmin()">x</a>
+   </div>
+   <div>
+   <div id="calendarStartDays" class="col-xs-6 col-md-4">
+      <table id="selectStartingDay" class="table-responsive table-hover" 
+            style="margin-left: 2px;margin-bottom:5px;padding:0px;width:100%;" align="center">
+         <tr>
+             <td >
+                 <button ng-click="periodicBookingCtrl.initWeekData(periodicBookingCtrl.dateStart.month()-1, true)">&lt;</button>
+             </td>
+             <td colspan="5" style="text-align:center;padding:2px;">
+                 {{periodicBookingCtrl.dateStart.format("MMMM YYYY")}}
+             </td>
+             <td colspan="2">
+                 <button ng-click="periodicBookingCtrl.initWeekData(periodicBookingCtrl.dateStart.month()+1, true)">&gt;</button>
+             </td>
+         </tr>
+         <tr>
+             <th style="text-align:center;padding:2px;margin-right:5px;">
+                {{'AGENDA_DAY1_LABEL' | i18n}}
+             </th>
+             <th style="text-align:center;padding:2px;margin-right:5px;">
+                {{'AGENDA_DAY2_LABEL' | i18n}}
+             </th>
+             <th style="text-align:center;padding:2px;margin-right:5px;">
+                {{'AGENDA_DAY3_LABEL' | i18n}}
+             </th>
+             <th style="text-align:center;padding:2px;margin-right:5px;">
+                {{'AGENDA_DAY4_LABEL' | i18n}}
+             </th>
+             <th style="text-align:center;padding:2px;margin-right:5px;">
+                {{'AGENDA_DAY5_LABEL' | i18n}}
+             </th>
+             <th style="text-align:center;padding:2px;margin-right:5px;">
+                {{'AGENDA_DAY6_LABEL' | i18n}}
+             </th>
+             <th style="text-align:center;padding:2px;margin-right:5px;">
+                {{'AGENDA_DAY7_LABEL' | i18n}}
+             </th>
+         </tr>
+         <tr ng-repeat="monthWeek in periodicBookingCtrl.monthWeeks[0] track by $index" align="center">
+             <td ng-repeat="monthDay in monthWeek.monthDays track by $index" 
+                 ng-class="{selectedClass: periodicBookingCtrl.selectedStartDay === monthDay.day && periodicBookingCtrl.selectedStartMonth === monthDay.month && periodicBookingCtrl.selectedStartYear === monthWeek.year,
+                  todayClass:periodicBookingCtrl.todayDate === monthDay.day && periodicBookingCtrl.todayMonth === monthDay.month && periodicBookingCtrl.todayYear === monthWeek.year}" 
+                 ng-click="periodicBookingCtrl.selectStartingDay(monthDay, monthWeek.week,monthWeek.year)" 
+                 style="margin: 5px;padding:2px;font-weight: normal;text-align:center;" >
+                 {{monthDay.day}}
+             </td>
+         </tr>
+      </table>
+   </div>
+   <div id="calendarEndDays" class="col-xs-6 col-md-4">
+      <table id="SelectEndingDay" class="table-responsive table-hover" 
+            style="margin-left: 2px;margin-bottom:5px;padding:0px;width:100%;" align="center">
+         <tr>
+             <td >
+                 <button ng-click="periodicBookingCtrl.initWeekData(periodicBookingCtrl.dateEnd.month()-1, false)">&lt;</button>
+             </td>
+             <td colspan="5" style="text-align:center;padding:2px;">
+                 {{periodicBookingCtrl.dateEnd.format("MMMM YYYY")}}
+             </td>
+             <td colspan="2">
+                 <button ng-click="periodicBookingCtrl.initWeekData(periodicBookingCtrl.dateEnd.month()+1, false)">&gt;</button>
+             </td>
+         </tr>
+         <tr>
+             <th style="text-align:center;padding:2px;margin-right:5px;">
+                {{'AGENDA_DAY1_LABEL' | i18n}}
+             </th>
+             <th style="text-align:center;padding:2px;margin-right:5px;">
+                {{'AGENDA_DAY2_LABEL' | i18n}}
+             </th>
+             <th style="text-align:center;padding:2px;margin-right:5px;">
+                {{'AGENDA_DAY3_LABEL' | i18n}}
+             </th>
+             <th style="text-align:center;padding:2px;margin-right:5px;">
+                {{'AGENDA_DAY4_LABEL' | i18n}}
+             </th>
+             <th style="text-align:center;padding:2px;margin-right:5px;">
+                {{'AGENDA_DAY5_LABEL' | i18n}}
+             </th>
+             <th style="text-align:center;padding:2px;margin-right:5px;">
+                {{'AGENDA_DAY6_LABEL' | i18n}}
+             </th>
+             <th style="text-align:center;padding:2px;margin-right:5px;">
+                {{'AGENDA_DAY7_LABEL' | i18n}}
+             </th>
+         </tr>
+         <tr ng-repeat="monthWeekEnd in periodicBookingCtrl.monthWeeks[1] track by $index" align="center">
+             <td ng-repeat="monthDayEnd in monthWeekEnd.monthDays track by $index" 
+                 ng-class="{selectedClass: periodicBookingCtrl.selectedEndWeek === monthWeekEnd.week && periodicBookingCtrl.selectedEndYear === monthWeekEnd.year,
+                 todayClass:periodicBookingCtrl.todayDate === monthDayEnd.day && periodicBookingCtrl.todayMonth === monthDayEnd.month && periodicBookingCtrl.todayYear === monthWeek.year}" 
+                 ng-click="periodicBookingCtrl.selectEndingDay(monthDayEnd, monthWeekEnd.week,monthWeekEnd.year)" 
+                 style="margin: 5px;padding:2px;font-weight: normal;text-align:center;" >
+                 {{monthDayEnd.day}}
+             </td>
+         </tr>
+      </table>
+   </div>
+   <div id="perdiodicInfo" class="col-xs-6 col-md-4">
+      <form name="selectSchedulesForm"
+         style="width:100%;"
+        ng-submit="selectSchedulesForm.$valid && periodicBookingCtrl.daysAreSelected() && periodicBookingCtrl.periodicBookingWeeksDuration > 0 && periodicBookingCtrl.addPeriodicBooking()" novalidate>
+        <div class="input-group">
+            <div  style="width:50%;float: left;margin-bottom:20px;">
+                <label style="">{{'PERIODIC_BOOKING_SCHEDULE_FROM_LABEL' | i18n}}</label><br>
+                <select ng-model="periodicBookingCtrl.periodicBookingScheduleStart" required>
+                    <option ng-repeat="timeStart in periodicBookingCtrl.schedules track by $index" 
+                    ng-disabled="periodicBookingCtrl.periodicBookingScheduleEnd !== undefined && timeStart >= periodicBookingCtrl.periodicBookingScheduleEnd"
+                    value="{{timeStart}}">{{periodicBookingCtrl.schedulesLabels[$index]}}</option>
+                </select>
+            </div>
+            <div style="width:50%;float: right;margin-bottom:20px;">
+                <label>{{'PERIODIC_BOOKING_SCHEDULE_TO_LABEL' | i18n}}</label><br>
+                <select ng-model="periodicBookingCtrl.periodicBookingScheduleEnd" required>
+                    <option ng-repeat="timeEnd in periodicBookingCtrl.schedules track by $index" ng-disabled="periodicBookingCtrl.periodicBookingScheduleStart !== undefined && timeEnd <= periodicBookingCtrl.periodicBookingScheduleStart" value="{{timeEnd}}">{{periodicBookingCtrl.schedulesLabels[$index]}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="input-group">
+            <div style="margin-bottom:20px;">
+                <label>{{'PERIODIC_BOOKING_ROOM_LABEL' | i18n}}</label><br>
+                <select ng-model="periodicBookingCtrl.periodicBookingRoom" required>
+                     <option ng-repeat="room in rooms track by $index" value="{{room.room}}"> 
+                        {{room.room}}
+                     </option>
+                </select>
+            </div>
+        </div>
+        <input ng-disabled="selectSchedulesForm.$invalid || !periodicBookingCtrl.daysAreSelected() || periodicBookingCtrl.periodicBookingWeeksDuration <= 0" class="btn btn-success" ng-hide="dataLoading === true" type="submit" value="{{'PERIODIC_BOOKING_BOOK_LABEL' | i18n}}" style="margin-bottom:20px;margin-right:5px;float:left;" required/>                  
+        <img ng-show="dataLoading === true" src="/images/loading.svg" 
+            alt="..." style="width: 5%; height: 5%"/>
+         <div>
+            <div ng-messages="selectSchedulesForm.$error" style="color:maroon" role="alert">
+               <div ng-message="required">{{'PERIODIC_BOOKING_FORM_ERROR' | i18n}}</div>
+            </div>
+            <div ng-show="periodicBookingCtrl.daysAreSelected() === false" style="color:maroon;" role="alert">
+               {{'PERIODIC_BOOKING_SELECTED_DAY_ERROR' | i18n}}
+            </div>
+            <div ng-show="periodicBookingCtrl.periodicBookingWeeksDuration <= 0" style="color:maroon;" role="alert">
+               {{'PERIODIC_BOOKING_WEEK_DURATION_ERROR'| i18n}}
+            </div>
+         </div>
+      </form>
+   
+     <!-- <p>
+         Réservation périodique de <b>{{periodicBookingCtrl.periodicBookingRoom}}</b><br>Les <b>{{periodicBookingCtrl.periodicDay}}</b><br>Du <b>{{periodicBookingCtrl.selectedStartingDate}}</b><br>Au <b>{{periodicBookingCtrl.selectedEndingDate}}</b><br>De <b>{{(periodicBookingCtrl.periodicBookingScheduleStart+'h').replace(".5h", "h30")}}</b> à <b>{{(periodicBookingCtrl.periodicBookingScheduleEnd+'h').replace(".5h", "h30")}}</b><br>
+         Durée: <b>{{periodicBookingCtrl.periodicBookingWeeksDuration}}</b> semaines
+      </p>-->
+   </div>   
+   </div>
+   <div id="periodicBookings" class="col-xs-12 col-md-12"> 
+      <ul id="roomList" class="list-group">
+         <li class="list-group-item" ng-repeat="periodicBooking in formattedPeriodicBookings">
+            <button class="btn btn-danger" ng-click="periodicBookingCtrl.deletePeriodicBooking(periodicBooking.id)" style="float:right;margin-left:5px;">
+               {{'PERIODIC_BOOKING_DELETE_BOOKING_LABEL'| i18n}}
+            </button>
+            <button ng-show="isAdmin === true && bookingConflitLoading[periodicBooking.id] !== true &&  !periodicBooking.isValidated" class="btn btn-info" ng-click="periodicBookingCtrl.findConflictedSlotsWithPerdiodicBooking(periodicBooking.id)" style="float:right;margin-left:5px;">
+               {{'PERIODIC_BOOKING_CHECK_BOOKING_CONFLICTS_LABEL' | i18n}}
+            </button>
+            <img ng-show="bookingConflitLoading[periodicBooking.id] === true" src="/images/loading.svg" 
+            alt="..." style="width: 5%; height: 5%; float:right;margin-left:5px;"/>
+            <button ng-show="isAdmin === true && nbConflicts[periodicBooking.id] !== undefined && bookingConflitLoading[periodicBooking.id] !== true &&  !periodicBooking.isValidated && nbConflicts[periodicBooking.id] <= 0" class="btn btn-success" ng-click="periodicBookingCtrl.validatePeriodicBooking(periodicBooking.id)" style="float:right;margin-left:5px;">
+               {{'PERIODIC_BOOKING_VALIDATE_BOOKING_LABEL'| i18n}}
+            </button>
+            <button ng-show="isAdmin === true && nbConflicts[periodicBooking.id] !== undefined && bookingConflitLoading[periodicBooking.id] !== true &&  !periodicBooking.isValidated && nbConflicts[periodicBooking.id] > 0" class="btn btn-warning" ng-click="periodicBookingCtrl.validatePeriodicBooking(periodicBooking.id)" style="float:right;margin-left:5px;">
+               {{'PERIODIC_BOOKING_VALIDATE_BOOKING_WITH_CONFLICTS_LABEL'| i18n}} <b>{{nbConflicts[periodicBooking.id]}} {{'PERIODIC_BOOKING_CONFLICTS_LABEL' | i18n}}</b>
+            </button>
+  
+
+               {{'PERIODIC_BOOKING_DISPLAY_INTRO_LABEL' | i18n}} <b>{{periodicBooking.room}}</b><br>{{'PERIODIC_BOOKING_DISPLAY_DAY_LABEL' | i18n}} <b>{{periodicBooking.day}}</b><br>{{'PERIODIC_BOOKING_DISPLAY_DAY_START_LABEL'| i18n}} <b>{{periodicBooking.dateStart}}</b><br>{{'PERIODIC_BOOKING_DISPLAY_DAY_END_LABEL' | i18n}} <b>{{periodicBooking.dateEnd}}</b><br>{{'PERIODIC_BOOKING_SCHEDULE_FROM_LABEL' | i18n}} <b>{{periodicBooking.scheduleStart}}</b> {{'PERIODIC_BOOKING_SCHEDULE_TO_LABEL' | i18n}} <b>{{periodicBooking.scheduleEnd}}</b><br>{{'PERIODIC_BOOKING_DISPLAY_DURATION_LABEL' | i18n}} <b>{{periodicBooking.periodicBookingWeeksDuration}}</b> {{'PERIODIC_BOOKING_DISPLAY_WEEK_LABEL' | i18n}}<br>Réserver par: <b>{{periodicBooking.bookedBy}}</b>              
+            </div>
+         </li>
+      </ul>
+   </div>
+      
+</div>
