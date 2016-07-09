@@ -6,3 +6,5 @@
 /Database/phpinfo.php
 *.DS_Store
 *.log
+/Front-End/.git
+/Back-Enf/.git
