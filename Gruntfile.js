@@ -505,12 +505,9 @@ module.exports = function (grunt) {
     'concurrent:dist',
     'postcss',
     'ngtemplates',
-    'concat',
-    
+    'concat',   
     'copy:dist',
     'cdnify',
-    'cssmin',
-    'uglify',
     'filerev',
     'usemin',
     'htmlmin'
@@ -522,7 +519,7 @@ module.exports = function (grunt) {
     'test',
     'build'
   ]);
-  
+
   grunt.registerTask('heroku:production', [
       'bower:install',
       'build'

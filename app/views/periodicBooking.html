@@ -17,13 +17,13 @@
             style="margin-left: 2px;margin-bottom:5px;padding:0px;width:100%;" align="center">
          <tr>
              <td >
-                 <button ng-click="periodicBookingCtrl.initWeekData(periodicBookingCtrl.dateStart.month()-1, true)"><</button>
+                 <button ng-click="periodicBookingCtrl.initWeekData(periodicBookingCtrl.dateStart.month()-1, true)">&lt;</button>
              </td>
              <td colspan="5" style="text-align:center;padding:2px;">
                  {{periodicBookingCtrl.dateStart.format("MMMM YYYY")}}
              </td>
              <td colspan="2">
-                 <button ng-click="periodicBookingCtrl.initWeekData(periodicBookingCtrl.dateStart.month()+1, true)">></button>
+                 <button ng-click="periodicBookingCtrl.initWeekData(periodicBookingCtrl.dateStart.month()+1, true)">&gt;</button>
              </td>
          </tr>
          <tr>
@@ -65,13 +65,13 @@
             style="margin-left: 2px;margin-bottom:5px;padding:0px;width:100%;" align="center">
          <tr>
              <td >
-                 <button ng-click="periodicBookingCtrl.initWeekData(periodicBookingCtrl.dateEnd.month()-1, false)"><</button>
+                 <button ng-click="periodicBookingCtrl.initWeekData(periodicBookingCtrl.dateEnd.month()-1, false)">&lt;</button>
              </td>
              <td colspan="5" style="text-align:center;padding:2px;">
                  {{periodicBookingCtrl.dateEnd.format("MMMM YYYY")}}
              </td>
              <td colspan="2">
-                 <button ng-click="periodicBookingCtrl.initWeekData(periodicBookingCtrl.dateEnd.month()+1, false)">></button>
+                 <button ng-click="periodicBookingCtrl.initWeekData(periodicBookingCtrl.dateEnd.month()+1, false)">&gt;</button>
              </td>
          </tr>
          <tr>

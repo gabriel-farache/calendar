@@ -4,13 +4,13 @@
          style="margin-left: 4px;margin-bottom:5px;padding:0px;width:18%;" align="center">
          <tr>
             <td >
-              <button ng-click="calendarCtrl.initWeekData(calendarCtrl.date.month()-1)"><</button>
+              <button ng-click="calendarCtrl.initWeekData(calendarCtrl.date.month()-1)">&lt;</button>
             </td>
             <td colspan="5" style="text-align:center;padding:2px;">
                {{calendarCtrl.date.format("MMMM YYYY")}}
             </td>
             <td colspan="2">
-              <button ng-click="calendarCtrl.initWeekData(calendarCtrl.date.month()+1)">></button>
+              <button ng-click="calendarCtrl.initWeekData(calendarCtrl.date.month()+1)">&gt;</button>
             </td>
          </tr>
          <tr>
