@@ -38,7 +38,7 @@
                         </button>
                     </a>
                 </li>
-                <li>
+                <li ng-show="username !== undefined && username !== guestName" >
                     <a href="/periodicBooking" style="margin: 8px;margin-right:0px;padding:0px;display:inline;">
                         <button class="btn btn-info" style="margin: 8px;">
                             {{'INDEX_PERIODIC_BOOKING_BUTTON' | i18n}}
