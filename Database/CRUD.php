@@ -1,4 +1,5 @@
 <?php
+
 $GLOBALS['errorAlreadyHappened'] = FALSE;
 set_error_handler('myErrorHandler');
 register_shutdown_function('fatalErrorShutdownHandler');
