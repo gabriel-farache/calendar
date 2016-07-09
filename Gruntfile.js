@@ -31,6 +31,12 @@ module.exports = function (grunt) {
     // Project settings
     yeoman: appConfig,
 
+    bower: {
+        install: {
+           //just run 'grunt bower:install' and you'll see files from your Bower packages in lib directory
+        }
+      },
+
     // Watches files for changes and runs tasks based on the changed files
     watch: {
       bower: {
@@ -515,5 +521,10 @@ module.exports = function (grunt) {
     'newer:jscs',
     'test',
     'build'
+  ]);
+
+  grunt.registerTask('heroku:production', [
+      'bower:install',
+      'build'
   ]);
 };
