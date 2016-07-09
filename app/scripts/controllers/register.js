@@ -2,7 +2,7 @@
  
  angular
     .module('calendarApp')
-    .controller('registerController',   
+    .controller('registerController',  ['$scope', '$timeout', 'databaseService', 'authenticationService', '$location', 'globalizationService', 
 function RegisterController($scope, $timeout, databaseService, authenticationService, $location, globalizationService) {
     this.username = '';
     this.password = '';
@@ -53,6 +53,6 @@ function RegisterController($scope, $timeout, databaseService, authenticationSer
     $scope.removeMessage = function() {
       $scope.message = undefined;
     };
-});
+}]);
 
 

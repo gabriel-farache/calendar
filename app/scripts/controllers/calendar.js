@@ -8,7 +8,8 @@
  * Controller of the calendarApp
  */
 angular.module('calendarApp')
-  .controller('calendarController', function ($scope, $http, $window, $cookieStore, $timeout, $interval, moment, databaseService, sharedService, authenticationService, emailService, globalizationService, commonService) {
+  .controller('calendarController', ['$scope', '$http', '$window', '$cookieStore', '$timeout', '$interval', 'moment', 'databaseService', 'sharedService', 'authenticationService', 'emailService', 'globalizationService', 'commonService',
+  function ($scope, $http, $window, $cookieStore, $timeout, $interval, moment, databaseService, sharedService, authenticationService, emailService, globalizationService, commonService) {
     $scope.callerName = 'Calendar';
     $scope.guestName = 'Visiteur';
     $scope.colorOfValidatedBooking = '#4caf50';
@@ -520,4 +521,4 @@ angular.module('calendarApp')
       $scope.message = undefined;
     };
 
-  });
+  }]);

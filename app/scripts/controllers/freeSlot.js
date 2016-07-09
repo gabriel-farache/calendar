@@ -8,7 +8,8 @@
  * Controller of the calendarApp
  */
 angular.module('calendarApp')
-  .controller('freeSlotController', function ($scope, $http, $cookieStore, $timeout, moment, databaseService, sharedService, authenticationService) {
+  .controller('freeSlotController', ['$scope', '$http', '$cookieStore', '$timeout', 'moment', 'databaseService', 'sharedService', 'authenticationService',
+  function ($scope, $http, $cookieStore, $timeout, moment, databaseService, sharedService, authenticationService) {
 	moment.locale('fr');
   $scope.availableRooms = undefined;
 	$scope.dataLoading = false;
@@ -186,4 +187,4 @@ angular.module('calendarApp')
       $scope.message = undefined;
     };
 
-});
+}]);

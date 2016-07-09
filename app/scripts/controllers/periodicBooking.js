@@ -2,7 +2,8 @@
 
 angular
     .module('calendarApp')
-    .controller('periodicBookingController', function PeriodicBookingController($scope, $cookieStore, $timeout, $location, moment, sharedService, databaseService, globalizationService, emailService, authenticationService, commonService) {
+    .controller('periodicBookingController', ['$scope', '$cookieStore', '$timeout', '$location', 'moment', 'sharedService', 'databaseService', 'globalizationService', 'emailService', 'authenticationService', 'commonService',
+    function PeriodicBookingController($scope, $cookieStore, $timeout, $location, moment, sharedService, databaseService, globalizationService, emailService, authenticationService, commonService) {
         moment.locale('fr');
         $scope.callerName = 'PeriodicBooking';
         $scope.dataLoading = false;
@@ -498,4 +499,4 @@ angular
                 this.periodicBookingWeeksDuration !== undefined);
         };
 
-    });
+    }]);

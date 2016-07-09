@@ -1,6 +1,7 @@
 'use strict';
 angular.module('calendarApp')
-  .controller('userConsoleController', function ($scope, $cookieStore, $timeout, databaseService, sharedService, authenticationService, globalizationService) {
+  .controller('userConsoleController', ['$scope', '$cookieStore', '$timeout', 'databaseService', 'sharedService', 'authenticationService', 'globalizationService',
+function ($scope, $cookieStore, $timeout, databaseService, sharedService, authenticationService, globalizationService) {
     $scope.timeoutTime = 10000;
     $scope.isUpdating = false;
     $scope.booker = {};
@@ -91,4 +92,4 @@ angular.module('calendarApp')
     };
 
 
-});
+}]);

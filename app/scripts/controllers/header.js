@@ -2,7 +2,8 @@
 
 angular
     .module('calendarApp')
-    .controller('headerController', function HeaderController($scope, $cookieStore, $location, sharedService, authenticationService) {
+    .controller('headerController', ['$scope', '$cookieStore', '$location', 'sharedService', 'authenticationService', 
+    function HeaderController($scope, $cookieStore, $location, sharedService, authenticationService) {
         $scope.guestName = 'Visiteur';
         $scope.username = $scope.guestName;
         $scope.isAdmin = false;
@@ -31,4 +32,4 @@ angular
         $scope.$on('handleBroadcast', handleBroadcastCallbackFunction);
 
 
-    });
+    }]);

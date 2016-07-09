@@ -3,7 +3,8 @@
 
 angular
     .module('calendarApp')
-    .controller('loginController', function LoginController($scope, $location, $routeParams, $timeout, authenticationService, globalizationService) {
+    .controller('loginController', ['$scope', '$location', '$routeParams', '$timeout', 'authenticationService', 'globalizationService',
+      function LoginController($scope, $location, $routeParams, $timeout, authenticationService, globalizationService) {
         $scope.username = '';
         this.password = '';
         $scope.dataLoading = false;
@@ -62,5 +63,5 @@ angular
       $scope.message = undefined;
     };
 
-});
+}]);
 

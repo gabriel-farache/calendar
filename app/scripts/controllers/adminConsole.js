@@ -1,7 +1,8 @@
 
 'use strict';
 angular.module('calendarApp')
-  .controller('adminConsoleController', function ($scope, $cookieStore, $timeout, $sce, databaseService, sharedService, authenticationService, globalizationService) {
+  .controller('adminConsoleController', ['$scope', '$cookieStore', '$timeout', '$sce', 'databaseService', 'sharedService', 'authenticationService', 'globalizationService', 
+    function ($scope, $cookieStore, $timeout, $sce, databaseService, sharedService, authenticationService, globalizationService) {
         $scope.adminToken = '';
         $scope.adminTokenEndTime = '';
         $scope.error = undefined;
@@ -169,5 +170,5 @@ angular.module('calendarApp')
       $scope.message = undefined;
     };
 
-});
+}]);
 
