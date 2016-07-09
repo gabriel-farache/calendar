@@ -1,0 +1,122 @@
+<div class="col-md-10 col-md-offset-2 container-fluid" >
+    <div class="alert alert-danger" ng-show="error !== undefined" style="padding:2px;margin-bottom:2px;">
+         {{error}}
+         <a style="float: right" ng-click="removeErrorMessage()">x</a>
+   </div>
+   <div class="alert alert-success" ng-show="message !== undefined" style="padding:2px;margin-bottom:2px;">
+         {{message}}
+         <a style="float: right" ng-click="removeMessage()">x</a>
+   </div>
+   <div class="alert alert-success" ng-show="messageAdmin !== undefined" style="padding:2px;margin-bottom:2px;">
+         {{messageAdmin}}
+         <a style="float: right" ng-click="removeMessageAdmin()">x</a>
+   </div>
+   <div class="container-fluid" style="width:100%;">
+       <ul class="nav nav-pills" role="pilllist">
+            <li class="active"><a data-toggle="pill" data-target="#adminAuthKeyGenerator">
+                {{'ADMIN_GENERATING_ADMIN_TOKEN_TITLE' | i18n}}</a></li>
+            <li><a data-toggle="pill" data-target="#metrics">
+                {{'ADMIN_METRICS_TITLE' | i18n}}
+            </a></li>
+            <li><a data-toggle="pill" data-target="#roomManagement" ng-click="initRooms()">
+                {{'ADMIN_ROOM_MANAGEMENT_TITLE' | i18n}}
+            </a></li>
+            <li><a data-toggle="pill" data-target="#bookerManagement" ng-click="initBookers()">
+                {{'ADMIN_USER_MANAGEMENT_TITLE' | i18n}}
+            </a></li>
+        </ul>
+
+        <img ng-show="dataLoading === true" src="/images/loading.svg" 
+                alt="..." style="width: 15%; height: 15%"/>
+
+        <div class="tab-content">
+            <div ng-hide="dataLoading === true" id="adminAuthKeyGenerator" class="tab-pane fade in active">
+                <h2>{{'ADMIN_GENERATE_ADMIN_TOKEN_LABEL' | i18n}}</h2>
+                <a ng-click="adminConsoleCtrl.generateAdminToken()">
+                    <button type="button" class="btn btn-info" style="margin: 8px;" >
+                        {{'ADMIN_GENERATE_LABEL' | i18n}}
+                    </button>
+                </a>
+                <p>{{'ADMIN_KEY_LABEL' | i18n}} {{adminToken}}</p>
+                <p>{{'ADMIN_END_OF_VALIDITY_LABEL' | i18n}} {{adminTokenEndTime}}</p>
+            </div>
+            <div ng-hide="dataLoading === true" id="metrics" class="tab-pane fade">
+                <h2>{{'ADMIN_METRICS_LABEL' | i18n}}</h2>
+            </div>
+            
+            <div ng-hide="dataLoading === true" id="roomManagement" class="tab-pane fade">
+                <ul id="roomList" class="list-group">
+                    <li class="list-group-item" ng-repeat="room in rooms">
+                        <input type="text" 
+                        style="width:65%"
+                        ng-model="room.name" 
+                        ng-disabled="room.isNew === false && room.oldName === undefined" required />
+                        <a ng-click="adminConsoleCtrl.deleteRoomDB(room)"
+                        style="float: right;margin-left:5px;">
+                            <button class="btn btn-danger">
+                                {{'ADMIN_DELETE_ROOM_LABEL' | i18n}}
+                            </button>
+                        </a>
+                        <a ng-click="adminConsoleCtrl.modifyRoom(room)" ng-show="room.oldName === undefined"
+                        style="float: right;margin-left:5px;">
+                            <button class="btn btn-warning" 
+                                ng-show="room.isNew === false && room.oldName === undefined">
+                                {{'ADMIN_UPDATE_ROOM_LABEL' | i18n}}
+                            </button>
+                        </a>
+                        <a ng-click="adminConsoleCtrl.updateRoomInDB(room)"  g-show="room.isNew === true || room.oldName !== undefined"
+                        style="float: right;margin-left:5px;">
+                            <button class="btn btn-success" ng-show="room.isNew === true || room.oldName !== undefined">
+                                {{'ADMIN_VALIDATE_ROOM_LABEL' | i18n}}
+                            </button>
+                        </a>                        
+                    </li>
+                </ul>
+                <a ng-click="adminConsoleCtrl.addNewRoom()">
+                    <button class="btn btn-info">
+                        {{'ADMIN_ADD_ROOM_LABEL' | i18n}}
+                    </button>
+                </a>
+            </div>
+            <div ng-hide="dataLoading" id="bookerManagement" class="tab-pane fade">
+                <h2>{{'ADMIN_USERS_LABEL' | i18n}}</h2>
+                <ul id="bookersList" class="list-group">
+                    <li class="list-group-item" ng-repeat="booker in bookers">
+                        <input type="text" 
+                        style="width:30%"
+                        ng-model="booker.booker" 
+                        trusted-html
+                        ng-disabled="booker.isNew === false && booker.oldName === undefined" required>
+                        </input>
+                        <span class="glyphicon glyphicon-stop" 
+                            ng-style="{color:booker.color}"
+                            style="padding:0px;margin-left:5px;"></span>
+                        <material-picker ng-hide="booker.isNew === false && booker.oldName === undefined"
+                        ng-model="booker.color" format="'hex'" hover-model="hoverColor" size="size"></material-picker>
+                        <a ng-click="adminConsoleCtrl.deleteBookerDB(booker)"
+                        style="float: right;margin-left:5px;">
+                            <button class="btn btn-danger">
+                                {{'ADMIN_DELETE_USER_LABEL' | i18n}}
+                            </button>
+                        </a>
+                        
+                        <a ng-click="adminConsoleCtrl.modifyBooker(booker)" ng-show="booker.oldName === undefined"
+                        style="float: right;margin-left:5px;">
+                            <button class="btn btn-warning" 
+                                ng-show="booker.isNew === false && booker.oldName === undefined">
+                                {{'ADMIN_UPDATE_USER_LABEL' | i18n}}
+                            </button>
+                        </a>
+                        <a ng-click="adminConsoleCtrl.updateBookerInDB(booker)"  ng-show="booker.oldName !== undefined"
+                        style="float: right;margin-left:5px;">
+                            <button class="btn btn-success" ng-show="booker.isNew === true || booker.oldName !== undefined">
+                                {{'ADMIN_VALIDATE_USER_LABEL' | i18n}}
+                            </button>
+                        </a>
+                        
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
