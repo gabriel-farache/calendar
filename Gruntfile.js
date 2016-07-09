@@ -501,17 +501,11 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'clean:dist',
     'wiredep',
-    'useminPrepare',
     'concurrent:dist',
     'postcss',
-    'ngtemplates',
-    'concat',   
     'copy:dist',
-    'cdnify',
-    'filerev',
-    'usemin',
-    'htmlmin'
-  ]);
+    'filerev'
+ ]);
 
   grunt.registerTask('default', [
     'newer:jshint',
