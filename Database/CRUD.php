@@ -37,13 +37,24 @@ try {
     include('booker.inc.php');
     include('booking.inc.php');
 
+    /*
     $host     = "localhost";
     $port     = 27017;
     $user     = "root";
     $pass     = "root";
     $database = "calendar";
-    
-    $connection = new MongoClient("mongodb://" . $host . ":" . $port . "/?replicaSet=rs0");
+    $replicaSet = "rs0";
+    */
+
+    $host     = "ds017155.mlab.com";
+    $port     = 17155;
+    $user     = "heroku_g164v8r4";
+    $pass     = "4arvj75kku0snf73kjbjtp8eo2";
+    $database = "heroku_g164v8r4";
+    $replicaSet = "rs-ds017155";
+    $connectionString = "mongodb://" . $user . ":" .$pass . "@" . $host . ":" . $port . "/" . $database . "?replicaSet=" . $replicaSet;
+
+    $connection = new MongoClient($connectionString);
     $db         = $connection->selectDB($database);
     
     $err        = $db->lastError();

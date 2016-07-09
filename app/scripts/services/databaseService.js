@@ -1,6 +1,6 @@
 'use strict';
 function DatabaseService($http) {
-  var serverAddr = 'http://gabiraspi.ddns.net/';
+  var serverAddr = 'https://calendar-pechbusque-db.herokuapp.com/';
 	function getBookingDB(index) {
       var URL = serverAddr+'CRUD.php?action=get_booking';
       var params = {
