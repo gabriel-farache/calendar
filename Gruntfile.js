@@ -284,7 +284,7 @@ module.exports = function (grunt) {
         flow: {
           html: {
             steps: {
-              js: ['concat'],
+              js: ['concat', 'uglifyjs'],
               css: ['cssmin']
             },
             post: {}
@@ -501,11 +501,20 @@ module.exports = function (grunt) {
   grunt.registerTask('build', [
     'clean:dist',
     'wiredep',
+    'useminPrepare',
     'concurrent:dist',
     'postcss',
+    'ngtemplates',
+    'concat',
+    'ngAnnotate',
     'copy:dist',
-    'filerev'
- ]);
+    'cdnify',
+    'cssmin',
+    'uglify',
+    'filerev',
+    'usemin',
+    'htmlmin'
+  ]);
 
   grunt.registerTask('default', [
     'newer:jshint',
@@ -513,7 +522,7 @@ module.exports = function (grunt) {
     'test',
     'build'
   ]);
-
+  
   grunt.registerTask('heroku:production', [
       'bower:install',
       'build'

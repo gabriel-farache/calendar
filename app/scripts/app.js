@@ -16,7 +16,6 @@ angular
     'ngRoute',
     'angularMoment',
     'ngSanitize',
-    'ui.bootstrap.materialPicker',
     'localization'
   ])
   .directive('trustedHTML', ['$sce', function($sce) {
