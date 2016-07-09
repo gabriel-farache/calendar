@@ -49,3 +49,6 @@ sudo apt-get install php5 php5-cli libapache2-mod-php5
 sudo a2enmod header
 sudo a2enmod rewrite
 sudo apt-get install php5-mongo
+
+sudo gem install travis --no-rdoc --no-ri
+travis lint .tavis.yml
