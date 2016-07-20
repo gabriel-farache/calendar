@@ -46,7 +46,6 @@ function DatabaseService($http) {
                 'week'      : week,
                 'room'      : currentRoom
             };
-            console.log(params);
       return ($http.post(URL,params));
     }
   

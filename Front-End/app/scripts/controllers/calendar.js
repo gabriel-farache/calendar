@@ -254,6 +254,7 @@ angular.module('calendarApp')
       $scope.booking.scheduleStart = currTime+'';
       $scope.booking.day = day;
       $scope.booking.isValidated = false;
+      $scope.booking.isPeriodic = false;
       $scope.booking.bookedBy = $scope.booking.bookedBy === undefined ? ' ' : $scope.booking.bookedBy;
       //store the origin slot time selected to know if the selection direction
       this.originCurrTime = parseFloat(currTime);
@@ -329,6 +330,7 @@ angular.module('calendarApp')
               bookingDB.year           =   data.year;
               bookingDB.bookedBy       =   data.bookedBy;
               bookingDB.isValidated    =   data.isValidated;
+              bookingDB.isPeriodic     =   data.isPeriodic;
 
               $scope.booking = bookingDB;
               $scope.error = undefined;

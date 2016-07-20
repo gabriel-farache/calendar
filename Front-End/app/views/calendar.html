@@ -107,6 +107,11 @@
                                     <input type="checkbox" name="isValidated" ng-checked="booking.isValidated === true" disabled/>
                                     {{'CALENDAR_VALIDATED_LABEL' | i18n}}
                                 </div>
+                                <div class="input-group">
+                                    <label>{{'CALENDAR_BOOKING_LABEL' | i18n}}</label>
+                                    <input type="checkbox" name="isPeriodic" ng-checked="booking.isPeriodic === true" disabled/>
+                                    {{'CALENDAR_PERIODIC_LABEL' | i18n}}
+                                </div>
                                 <input class="btn btn-success" 
                                     ng-hide="dataLoading === true || booking.bookedBy === username && booking.isValidated === true" 
                                     type="submit" 

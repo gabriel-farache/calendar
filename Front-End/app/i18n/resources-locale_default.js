@@ -23,6 +23,7 @@
    "CALENDAR_ROOM_LABEL": "Salle : ",
    "CALENDAR_BOOKED_BY_LABEL": "Réservé par : ",
    "CALENDAR_VALIDATED_LABEL": "Validée",
+   "CALENDAR_PERIODIC_LABEL": "Periodique",
    "CALENDAR_BOOK_LABEL" : "Réserver",
    "CALENDAR_VALIDATE_BOOKING_LABEL": "Valider réservation",
    "CALENDAR_DELETE_BOOKING_LABEL": "Annuler réservation",

@@ -23,6 +23,7 @@
    "CALENDAR_ROOM_LABEL": "Room: ",
    "CALENDAR_BOOKED_BY_LABEL": "Booked by: ",
    "CALENDAR_VALIDATED_LABEL": "Validated",
+   "CALENDAR_PERIODIC_LABEL": "Periodic",
    "CALENDAR_BOOK_LABEL" : "Book",
    "CALENDAR_VALIDATE_BOOKING_LABEL": "Validate Booking",
    "CALENDAR_DELETE_BOOKING_LABEL": "Cancel Booking",
