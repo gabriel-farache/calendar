@@ -55,6 +55,13 @@ travis lint .tavis.yml
 
 heroku config:add BUILDPACK_URL=https://github.com/mbuchetics/heroku-buildpack-nodejs-grunt.git
 heroku config:set NODE_ENV=production
+npm install gzippo express morgan --save
+
 
 heroku config:add BUILDPACK_URL=https://github.com/heroku/heroku-buildpack-php
 heroku config:set NODE_ENV=production
+
+
+git subtree push --prefix Back-End herokudb master
+
+git subtree push --prefix Front-End heroku master

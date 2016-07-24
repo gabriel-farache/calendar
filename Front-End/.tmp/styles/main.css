@@ -8729,46 +8729,47 @@ button.close {
 /* line 25, ../../app/styles/main.scss */
 .validatedBooking {
   font-weight: bold !important;
+  border: 3px solid #ff0000;
 }
 
-/* line 28, ../../app/styles/main.scss */
+/* line 29, ../../app/styles/main.scss */
 ::-webkit-scrollbar {
   -webkit-appearance: none;
   width: 7px;
 }
 
-/* line 32, ../../app/styles/main.scss */
+/* line 33, ../../app/styles/main.scss */
 ::-webkit-scrollbar-thumb {
   border-radius: 4px;
   background-color: rgba(0, 0, 0, 0.5);
   -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
 }
 
-/* line 37, ../../app/styles/main.scss */
+/* line 38, ../../app/styles/main.scss */
 html {
   overflow: -moz-scrollbars-vertical;
   overflow: scroll;
 }
 
-/* line 41, ../../app/styles/main.scss */
+/* line 42, ../../app/styles/main.scss */
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
 }
 
-/* line 46, ../../app/styles/main.scss */
+/* line 47, ../../app/styles/main.scss */
 table.fixed {
   table-layout: fixed;
 }
 
-/* line 47, ../../app/styles/main.scss */
+/* line 48, ../../app/styles/main.scss */
 table.fixed td {
   overflow: hidden;
 }
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
-/* line 49, ../../app/styles/main.scss */
+/* line 50, ../../app/styles/main.scss */
 .header,
 .marketing,
 .footer {
@@ -8776,7 +8777,7 @@ table.fixed td {
   padding-right: 15px;
 }
 
-/* line 56, ../../app/styles/main.scss */
+/* line 57, ../../app/styles/main.scss */
 .innerCalendarPage {
   margin: 0;
   padding: 0;
@@ -8789,7 +8790,7 @@ table.fixed td {
   display: block;
 }
 
-/* line 69, ../../app/styles/main.scss */
+/* line 70, ../../app/styles/main.scss */
 .innerCalendarContent {
   padding: 0;
   position: absolute;
@@ -8805,7 +8806,7 @@ table.fixed td {
   /*-webkit-overflow-scrolling: touch;*/
 }
 
-/* line 84, ../../app/styles/main.scss */
+/* line 85, ../../app/styles/main.scss */
 .innerCalendarHeaderPage {
   margin: 0;
   padding: 0;
@@ -8818,7 +8819,7 @@ table.fixed td {
   display: block;
 }
 
-/* line 97, ../../app/styles/main.scss */
+/* line 98, ../../app/styles/main.scss */
 .innerCalendarHeaderContent {
   padding: 0;
   position: relative;
@@ -8834,7 +8835,7 @@ table.fixed td {
   /*-webkit-overflow-scrolling: touch;*/
 }
 
-/* line 112, ../../app/styles/main.scss */
+/* line 113, ../../app/styles/main.scss */
 .innerInfoPage {
   overflow-y: scroll;
   overflow-x: hidden;
@@ -8851,7 +8852,7 @@ table.fixed td {
   display: block;
 }
 
-/* line 129, ../../app/styles/main.scss */
+/* line 130, ../../app/styles/main.scss */
 .innerInfoContent {
   padding: 0;
   position: absolute;
@@ -8867,26 +8868,26 @@ table.fixed td {
   /*-webkit-overflow-scrolling: touch;*/
 }
 
-/* line 144, ../../app/styles/main.scss */
+/* line 145, ../../app/styles/main.scss */
 span {
   padding: 4em 0 0 0;
   display: inline-block;
 }
 
-/* line 150, ../../app/styles/main.scss */
+/* line 151, ../../app/styles/main.scss */
 .nav.nav-pills li a {
   border-radius: 0;
   /* avoid curved divisor corner */
 }
 
 /* Custom page header */
-/* line 155, ../../app/styles/main.scss */
+/* line 156, ../../app/styles/main.scss */
 .header {
   border-bottom: 1px solid #e5e5e5;
   margin-bottom: 10px;
   /* Make the masthead heading the same height as the navigation */
 }
-/* line 160, ../../app/styles/main.scss */
+/* line 161, ../../app/styles/main.scss */
 .header h3 {
   margin-top: 0;
   margin-bottom: 0;
@@ -8895,41 +8896,41 @@ span {
 }
 
 /* Custom page footer */
-/* line 169, ../../app/styles/main.scss */
+/* line 170, ../../app/styles/main.scss */
 .footer {
   padding-top: 19px;
   color: #777;
   border-top: 1px solid #e5e5e5;
 }
 
-/* line 175, ../../app/styles/main.scss */
+/* line 176, ../../app/styles/main.scss */
 .container-narrow > hr {
   margin: 30px 0;
 }
 
 /* Main marketing message and sign up button */
-/* line 180, ../../app/styles/main.scss */
+/* line 181, ../../app/styles/main.scss */
 .jumbotron {
   text-align: center;
   border-bottom: 1px solid #e5e5e5;
 }
-/* line 184, ../../app/styles/main.scss */
+/* line 185, ../../app/styles/main.scss */
 .jumbotron .btn {
   font-size: 21px;
   padding: 14px 24px;
 }
 
 /* Supporting marketing content */
-/* line 191, ../../app/styles/main.scss */
+/* line 192, ../../app/styles/main.scss */
 .marketing {
   margin: 40px 0;
 }
-/* line 194, ../../app/styles/main.scss */
+/* line 195, ../../app/styles/main.scss */
 .marketing p + h4 {
   margin-top: 28px;
 }
 
-/* line 199, ../../app/styles/main.scss */
+/* line 200, ../../app/styles/main.scss */
 .noselect {
   cursor: pointer;
   -webkit-touch-callout: none;
@@ -8940,90 +8941,90 @@ span {
   user-select: none;
 }
 
-/* line 208, ../../app/styles/main.scss */
+/* line 209, ../../app/styles/main.scss */
 table {
   margin-bottom: 0px;
 }
 
-/* line 212, ../../app/styles/main.scss */
+/* line 213, ../../app/styles/main.scss */
 tr {
   width: 100%;
 }
 
-/* line 215, ../../app/styles/main.scss */
+/* line 216, ../../app/styles/main.scss */
 td {
   overflow: auto;
 }
 
-/* line 219, ../../app/styles/main.scss */
+/* line 220, ../../app/styles/main.scss */
 upperBorderNone {
   border-top-style: none;
 }
 
-/* line 220, ../../app/styles/main.scss */
+/* line 221, ../../app/styles/main.scss */
 upperBorderDotted {
   border-top-style: dotted;
 }
 
-/* line 221, ../../app/styles/main.scss */
+/* line 222, ../../app/styles/main.scss */
 upperBorderDashed {
   border-top-style: dashed;
 }
 
-/* line 222, ../../app/styles/main.scss */
+/* line 223, ../../app/styles/main.scss */
 upperBorderSolid {
   border-top-style: solid;
 }
 
-/* line 223, ../../app/styles/main.scss */
+/* line 224, ../../app/styles/main.scss */
 upperBorderDouble {
   border-top-style: double;
 }
 
-/* line 224, ../../app/styles/main.scss */
+/* line 225, ../../app/styles/main.scss */
 upperBorderGroove {
   border-top-style: groove;
 }
 
-/* line 225, ../../app/styles/main.scss */
+/* line 226, ../../app/styles/main.scss */
 upperBorderRidge {
   border-top-style: ridge;
 }
 
-/* line 226, ../../app/styles/main.scss */
+/* line 227, ../../app/styles/main.scss */
 upperBorderInset {
   border-top-style: inset;
 }
 
-/* line 227, ../../app/styles/main.scss */
+/* line 228, ../../app/styles/main.scss */
 upperBorderOutset {
   border-top-style: outset;
 }
 
-/* line 229, ../../app/styles/main.scss */
+/* line 230, ../../app/styles/main.scss */
 .selectBookingSlot {
   background-color: #ace1fd !important;
 }
 
-/* line 235, ../../app/styles/main.scss */
+/* line 236, ../../app/styles/main.scss */
 .table-hover > tbody > tr > td:hover, .table-hover > tbody > tr > td:hover {
   background-color: #CFD8DC !important;
 }
 
-/* line 238, ../../app/styles/main.scss */
+/* line 239, ../../app/styles/main.scss */
 .selectedRoom {
   background-color: #ace1fd !important;
 }
 
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
-  /* line 245, ../../app/styles/main.scss */
+  /* line 246, ../../app/styles/main.scss */
   .container {
     max-width: 730px;
   }
 
   /* Remove the padding we set earlier */
-  /* line 250, ../../app/styles/main.scss */
+  /* line 251, ../../app/styles/main.scss */
   .header,
   .marketing,
   .footer {
@@ -9032,18 +9033,18 @@ upperBorderOutset {
   }
 
   /* Space out the masthead */
-  /* line 257, ../../app/styles/main.scss */
+  /* line 258, ../../app/styles/main.scss */
   .header {
     margin-bottom: 30px;
   }
 
   /* Remove the bottom border on the jumbotron for visual effect */
-  /* line 261, ../../app/styles/main.scss */
+  /* line 262, ../../app/styles/main.scss */
   .jumbotron {
     border-bottom: 0;
   }
 }
-/* line 266, ../../app/styles/main.scss */
+/* line 267, ../../app/styles/main.scss */
 .materialpicker-colors {
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -9057,7 +9058,7 @@ upperBorderOutset {
   cursor: default;
 }
 
-/* line 276, ../../app/styles/main.scss */
+/* line 277, ../../app/styles/main.scss */
 .materialpicker-colors div.selected {
   position: relative;
   z-index: 2;
@@ -9065,12 +9066,12 @@ upperBorderOutset {
   border: 2px solid #FFF;
 }
 
-/* line 282, ../../app/styles/main.scss */
+/* line 283, ../../app/styles/main.scss */
 div.materialpicker-white.selected {
   border-color: #78909C;
 }
 
-/* line 285, ../../app/styles/main.scss */
+/* line 286, ../../app/styles/main.scss */
 .colorpicker-preview {
   width: 40px;
   height: 40px;
@@ -9079,10 +9080,8 @@ div.materialpicker-white.selected {
   vertical-align: middle;
 }
 
-/* line 292, ../../app/styles/main.scss */
+/* line 293, ../../app/styles/main.scss */
 .materialpicker.ng-invalid .materialpicker-colors {
   border-color: #a94442;
   box-shadow: 0 1px 5px #a94442;
 }
-
-/*# sourceMappingURL=main.css.map */

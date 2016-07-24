@@ -15,6 +15,7 @@
    "AGENDA_DAY6_LABEL" : "sa.",
    "AGENDA_DAY7_LABEL" : "di.",
    "TODAY_LABEL" : "Aujourd'hui",
+   "SELECTED_ROOM_LABEL" : "Salle sélectionnée :",
 
    "CALENDAR_BOOKING": "Réservation",
    "CALENDAR_BOOKING_LABEL" : "Réservation : ",

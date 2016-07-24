@@ -15,6 +15,7 @@
    "AGENDA_DAY6_LABEL" : "sa.",
    "AGENDA_DAY7_LABEL" : "su.",
    "TODAY_LABEL" : "Today",
+   "SELECTED_ROOM_LABEL" : "Selected room:",
 
    "CALENDAR_BOOKING": "Booking",
    "CALENDAR_BOOKING_LABEL" : "Booking: ",
