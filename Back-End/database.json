@@ -1,0 +1,8 @@
+{
+    "host"        : "ds017155.mlab.com",
+    "port"        : "17155",
+    "user"        : "pechbusque",
+    "pass"        : "Azerty",
+    "database"   : "heroku_g164v8r4",
+    "replicaSet"  : "rs-ds017155"
+}

@@ -1,6 +1,6 @@
 'use strict';
-function DatabaseService($http) {
-  var serverAddr = 'https://calendar-pechbusque-db.herokuapp.com/';
+function DatabaseService($http, DB_CONFIG) {
+  var serverAddr = DB_CONFIG.url;
 	function getBookingDB(index) {
       var URL = serverAddr+'CRUD.php?action=get_booking';
       var params = {
@@ -331,4 +331,4 @@ function DatabaseService($http) {
 
 angular.module('calendarApp').factory('databaseService', DatabaseService);
 
-DatabaseService.$inject = ['$http'];   
+DatabaseService.$inject = ['$http', 'DB_CONFIG'];   

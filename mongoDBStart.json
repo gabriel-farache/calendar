@@ -22,6 +22,20 @@ rsconf = {
 
 rs.initiate(rsconf);
 
+mongo
+use admin
+db.system.users.remove({})   
+db.system.version.remove({}) 
+db.system.version.insert({ "_id" : "authSchema", "currentVersion" : 3 })
+
+db.createUser(
+   {
+     user: "pechbusque",
+     pwd: "Azerty",
+     roles: [ "readWrite", "dbAdmin" ]
+   }
+)
+
 sudo apt-get install autoconf
 npm install --global yo
 npm install -g grunt-cli bower yo generator-karma generator-angular compass

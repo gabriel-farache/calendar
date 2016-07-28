@@ -46,15 +46,16 @@ try {
     $database = "calendar";
     $replicaSet = "rs0";
     */
-
-    $host     = "ds017155.mlab.com";
-    $port     = 17155;
-    $user     = "heroku_g164v8r4";
-    $pass     = "4arvj75kku0snf73kjbjtp8eo2";
-    $database = "heroku_g164v8r4";
-    $replicaSet = "rs-ds017155";
-    $connectionString = "mongodb://" . $user . ":" .$pass . "@" . $host . ":" . $port . "/" . $database . "?replicaSet=" . $replicaSet;
-
+    $dbConfFile = file_get_contents("database.json");
+    $dbConf = json_decode($dbConfFile, true);
+    $host     = $dbConf['host'];
+    $port     = $dbConf['port'];
+    $user     = $dbConf['user'];
+    $pass     = $dbConf['pass'];
+    $database = $dbConf['database'];
+    $replicaSet = $dbConf['replicaSet'];
+    $connectionString = "mongodb://" . $user . ":" .$pass . "@" . $host . ":" . $port . "/" . $database;// . "?replicaSet=" . $replicaSet;
+//print_r($connectionString);
     $connection = new MongoClient($connectionString);
     $db         = $connection->selectDB($database);
     
