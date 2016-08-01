@@ -97,6 +97,10 @@ angular.module('calendarApp')
       this.initCalendarDays();
       this.initWeek();
     };
+    
+    this.resolve = {
+      return globalizationService.initLocalizedResources();
+    };
 
     this.initRooms = function() {
       databaseService.getRoomsDB().then(function(data)
