@@ -1,4 +1,4 @@
-ENV_BACKEND_URL='http://0.0.0.0:8080'
+ENV_BACKEND_URL='https://calendar-pechbusque-db.herokuapp.com/'
 
 ENV_DB_HOST='ds017155.mlab.com'
 ENV_DB_PORT='17155'
