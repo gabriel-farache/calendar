@@ -1,6 +1,16 @@
 'use strict';
 function DatabaseService($http, DB_CONFIG) {
   var serverAddr = DB_CONFIG.url;
+
+  if(serverAddr.indexOf('http://') !== 0 && serverAddr.indexOf('https://') !== 0){
+    serverAddr = 'http://' + serverAddr;
+  }
+
+  if(serverAddr.indexOf('/', serverAddr.length - 1) !== 0) {
+    serverAddr = serverAddr + '/';
+  }
+
+  
 	function getBookingDB(index) {
       var URL = serverAddr+'CRUD.php?action=get_booking';
       var params = {

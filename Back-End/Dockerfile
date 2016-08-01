@@ -2,8 +2,8 @@ FROM php:5.5-apache
 
 MAINTAINER gabriel.farache@gmail.com
 
-RUN mkdir -p /pechbusque-calendar/front-end
-WORKDIR /pechbusque-calendar/front-end
+RUN mkdir -p /pechbusque-calendar/back-end
+WORKDIR /pechbusque-calendar/back-end
 # Copy this repo into place.
 ADD . /pechbusque-calendar/back-end
 
@@ -31,7 +31,7 @@ EXPOSE 80
 
 ADD ./httpd.conf /etc/apache2/sites-enabled/000-default.conf
 
-CMD	[“sh”, “dockerBackEndRunScript.sh”]
+
 
 # By default start up apache in the foreground, override with /bin/bash for interative.
-CMD ["apache2","-DFOREGROUND"]
+CMD ./dockerBackEndRunScript.sh && apache2 -D FOREGROUND
