@@ -1,4 +1,5 @@
 <?php
+header("Access-Control-Allow-Origin: *");
 
 $GLOBALS['errorAlreadyHappened'] = FALSE;
 set_error_handler('myErrorHandler');
