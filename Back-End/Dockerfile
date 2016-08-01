@@ -1,4 +1,4 @@
-FROM httpd:latest
+FROM php:5.5-apache
 
 MAINTAINER gabriel.farache@gmail.com
 
@@ -7,11 +7,15 @@ WORKDIR /pechbusque-calendar/front-end
 # Copy this repo into place.
 ADD . /pechbusque-calendar/back-end
 
+RUN apt-get update -y && apt-get install -y libssl-dev && \
+    pecl install mongo && \
+    apt-get purge -y --auto-remove libssl-dev && \
+    docker-php-ext-enable mongo && \
+    echo "extension=mongo.so" > /usr/local/etc/php/conf.d/ext-mongo.ini && \
+    echo “extension=mongo.so” > /usr/local/etc/php/php.ini
 
-RUN apt-get update && apt-get install -y php5 php5-cli libapache2-mod-php5 php5-mongo
 
 # Enable apache mods.
-RUN a2enmod php5
 RUN a2enmod rewrite
 RUN a2enmod headers
 
@@ -26,7 +30,8 @@ ENV APACHE_PID_FILE /var/run/apache2.pid
 EXPOSE 80
 
 ADD ./httpd.conf /etc/apache2/sites-enabled/000-default.conf
-#ADD . /var/www/html/
+
+CMD	[“sh”, “dockerBackEndRunScript.sh”]
 
 # By default start up apache in the foreground, override with /bin/bash for interative.
 CMD ["apache2","-DFOREGROUND"]
