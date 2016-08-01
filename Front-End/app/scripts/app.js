@@ -57,7 +57,8 @@ angular
       }).when('/', {
         templateUrl: 'views/calendar.html',
         controller: 'calendarController',
-        controllerAs: 'calendarCtrl'
+        controllerAs: 'calendarCtrl',
+        resolve: 'calendarCtrl.resolve'
       })
       .when('/about', {
         templateUrl: 'views/about.html',
