@@ -1,6 +1,6 @@
 'use strict';
 
-function GlobalizationService($http, $rootScope, $window) {
+function GlobalizationService($http, $rootScope, $window, $q) {
     var DEFAULT_INIT = {'fr' : {'INDEX_WELCOME_LABEL' : 'Bienvenue',
                            'INDEX_SEARCH_FREE_SLOT_BUTTON' : 'Chercher salles libres',
                            'INDEX_PERIODIC_BOOKING_BUTTON' : 'Réservations périodiques',
@@ -40,12 +40,18 @@ function GlobalizationService($http, $rootScope, $window) {
     };
 
     function successCallback(data) {
+        var deferred = $q.defer();
+      
         // store the returned array in the dictionary
         localize.dictionary = data;
         // set the flag that the resource are loaded
         localize.resourceFileLoaded = true;
         // broadcast that the file has been loaded
         $rootScope.$broadcast('localizeResourcesUpdates');
+        
+        deferred.resolve("i18n files loaded!");
+        // promise is returned
+        return deferred.promise;
     }
 
     function initLocalizedResources() {
@@ -95,7 +101,7 @@ function GlobalizationService($http, $rootScope, $window) {
 
 angular.module('localization', []).factory('globalizationService', GlobalizationService);
 
-GlobalizationService.$inject = ['$http', '$rootScope', '$window'];   
+GlobalizationService.$inject = ['$http', '$rootScope', '$window', '$q'];   
 
 angular.module('localization').filter('i18n', ['globalizationService', function (globalizationService) {
     return function (input) {
