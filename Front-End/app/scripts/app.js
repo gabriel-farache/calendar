@@ -58,7 +58,11 @@ angular
         templateUrl: 'views/calendar.html',
         controller: 'calendarController',
         controllerAs: 'calendarCtrl',
-        resolve: 'calendarCtrl.resolve'
+        resolve: {
+          messages: function (globalizationService) {
+            return globalizationService.initLocalizedResources();
+          }
+        }
       })
       .when('/about', {
         templateUrl: 'views/about.html',

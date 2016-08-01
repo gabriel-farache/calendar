@@ -6,6 +6,7 @@
    "INDEX_ACCOUNT_BUTTON" : "Mon compte",
    "INDEX_LOGIN_BUTTON" : "S'authentifier",
    "INDEX_LOGOFF_BUTTON" : "Se déconnecter",
+   "INDEX_LOADING_DATA" : "Chargement des données",
 
    "AGENDA_DAY1_LABEL" : "lu.",
    "AGENDA_DAY2_LABEL" : "ma.",

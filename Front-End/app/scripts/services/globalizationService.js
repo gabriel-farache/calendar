@@ -1,6 +1,6 @@
 'use strict';
 
-function GlobalizationService($http, $rootScope, $window, $q) {
+function GlobalizationService($http, $rootScope, $window, $q, sharedService) {
     var DEFAULT_INIT = {'fr' : {'INDEX_WELCOME_LABEL' : 'Bienvenue',
                            'INDEX_SEARCH_FREE_SLOT_BUTTON' : 'Chercher salles libres',
                            'INDEX_PERIODIC_BOOKING_BUTTON' : 'Réservations périodiques',
@@ -39,6 +39,8 @@ function GlobalizationService($http, $rootScope, $window, $q) {
         resourceFileLoaded:false
     };
 
+    var isLoaded = false;
+
     function successCallback(data) {
         var deferred = $q.defer();
       
@@ -47,9 +49,10 @@ function GlobalizationService($http, $rootScope, $window, $q) {
         // set the flag that the resource are loaded
         localize.resourceFileLoaded = true;
         // broadcast that the file has been loaded
-        $rootScope.$broadcast('localizeResourcesUpdates');
+        sharedService.prepForI18nLoadedBroadcast();
         
-        deferred.resolve("i18n files loaded!");
+        deferred.resolve('i18n files loaded!');
+        isLoaded = true;
         // promise is returned
         return deferred.promise;
     }
@@ -58,11 +61,16 @@ function GlobalizationService($http, $rootScope, $window, $q) {
         // build the url to retrieve the localized resource file
         var url = '/i18n/resources-locale_' + localize.language + '.json';
         // request the resource file
-        return $http({ method:'GET', url:url, cache:false }).success(successCallback).error(function () {
+        $http({ method:'GET', url:url, cache:false }).then(function(response){
+            return successCallback(response.data);
+          },
+          function () {
             // the request failed set the url to the default resource file
             var url = '/i18n/resources-locale_default.json';
             // request the default resource file
-            return $http({ method:'GET', url:url, cache:false }).success(successCallback);
+            $http({ method:'GET', url:url, cache:false }).then(function(response){
+              return successCallback(response.data);
+            });
         });
     }
 
@@ -88,20 +96,20 @@ function GlobalizationService($http, $rootScope, $window, $q) {
         return result;
     }
     localize.dictionary.push(DEFAULT_INIT[localize.language]);
-    initLocalizedResources();
 
     var service = {};
     service.localize = localize;
     service.getLocalizedString = getLocalizedString;
     service.initLocalizedResources = initLocalizedResources;
     service.successCallback = successCallback;
+    service.isLoaded = isLoaded;
 
     return service;
 }
 
 angular.module('localization', []).factory('globalizationService', GlobalizationService);
 
-GlobalizationService.$inject = ['$http', '$rootScope', '$window', '$q'];   
+GlobalizationService.$inject = ['$http', '$rootScope', '$window', '$q', 'sharedService'];   
 
 angular.module('localization').filter('i18n', ['globalizationService', function (globalizationService) {
     return function (input) {

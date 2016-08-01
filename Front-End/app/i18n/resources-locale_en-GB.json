@@ -6,6 +6,7 @@
    "INDEX_ACCOUNT_BUTTON" : "My account",
    "INDEX_LOGIN_BUTTON" : "Login",
    "INDEX_LOGOFF_BUTTON" : "Logoff",
+   "INDEX_LOADING_DATA" : "Loading data",
 
    "AGENDA_DAY1_LABEL" : "mo.",
    "AGENDA_DAY2_LABEL" : "tu.",

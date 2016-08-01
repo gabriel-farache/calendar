@@ -2,12 +2,12 @@
 
 angular
     .module('calendarApp')
-    .controller('headerController', ['$scope', '$cookieStore', '$location', 'sharedService', 'authenticationService', 
-    function HeaderController($scope, $cookieStore, $location, sharedService, authenticationService) {
+    .controller('headerController', ['$scope', '$cookieStore', '$location', 'sharedService', 'authenticationService', 'globalizationService',
+    function HeaderController($scope, $cookieStore, $location, sharedService, authenticationService, globalizationService) {
         $scope.guestName = 'Visiteur';
         $scope.username = $scope.guestName;
         $scope.isAdmin = false;
-
+        $scope.isLoaded = globalizationService.isLoaded;
 
     	var globalsCookies = $cookieStore.get('globals');
       	if(globalsCookies !== undefined) {
@@ -29,7 +29,13 @@ angular
             $scope.isAdmin = message.isAdmin;
         }
 
+        function handleI18nLoadedFunction() {
+            $scope.isLoaded = true;
+        }
+
         $scope.$on('handleBroadcast', handleBroadcastCallbackFunction);
+
+        $scope.$on('i18nLoaded', handleI18nLoadedFunction);
 
 
     }]);
