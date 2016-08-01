@@ -46,7 +46,7 @@ try {
     $database = "calendar";
     $replicaSet = "rs0";
     */
-    $dbConfFile = file_get_contents("database.json");
+    $dbConfFile = file_get_contents("database.conf");
     $dbConf = json_decode($dbConfFile, true);
     $host     = $dbConf['host'];
     $port     = $dbConf['port'];
