@@ -58,11 +58,11 @@ function GlobalizationService($http, $rootScope, $window, $q) {
         // build the url to retrieve the localized resource file
         var url = '/i18n/resources-locale_' + localize.language + '.json';
         // request the resource file
-        $http({ method:'GET', url:url, cache:false }).success(successCallback).error(function () {
+        return $http({ method:'GET', url:url, cache:false }).success(successCallback).error(function () {
             // the request failed set the url to the default resource file
             var url = '/i18n/resources-locale_default.json';
             // request the default resource file
-            $http({ method:'GET', url:url, cache:false }).success(successCallback);
+            return $http({ method:'GET', url:url, cache:false }).success(successCallback);
         });
     }
 
