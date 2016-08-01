@@ -1,8 +1,8 @@
 /node_modules
 /Front-End/dist
-/.tmp
-/.sass-cache
-/bower_components
+Front-End/.tmp
+Front-End/.sass-cache
+Front-End/bower_components
 /Database/phpinfo.php
 *.DS_Store
 *.log

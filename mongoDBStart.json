@@ -1,8 +1,6 @@
-sudo mkdir /data/       
-sudo mkdir /data/rs0/   
-sudo mkdir /data/rs0/db0
-sudo mkdir /data/rs0/db1
-sudo mkdir /data/rs0/db2
+sudo mkdir -p /data/rs0/db0
+sudo mkdir -p /data/rs0/db1
+sudo mkdir -p /data/rs0/db2
 sudo chown -R pi /data/ 
 export LC_ALL=C
 mongod --port 27017 --dbpath /data/rs0/db0 --replSet rs0 --smallfiles --oplogSize 128 &
