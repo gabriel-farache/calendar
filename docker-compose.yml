@@ -66,6 +66,11 @@ services:
       - mongo1:mongo1
       - mongo2:mongo2
       - mongo3:mongo3
+    environment:
+      - user=admin
+      - password=admin
+      - base64pwd=QXplcnR5
+      - email=gabriel.farache@gmail.com
     volumes:
       - ./scripts:/scripts
     entrypoint: /scripts/setupMongo.sh
