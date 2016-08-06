@@ -67,10 +67,11 @@ services:
       - mongo2:mongo2
       - mongo3:mongo3
     environment:
-      - user=admin
-      - password=admin
-      - base64pwd=QXplcnR5
-      - email=gabriel.farache@gmail.com
+      - USER=admin
+      - PASSWORD=admin
+      - BASE64PWD=QXplcnR5
+      - DATABASE_NAME=calendar-pechbusque
+      - EMAIL=gabriel.farache@gmail.com
     volumes:
       - ./scripts:/scripts
     entrypoint: /scripts/setupMongo.sh
@@ -79,6 +80,9 @@ services:
     image: elasticsearch
     links:
       - elasticsearch:elasticsearch
+    environment:
+      - DATABASE_NAME_ALIAS=calendar-pechbusque
+      - ALIAS_NAME=booking-pechbusque
     volumes:
       - ./scripts:/scripts
     entrypoint: /scripts/setupElasticSearch.sh

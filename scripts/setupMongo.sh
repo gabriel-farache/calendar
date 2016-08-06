@@ -40,15 +40,15 @@ mongo --host ${MONGODB1}:27017 <<EOF
     };
     rs.initiate(cfg, { force: true });
     rs.reconfig(cfg, { force: true });
-    use calendar;
+    use $DATABASE_NAME;
     db.createUser(
       {
-        user: "$user",
+        user: "$USER",
         pwd: "$password",
-        roles: [ { role: "userAdmin", db: "calendar" } ]
+        roles: [ { role: "userAdmin", db: "$DATABASE_NAME" } ]
       }
     );
-    db.User.insert( { booker:"$user",password: "$base64pwd",isAdmin: true, color: "#9e9e9e", email:"$email"});
+    db.User.insert( { booker:"$USER",password: "$BASE64PWD",isAdmin: true, color: "#9e9e9e", email:"$EMAIL"});
 EOF
 
 

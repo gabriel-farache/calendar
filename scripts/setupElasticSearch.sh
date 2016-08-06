@@ -18,13 +18,13 @@ echo "Installing Head plugin"
 
 
 echo "Puting index v1"
-curl -XPUT ${ES}:9200/booking_index_v1
+curl -XPUT ${ES}:9200/${ALIAS_NAME}_v1
 
 echo "Puting alias"
-curl -XPUT ${ES}:9200/booking_index_v1/_alias/calendar
+curl -XPUT ${ES}:9200/${ALIAS_NAME}_v1/_alias/${DATABASE_NAME_ALIAS}
 
 echo "Puting index v2 with mappings"
-curl -XPUT ${ES}:9200/booking_index_v2 -d '{
+curl -XPUT ${ES}:9200/${ALIAS_NAME}_v2 -d '{
       "mappings":{
          "booking":{
             "properties":{
@@ -64,26 +64,28 @@ curl -XPUT ${ES}:9200/booking_index_v2 -d '{
 echo "Reindexing"
 curl -XPOST ${ES}:9200/_reindex -d '{
      "source" : {
-      "index" : "booking_index_v1"
+      "index" : "${ALIAS_NAME}_v1"
      },
      "dest" : {
-      "index" : "booking_index_v2",
+      "index" : "${ALIAS_NAME}_v2",
       "version_type": "external"
      }
     }'
 
-echo "Upudating aliases"
+echo "Updating aliases"
 curl -XPOST ${ES}:9200/_aliases -d '
 {
     "actions": [
         { "remove": {
-            "index": "booking_index_v1",
-            "alias": "calendar"
+            "index": "${ALIAS_NAME}_v1",
+            "alias": "${DATABASE_NAME_ALIAS}"
         }},
         { "add": {
-            "index": "booking_index_v2",
-            "alias": "calendar"
+            "index": "${ALIAS_NAME}_v2",
+            "alias": "${DATABASE_NAME_ALIAS}"
         }}
     ]
 }
 '
+echo "Removing old v1 index"
+curl -XDELETE ${ES}:9200/${ALIAS_NAME}_v1
