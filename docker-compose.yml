@@ -94,6 +94,9 @@ services:
       - mongo2:mongo2
       - mongo3:mongo3
       - elasticsearch:elasticsearch
+    depends_on:
+      - elasticsearchsetup
+      - mongosetup
     volumes:
       - ./scripts:/scripts
     entrypoint: /scripts/mongo-connector.sh

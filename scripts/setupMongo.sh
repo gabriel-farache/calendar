@@ -44,7 +44,7 @@ mongo --host ${MONGODB1}:27017 <<EOF
     db.createUser(
       {
         user: "$USER",
-        pwd: "$password",
+        pwd: "$PASSWORD",
         roles: [ { role: "userAdmin", db: "$DATABASE_NAME" } ]
       }
     );

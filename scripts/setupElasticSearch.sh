@@ -13,8 +13,8 @@ echo "Elasticsearch started."
 
 echo SETUPELASTICSEARCH.sh time now: `date +"%T" `
 
-echo "Installing Head plugin"
-/usr/share/elasticsearch/bin/plugin install mobz/elasticsearch-head 
+#echo "Installing Head plugin"
+#/usr/share/elasticsearch/bin/plugin install mobz/elasticsearch-head 
 
 
 echo "Puting index v1"
@@ -64,10 +64,10 @@ curl -XPUT ${ES}:9200/${ALIAS_NAME}_v2 -d '{
 echo "Reindexing"
 curl -XPOST ${ES}:9200/_reindex -d '{
      "source" : {
-      "index" : "${ALIAS_NAME}_v1"
+      "index" : "'"${ALIAS_NAME}_v1"'"
      },
      "dest" : {
-      "index" : "${ALIAS_NAME}_v2",
+      "index" : "'"${ALIAS_NAME}_v2"'",
       "version_type": "external"
      }
     }'
@@ -77,12 +77,12 @@ curl -XPOST ${ES}:9200/_aliases -d '
 {
     "actions": [
         { "remove": {
-            "index": "${ALIAS_NAME}_v1",
-            "alias": "${DATABASE_NAME_ALIAS}"
+            "index": "'"${ALIAS_NAME}_v1"'",
+            "alias": "'"${DATABASE_NAME_ALIAS}"'"
         }},
         { "add": {
-            "index": "${ALIAS_NAME}_v2",
-            "alias": "${DATABASE_NAME_ALIAS}"
+            "index": "'"${ALIAS_NAME}_v2"'",
+            "alias": "'"${DATABASE_NAME_ALIAS}"'"
         }}
     ]
 }
