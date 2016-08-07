@@ -83,8 +83,8 @@ then
     exit 1;
 fi
 
-echo "docker run -e ENV_BACKEND_URL=$ENV_BACKEND_URL -p 9000:9000 -d gabrielfarache/pechbusque-calendar:front-end"
-docker run -e ENV_BACKEND_URL=$ENV_BACKEND_URL -p 9000:9000 -d gabrielfarache/pechbusque-calendar:front-end
+echo "docker run -e ENV_BACKEND_URL=$ENV_BACKEND_URL -p 9000:9000 -d gabrielfarache/calendar-pechbusque:front-end"
+docker run -e ENV_BACKEND_URL=$ENV_BACKEND_URL -p 9000:9000 -d gabrielfarache/calendar-pechbusque:front-end
 
-echo "docker run -e ENV_DB_HOST=$ENV_DB_HOST -e ENV_DB_PORT=$ENV_DB_PORT -e ENV_DB_USER=$ENV_DB_USER -e ENV_DB_PASS=$ENV_DB_PASS -e ENV_DB_DB_NAME=$ENV_DB_DB_NAME -e ENV_DB_REPLICASET=$ENV_DB_REPLICASET -p 8080:80 -d gabrielfarache/pechbusque-calendar:back-end" 
-docker run -e ENV_DB_HOST=$ENV_DB_HOST -e ENV_DB_PORT=$ENV_DB_PORT -e ENV_DB_USER=$ENV_DB_USER -e ENV_DB_PASS=$ENV_DB_PASS -e ENV_DB_DB_NAME=$ENV_DB_DB_NAME -e ENV_DB_REPLICASET=$ENV_DB_REPLICASET -p 8080:80 -d gabrielfarache/pechbusque-calendar:back-end 
+echo "docker run -e ENV_DB_HOST=$ENV_DB_HOST -e ENV_DB_PORT=$ENV_DB_PORT -e ENV_DB_USER=$ENV_DB_USER -e ENV_DB_PASS=$ENV_DB_PASS -e ENV_DB_DB_NAME=$ENV_DB_DB_NAME -e ENV_DB_REPLICASET=$ENV_DB_REPLICASET -p 8080:80 -d gabrielfarache/calendar-pechbusque:back-end" 
+docker run -e ENV_DB_HOST=$ENV_DB_HOST -e ENV_DB_PORT=$ENV_DB_PORT -e ENV_DB_USER=$ENV_DB_USER -e ENV_DB_PASS=$ENV_DB_PASS -e ENV_DB_DB_NAME=$ENV_DB_DB_NAME -e ENV_DB_REPLICASET=$ENV_DB_REPLICASET -p 8080:80 -d gabrielfarache/calendar-pechbusque:back-end 

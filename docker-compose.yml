@@ -1,3 +1,5 @@
+
+#su -c "setenforce 0"
 version: '2'
 services:
   mongo3:
