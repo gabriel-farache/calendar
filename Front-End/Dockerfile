@@ -15,6 +15,6 @@ RUN	gem update --system
 RUN 	gem update
 RUN	gem install compass
 
-CMD 	./dockerFrontEndRunScript.sh && grunt serve
+CMD 	./dockerFrontEndRunScript.sh && grunt serve:dist -—force
 
 EXPOSE  9000
