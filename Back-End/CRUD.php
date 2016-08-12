@@ -56,7 +56,7 @@ try {
     $database = $dbConf['database'];
     $replicaSet = $dbConf['replicaSet'];
     $connectionString = "mongodb://" . $user . ":" .$pass . "@" . $host . ":" . $port . "/" . $database;// . "?replicaSet=" . $replicaSet;
-        print_r($connectionString);
+    //print_r($connectionString);
 
     $connection = new MongoClient($connectionString);
     $db         = $connection->selectDB($database);

@@ -31,8 +31,12 @@ mongo --host ${MONGODB1}:27017 <<EOF
     rs.initiate(cfg, { force: true });
     rs.reconfig(cfg, { force: true });
 EOF
-mongo --host ${MONGODB1}:27017 <<EOF
-    use $DATABASE_NAME;
+
+MONGO_DOCKER=`docker ps | grep mongo1 | cut -c 1-12`
+
+docker exec -i -t ${MONGO_DOCKER} bash <<EOF
+mongo
+use $DATABASE_NAME;
     db.createUser(
       {
         user: "$USER",
@@ -42,6 +46,7 @@ mongo --host ${MONGODB1}:27017 <<EOF
     );
     db.User.insert( { booker:"$USER",password: "$BASE64PWD",isAdmin: true, color: "#9e9e9e", email:"$EMAIL"});
 EOF
+    
 
 
 
