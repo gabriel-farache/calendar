@@ -1,11 +1,11 @@
 ENV_BACKEND_URL='https://calendar-pechbusque-db.herokuapp.com/'
 
-ENV_DB_HOST='ds017155.mlab.com'
-ENV_DB_PORT='17155'
-ENV_DB_USER='pechbusque'
-ENV_DB_PASS='Azerty'
-ENV_DB_DB_NAME='heroku_g164v8r4'
-ENV_DB_REPLICASET='rs-ds017155'
+#ENV_DB_HOST='ds017155.mlab.com'
+#ENV_DB_PORT='17155'
+#ENV_DB_USER='pechbusque'
+#ENV_DB_PASS='Azerty'
+#ENV_DB_DB_NAME='heroku_g164v8r4'
+#ENV_DB_REPLICASET='rs-ds017155'
 
 while getopts "b:o:p:u:w:d:r:h" opt; do
   case $opt in

@@ -2,27 +2,27 @@
 #su -c "setenforce 0"
 version: '2'
 services:
-  mongo3:
-    hostname: mongo3
-    image: mongo:3.0.6
-    entrypoint: /usr/bin/mongod --replSet rs0 --journal --smallfiles --rest
-    ports:
-      - "27018:27017"
-      - "28018:28017"
-    #volumes: 
-    #  - /Users/data/rs0/db3:/data/rs0/db3
-    restart: always
-
-  mongo2:
-    hostname: mongo2
-    image: mongo:3.0.6
-    entrypoint: /usr/bin/mongod --replSet rs0 --journal --smallfiles --rest
-    ports:
-      - "27019:27017"
-      - "28019:28017"
-    #volumes: 
-    #  - /Users/data/rs0/db2:/data/rs0/db2
-    restart: always
+  #mongo3:
+  #  hostname: mongo3
+  #  image: mongo:3.0.6
+  #  entrypoint: /usr/bin/mongod --replSet rs0 --journal --smallfiles --rest
+  #  ports:
+  #    - "27018:27017"
+  #    - "28018:28017"
+  #  #volumes: 
+  #  #  - /Users/data/rs0/db3:/data/rs0/db3
+  #  restart: always
+  #
+  #mongo2:
+  #  hostname: mongo2
+  #  image: mongo:3.0.6
+  #  entrypoint: /usr/bin/mongod --replSet rs0 --journal --smallfiles --rest
+  #  ports:
+  #    - "27019:27017"
+  #    - "28019:28017"
+  #  #volumes: 
+  #  #  - /Users/data/rs0/db2:/data/rs0/db2
+  #  restart: always
 
   mongo1:
     hostname: mongo1
@@ -33,9 +33,9 @@ services:
       - "28017:28017"
     #volumes: 
     #  - /Users/data/rs0/db1:/data/rs0/db1
-    links:
-      - mongo2:mongo2
-      - mongo3:mongo3
+  #  links:
+  #    - mongo2:mongo2
+  #    - mongo3:mongo3
     restart: always
 
   elasticsearch:
@@ -46,8 +46,8 @@ services:
       - "9300:9300"
     links:
       - mongo1:mongo1
-      - mongo2:mongo2
-      - mongo3:mongo3
+  #    - mongo2:mongo2
+  #    - mongo3:mongo3
     #volumes:
     #  - ./elasticsearch/logging.yml:/etc/elasticsearch/logging.yml
     restart: always
@@ -66,8 +66,8 @@ services:
     image: mongo:3.0.6
     links:
       - mongo1:mongo1
-      - mongo2:mongo2
-      - mongo3:mongo3
+  #    - mongo2:mongo2
+  #    - mongo3:mongo3
     environment:
       - USER=admin
       - PASSWORD=admin
@@ -93,8 +93,8 @@ services:
     image: python:latest
     links:
       - mongo1:mongo1
-      - mongo2:mongo2
-      - mongo3:mongo3
+  #    - mongo2:mongo2
+  #    - mongo3:mongo3
       - elasticsearch:elasticsearch
     depends_on:
       - elasticsearchsetup
@@ -118,8 +118,8 @@ services:
     image: mongo:3.0.6
     links:
       - mongo1:mongo1
-      - mongo2:mongo2
-      - mongo3:mongo3
+  #    - mongo2:mongo2
+  #    - mongo3:mongo3
       - elasticsearch:elasticsearch
     volumes:
       - ./scripts:/scripts
