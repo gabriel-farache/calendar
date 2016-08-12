@@ -74,6 +74,8 @@ services:
       - BASE64PWD=QXplcnR5
       - DATABASE_NAME=calendar-pechbusque
       - EMAIL=gabriel.farache@gmail.com
+    depends_on:
+      - mongo1
     volumes:
       - ./scripts:/scripts
     entrypoint: /scripts/setupMongo.sh

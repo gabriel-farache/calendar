@@ -1,10 +1,10 @@
 #!/bin/bash
 
 MONGODB1=`ping -c 1 mongo1 | head -1  | cut -d "(" -f 2 | cut -d ")" -f 1`
-MONGODB2=`ping -c 1 mongo2 | head -1  | cut -d "(" -f 2 | cut -d ")" -f 1`
-MONGODB3=`ping -c 1 mongo3 | head -1  | cut -d "(" -f 2 | cut -d ")" -f 1`
+#MONGODB2=`ping -c 1 mongo2 | head -1  | cut -d "(" -f 2 | cut -d ")" -f 1`
+#MONGODB3=`ping -c 1 mongo3 | head -1  | cut -d "(" -f 2 | cut -d ")" -f 1`
 ES=`ping -c 1 elasticsearch | head -1  | cut -d "(" -f 2 | cut -d ")" -f 1`
-KIBANA = `ping -c 1 kibana | head -1  | cut -d "(" -f 2 | cut -d ")" -f 1`
+KIBANA=`ping -c 1 kibana | head -1  | cut -d "(" -f 2 | cut -d ")" -f 1`
 
 /scripts/wait-until-started.sh
 
