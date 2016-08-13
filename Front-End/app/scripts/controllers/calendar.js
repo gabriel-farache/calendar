@@ -102,12 +102,14 @@ angular.module('calendarApp')
       databaseService.getRoomsDB().then(function(data)
       {
         var rooms = data.data;
-        $scope.rooms = rooms;
-        $scope.currentRoom = rooms[0].room;
-        $scope.currentBuilding = $scope.rooms[0].building;
-        $scope.initWeekBookings();
-        $scope.initBuildingsRooms();
-        $scope.error = undefined;
+        if(rooms !== undefined && rooms.length > 0){
+          $scope.rooms = rooms;
+          $scope.currentRoom = rooms[0].room;
+          $scope.currentBuilding = $scope.rooms[0].building;
+          $scope.initWeekBookings();
+          $scope.initBuildingsRooms();
+          $scope.error = undefined;
+        }
       },$scope.handleErrorDBCallback);
     };
 

@@ -10,8 +10,6 @@ until curl http://${MONGODB1}:28017/serverStatus\?text\=1 2>&1 | grep uptime | h
   printf '.'
   sleep 1
 done
-
-echo curl http://${MONGODB1}:28017/serverStatus\?text\=1 2>&1 | grep uptime | head -1
 echo "Mongo Started.."
 
 
@@ -32,20 +30,7 @@ mongo --host ${MONGODB1}:27017 <<EOF
     rs.reconfig(cfg, { force: true });
 EOF
 
-MONGO_DOCKER=`docker ps | grep mongo1 | cut -c 1-12`
 
-docker exec -i -t ${MONGO_DOCKER} bash <<EOF
-mongo
-use $DATABASE_NAME;
-    db.createUser(
-      {
-        user: "$USER",
-        pwd: "$PASSWORD",
-        roles: [ { role: "userAdmin", db: "$DATABASE_NAME" } ]
-      }
-    );
-    db.User.insert( { booker:"$USER",password: "$BASE64PWD",isAdmin: true, color: "#9e9e9e", email:"$EMAIL"});
-EOF
     
 
 

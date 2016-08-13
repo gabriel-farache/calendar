@@ -176,28 +176,16 @@ function updateBookerIntoBookerCollection($db, $oldBookerName, $newBookerName)
     return $err;
 }
 
-
-
 function delete_booker($db)
 {
-    $data       = json_decode(file_get_contents("php://input"));
-    $booker     = $data->booker;
+    $$data           = json_decode(mb_convert_encoding(file_get_contents("php://input"), 'HTML-ENTITIES', "UTF-8"));
+    $bookerName  = $data->name;
+    $bookerColor = $data->color;
     $collection = $db->selectCollection(USER_COLLECTION);
-    $err        = $db->lastError();
+    //update the Room collection
+    $err = updateBookerIntoBookerCollection($db, $oldBookerName, $newBookerName, $newBookerColor);
     if (is_null($err["err"]) === TRUE) {
-        $collection->remove(array(
-            'room' => $roomName
-        ));
-        $err = $db->lastError();
-        if (is_null($err["err"]) === TRUE) {
-            $arr = array(
-                'msg' => "Booker Deleted Successfully!!!",
-                'error' => ''
-            );
-            $jsn = json_encode($arr);
-        } else {
-            $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
-        }
+
     } else {
         $jsn = handleMongoErr("HTTP/1.1 418 I am a teapot", "", $err);
     }

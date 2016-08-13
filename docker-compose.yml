@@ -68,12 +68,6 @@ services:
       - mongo1:mongo1
   #    - mongo2:mongo2
   #    - mongo3:mongo3
-    environment:
-      - USER=admin
-      - PASSWORD=admin
-      - BASE64PWD=QXplcnR5
-      - DATABASE_NAME=calendar-pechbusque
-      - EMAIL=gabriel.farache@gmail.com
     depends_on:
       - mongo1
     volumes:

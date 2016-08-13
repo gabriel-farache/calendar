@@ -10,7 +10,7 @@ angular
         $scope.dataLoading = false;
         $scope.timeoutTime = 5000;
         var action = $routeParams.param;
-    this.initLoginController = function initController() {
+        this.initLoginController = function initController() {
         // reset login status
         if(action === 'logout'){
             authenticationService.ClearCredentials();

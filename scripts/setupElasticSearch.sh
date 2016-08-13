@@ -12,16 +12,7 @@ echo "Elasticsearch started."
 
 
 echo SETUPELASTICSEARCH.sh time now: `date +"%T" `
-
-#echo "Installing Head plugin"
-ES_DOCKER=`docker ps | grep elasticsearch | cut -c 1-12`
-
-docker exec -i -t ${MONGO_DOCKER} bash <<EOF
-/usr/share/elasticsearch/bin/plugin install mobz/elasticsearch-head
-EOF
  
-
-
 echo "Puting index v1"
 curl -XPUT ${ES}:9200/${ALIAS_NAME}_v1
 
