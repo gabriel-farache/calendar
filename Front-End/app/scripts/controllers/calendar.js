@@ -347,7 +347,7 @@ angular.module('calendarApp')
       var color = this.getBookerColor(bookedByAndBookingID[0]);
       if(bookedByAndBookingID.length >= 2 ) {
         var bookingID = bookedByAndBookingID[1];
-        var isValidated = this.isBookingValidated(bookingID);
+        var isValidated = this.isBookingValidated(bookingID, $scope.calendar);
         if($scope.booking !== undefined &&
           $scope.booking !== undefined &&
           $scope.booking.id !== undefined &&
@@ -379,9 +379,9 @@ angular.module('calendarApp')
           if(bookings[i].bookedBy !== undefined ){
             var b = bookings[i];
             var nbSlots = (parseFloat(b.scheduleEnd) - parseFloat(b.scheduleStart)) * 2.0;
+            //We have to pass a string to avoid ifinite digest error while using object
             var bookedByString = b.bookedBy+'$'+b.id+'$'+nbSlots;
-            bookedBy.push(bookedByString);
-            
+            bookedBy.push(bookedByString);            
           }
         }
       }
@@ -391,22 +391,22 @@ angular.module('calendarApp')
       return bookedBy;
     };
 
-    this.hasBookingForSlot = function(day, week, year, currTime) {
-      var bookedBy = [];
+    this.isFreeSlot = function(day, week, year, currTime) {
+      var isFreeSlot = true;
+      //get the bookings for the slot
       var bookings = this.getBooking(day, week, year, currTime);
       if(bookings !== false){
-        for(var i = 0; i < bookings.length; i++){
+        for(var i = 0; i < bookings.length && isFreeSlot; i++){
           if(bookings[i].bookedBy !== undefined){
-            var b = bookings[i];
-            bookedBy.push(b.bookedBy+'$'+b.id);
+            isFreeSlot = false;
           }
         }
       }
-      return (bookedBy.length > 0);
+      return isFreeSlot;
     };
 
     this.isSelectBookingSlotClass = function(currTime, day) {
-      var isInfo = false;
+      var isSelectBookingSlot = false;
       //check if the user can select a slot
       if($scope.username !== undefined && $scope.username !== $scope.guestName) {
         var parsedCurrTime = parseFloat(currTime);
@@ -415,17 +415,17 @@ angular.module('calendarApp')
             //check the curernt booking day/schedule to know if the slot has to be colored
             if($scope.booking.day === day){
               if(parseFloat($scope.booking.scheduleStart) === parsedCurrTime){
-                isInfo = true;
+                isSelectBookingSlot = true;
               } else if (parseFloat($scope.booking.scheduleEnd) === (parsedCurrTime+0.5)){
-                isInfo = true;
+                isSelectBookingSlot = true;
               } else if (parseFloat($scope.booking.scheduleEnd) >= (parsedCurrTime+0.5) && 
                 parseFloat($scope.booking.scheduleStart) <= parsedCurrTime){
-                isInfo = true;
+                isSelectBookingSlot = true;
               } 
           }
         }
       }
-      return isInfo;
+      return isSelectBookingSlot;
     };
 
 
@@ -458,7 +458,7 @@ angular.module('calendarApp')
         $scope.calendar, $scope.callerName, $scope.handleErrorDBCallback);
     };
 
-    $scope.$on('BookingValidated', function() {
+    $scope.propagateBookingValidation = function() {
       if($scope.callerName === sharedService.callerName){
         var booking = sharedService.booking;
         var calendar = sharedService.calendar;
@@ -473,24 +473,29 @@ angular.module('calendarApp')
         $scope.messageAdmin = globalizationService.getLocalizedString('CALENDAR_BOOKING_VALIDATED_MSG');
         $scope.dataLoading = false;
       }
-    });
+    };
+
+    $scope.$on('BookingValidated', $scope.propagateBookingValidation);
 
 
-    this.isBookingValidated = function(bookingId){
+    this.isBookingValidated = function(bookingId, calendar){
       var isValidated = false;
-      var id = bookingId;
-      for(var i = 0; i < $scope.calendar.length; i++){
-        if($scope.calendar[i].id === id) {
-          isValidated = $scope.calendar[i].isValidated;
-          break;
+      if(calendar !== undefined && calendar !== []) {
+        for(var i = 0; i < calendar.length; i++){
+          if(calendar[i].id === bookingId) {
+            isValidated = calendar[i].isValidated;
+            break;
+          }
         }
       }
       return isValidated;
     };
 
     this.deleteBooking = function() {
+      $scope.dataLoading = true;
       databaseService.deleteBookingDB($scope.booking.id, $scope.username, $scope.authToken)
       .then( function(){
+        $scope.dataLoading = false;
         $scope.initWeekBookings();
         $scope.message = globalizationService.getLocalizedString('CALENDAR_BOOKING_DELETED_MSG');
         $timeout($scope.removeMessage, $scope.timeoutTime);
@@ -499,17 +504,23 @@ angular.module('calendarApp')
 
 
     $scope.handleErrorDBCallback = function(response){
+        if(response === undefined){
+          response = {};
+          response.data = undefined;
+          response.status = undefined;
+        }
         $scope.handleErrorDB(response.status, response.data); 
     };
 
     $scope.handleErrorDB = function(status, data){
-      if(data !== undefined && 
-          data.errorCode !== undefined && 
-          data.errorCode === -1) {
+
+      if(data !== undefined && data !== null) {
         authenticationService.ClearCredentials();
+        $scope.error = data.error;
+      } else {
+        $scope.error = 'Unexpected error';
       }
       $scope.dataLoading = false;
-      $scope.error = data.error;
       $timeout($scope.removeErrorMessage, $scope.timeoutTime); 
     };
 

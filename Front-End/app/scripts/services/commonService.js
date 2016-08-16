@@ -1,11 +1,15 @@
 'use strict';
 function CommonService(databaseService, emailService, globalizationService, sharedService) {
-    function validateBooking(booking, authToken, calendar, caller, handleErrorDBCallback) {
-      var bookingToValidate = booking;
+    function validateBooking(bookingToValidate, authToken, calendar, caller, handleErrorDBCallback) {
+      if(bookingToValidate !== undefined && bookingToValidate.id!== undefined){ 
           databaseService.validateBookingDB(bookingToValidate.id, authToken).then(function () {
             bookingToValidate.isValidated = true;
             sharedService.prepForBookingValidatedBroadcast(calendar, bookingToValidate, caller);       
         },handleErrorDBCallback);
+      } else {
+        var response = {'data': {'error': 'Undefined booking or booking id'}, 'status':404};
+        handleErrorDBCallback(response);
+      }
     }
 
     function cancelConflictedBookings(authToken, bookingToValidateID, bookingsSharingSlotToBeCancelled, refreshCalendarAfterDeletionFunction, handleErrorDBCallback){

@@ -229,7 +229,7 @@
                                             <tr>
                                                 <td ng-repeat="bookingForSchedule in calendarCtrl.getScheduleBookedBy(day, week, year, schedule) track by $index"
                                                     ng-click="calendarCtrl.selectBookingInDB(bookingForSchedule.split('$')[1])"
-                                                    ng-class="{validatedBooking: calendarCtrl.isBookingValidated(bookingForSchedule.split('$')[1])}"
+                                                    ng-class="{validatedBooking: calendarCtrl.isBookingValidated(bookingForSchedule.split('$')[1], calendar)}"
                                                     style="height: 20px; max-height:20px;padding:0px;overflow:auto;word-break: break-all;"
                                                     ng-mouseup="calendarCtrl.mouseUp()"
                                                     class="noselect"
@@ -237,7 +237,7 @@
                                                     id="{{bookingForSchedule.split('$')[1]}}">
                                                     {{bookingForSchedule.split('$')[0]}}
                                                 </td>
-                                                <td ng-show="calendarCtrl.hasBookingForSlot(day, week, year, schedule) === false"
+                                                <td ng-show="calendarCtrl.isFreeSlot(day, week, year, schedule)"
                                                     style="height: 20px; max-height:20px;padding:0px;overflow:hidden;border-top:none;word-break: break-all;"
                                                     ng-mouseenter="calendarCtrl.mouseEnter(schedule, day)"
                                                     ng-mousedown="calendarCtrl.mouseDown(day, week, year, schedule)"
