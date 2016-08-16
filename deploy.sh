@@ -121,7 +121,7 @@ then
   fi
 
   echo "nohup docker run -e ENV_DB_HOST=$ENV_DB_HOST -e ENV_DB_PORT=$ENV_DB_PORT -e ENV_DB_USER=$ENV_DB_USER -e ENV_DB_PASS=$ENV_DB_PASS -e ENV_DB_DB_NAME=$ENV_DB_DB_NAME -e ENV_DB_REPLICASET=$ENV_DB_REPLICASET -p 8080:80 -d gabrielfarache/calendar-pechbusque:back-end" 
-  nohup docker run -e ENV_DB_HOST=$ENV_DB_HOST -e ENV_DB_PORT=$ENV_DB_PORT -e ENV_DB_USER=$ENV_DB_USER -e ENV_DB_PASS=$ENV_DB_PASS -e ENV_DB_DB_NAME=$ENV_DB_DB_NAME -e ENV_DB_REPLICASET=$ENV_DB_REPLICASET -p 8080:80 -d gabrielfarache/calendar-pechbusque:back-end 
+  nohup docker run -e ENV_DB_HOST=$ENV_DB_HOST -e ENV_DB_PORT=$ENV_DB_PORT -e ENV_DB_USER=$ENV_DB_USER -e ENV_DB_PASS=$ENV_DB_PASS -e ENV_DB_DB_NAME=$ENV_DB_DB_NAME -e ENV_DB_REPLICASET=$ENV_DB_REPLICASET -p 8080:80 -p 443:443 -d gabrielfarache/calendar-pechbusque:back-end 
 fi
 
 
