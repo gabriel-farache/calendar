@@ -8,3 +8,4 @@ Front-End/bower_components
 *.log
 /Front-End/.git
 /Back-Enf/.git
+*.pem

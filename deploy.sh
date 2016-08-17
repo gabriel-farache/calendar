@@ -1,7 +1,13 @@
 #!/bin/bash
 
-while getopts "b:o:p:u:w:d:r:h:f:a:" opt; do
+while getopts "c:n:b:o:p:u:w:d:r:h:f:a:" opt; do
   case $opt in
+    c)
+      FRONTEND_FQDN=$OPTARG;
+      ;;
+    n)
+      BACKEND_FQDN=$OPTARG;
+      ;;
     b)
       ENV_BACKEND_URL=$OPTARG;
       ;;
@@ -66,6 +72,12 @@ fi
 
 if [ "$INSTALL_FRONT_END" = true ]
 then 
+  if [ -z "$FRONTEND_FQDN" ]
+  then
+    read -p "Front-end FQDN: " FRONTEND_FQDN
+  else 
+    echo "Front-end FQDN: $FRONTEND_FQDN"
+  fi
   if [ -z "$ENV_BACKEND_URL" ]
   then
     read -p "Back end URL: " ENV_BACKEND_URL
@@ -73,11 +85,17 @@ then
     echo "Back end URL: $ENV_BACKEND_URL"
   fi
   echo "nohup docker run -e ENV_BACKEND_URL=$ENV_BACKEND_URL -p 9000:9000 -d gabrielfarache/calendar-pechbusque:front-end"
-  nohup docker run -e ENV_BACKEND_URL=$ENV_BACKEND_URL -p 9000:9000 -d gabrielfarache/calendar-pechbusque:front-end
+  nohup docker run -e ENV_BACKEND_URL=$ENV_BACKEND_URL -e CN=$FRONTEND_FQDN -p 9000:9000 -d gabrielfarache/calendar-pechbusque:front-end
 fi
 
 if [ "$INSTALL_BACK_END" = true ]
 then
+  if [ -z "$BACKEND_FQDN" ]
+  then
+    read -p "Back-end FQDN: " BACKEND_FQDN
+  else 
+    echo "Back-end FQDN: $BACKEND_FQDN"
+  fi
   if [ -z "$ENV_DB_HOST" ]
     then
       read -p "Database address: " ENV_DB_HOST
@@ -121,7 +139,7 @@ then
   fi
 
   echo "nohup docker run -e ENV_DB_HOST=$ENV_DB_HOST -e ENV_DB_PORT=$ENV_DB_PORT -e ENV_DB_USER=$ENV_DB_USER -e ENV_DB_PASS=$ENV_DB_PASS -e ENV_DB_DB_NAME=$ENV_DB_DB_NAME -e ENV_DB_REPLICASET=$ENV_DB_REPLICASET -p 8080:80 -d gabrielfarache/calendar-pechbusque:back-end" 
-  nohup docker run -e ENV_DB_HOST=$ENV_DB_HOST -e ENV_DB_PORT=$ENV_DB_PORT -e ENV_DB_USER=$ENV_DB_USER -e ENV_DB_PASS=$ENV_DB_PASS -e ENV_DB_DB_NAME=$ENV_DB_DB_NAME -e ENV_DB_REPLICASET=$ENV_DB_REPLICASET -p 8080:80 -p 443:443 -d gabrielfarache/calendar-pechbusque:back-end 
+  nohup docker run -e ENV_DB_HOST=$ENV_DB_HOST -e CN=$BACKEND_FQDN -e ENV_DB_PORT=$ENV_DB_PORT -e ENV_DB_USER=$ENV_DB_USER -e ENV_DB_PASS=$ENV_DB_PASS -e ENV_DB_DB_NAME=$ENV_DB_DB_NAME -e ENV_DB_REPLICASET=$ENV_DB_REPLICASET -p 8080:80 -p 443:443 -d gabrielfarache/calendar-pechbusque:back-end 
 fi
 
 
