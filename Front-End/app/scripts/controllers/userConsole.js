@@ -1,7 +1,7 @@
 'use strict';
 angular.module('calendarApp')
-  .controller('userConsoleController', ['$scope', '$cookieStore', '$timeout', 'databaseService', 'sharedService', 'authenticationService', 'globalizationService',
-function ($scope, $cookieStore, $timeout, databaseService, sharedService, authenticationService, globalizationService) {
+  .controller('userConsoleController', ['$scope', '$cookies', '$timeout', 'databaseService', 'sharedService', 'authenticationService', 'globalizationService',
+function ($scope, $cookies, $timeout, databaseService, sharedService, authenticationService, globalizationService) {
     $scope.timeoutTime = 10000;
     $scope.isUpdating = false;
     $scope.booker = {};
@@ -14,7 +14,7 @@ function ($scope, $cookieStore, $timeout, databaseService, sharedService, authen
         $scope.booker.booker = message.username;
     });
 
-    var globalsCookies = $cookieStore.get('globals');
+    var globalsCookies = $cookies.get('globals');
     if(globalsCookies !== undefined) {
         $scope.authToken = globalsCookies.token;
         $scope.booker.oldBooker = globalsCookies.username;

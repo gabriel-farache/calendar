@@ -2,7 +2,7 @@
 'use strict';
 
 
-function AuthenticationService($http, $cookieStore, $rootScope, $timeout, databaseService, sharedService) {
+function AuthenticationService($http, $cookies, $rootScope, $timeout, databaseService, sharedService) {
     
     function Login(username, password) {
 
@@ -16,10 +16,13 @@ function AuthenticationService($http, $cookieStore, $rootScope, $timeout, databa
             'username': username,
             'isAdmin' : isAdmin
         };
+        var config = {
+            secure: true
+         };
         $rootScope.globals = credentials;
         sharedService.prepForBroadcast(credentials);
         $http.defaults.headers.common['Authorization'] = 'Basic ' + token; // jshint ignore:line
-        $cookieStore.put('globals', $rootScope.globals);
+        $cookies.put('globals', $rootScope.globals, config);
     }
 
     function ClearCredentials() {
@@ -30,7 +33,7 @@ function AuthenticationService($http, $cookieStore, $rootScope, $timeout, databa
         };
         $rootScope.globals = credentials;
         sharedService.prepForBroadcast(credentials);
-        $cookieStore.remove('globals');
+        $cookies.remove('globals');
         $http.defaults.headers.common.Authorization = 'Basic';
     }
     // Base64 encoding service used by AuthenticationService
@@ -127,5 +130,5 @@ angular
     .module('calendarApp')
     .factory('authenticationService', AuthenticationService);
 
-AuthenticationService.$inject = ['$http', '$cookieStore', '$rootScope', '$timeout', 'databaseService', 'sharedService'];
+AuthenticationService.$inject = ['$http', '$cookies', '$rootScope', '$timeout', 'databaseService', 'sharedService'];
 /*jslint bitwise: false */

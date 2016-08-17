@@ -106,42 +106,52 @@ try {
         default:
             $data      = json_decode(file_get_contents("php://input"));
             $authToken = $data->authToken;
-            if (isAdminAction($_GET['action']) && isValidAndAdminToken($db, $authToken)) {
-                switch ($_GET['action']) {
-                    case 'update_room':
-                        update_room($GLOBALS['db']);
-                        break;
-                    case 'add_room':
-                        add_room($GLOBALS['db']);
-                        break;
-                    case 'validate_booking':
-                        validate_booking($GLOBALS['db']);
-                        break;
-                    case 'delete_room':
-                        delete_room($GLOBALS['db']);
-                        break;
-                    case 'delete_booker':
-                        delete_booker($GLOBALS['db']);
-                        break;
-                    case 'update_booker':
-                        update_booker($GLOBALS['db']);
-                        break;
-                    case 'delete_bookings':
-                        delete_bookings($GLOBALS['db']);
-                        break;
-                    case 'validate_periodic_booking':
-                        validate_periodic_booking($GLOBALS['db']);
-                        break;
-                    default:
-                        header("HTTP/1.1 401 Unauthorized");
-                        $arr = array(
-                            'errorCode' => "-1",
-                            'error' => 'Not a valid admin action.'
-                        );
-                        $jsn = json_encode($arr);
-                        print_r($jsn);
+            if (isAdminAction($_GET['action'])) {
+                if(isValidAndAdminToken($db, $authToken)) {
+                    switch ($_GET['action']) {
+                        case 'update_room':
+                            update_room($GLOBALS['db']);
+                            break;
+                        case 'add_room':
+                            add_room($GLOBALS['db']);
+                            break;
+                        case 'validate_booking':
+                            validate_booking($GLOBALS['db']);
+                            break;
+                        case 'delete_room':
+                            delete_room($GLOBALS['db']);
+                            break;
+                        case 'delete_booker':
+                            delete_booker($GLOBALS['db']);
+                            break;
+                        case 'update_booker':
+                            update_booker($GLOBALS['db']);
+                            break;
+                        case 'delete_bookings':
+                            delete_bookings($GLOBALS['db']);
+                            break;
+                        case 'validate_periodic_booking':
+                            validate_periodic_booking($GLOBALS['db']);
+                            break;
+                        default:
+                            header("HTTP/1.1 401 Unauthorized");
+                            $arr = array(
+                                'errorCode' => "-1",
+                                'error' => 'Not a valid admin action.'
+                            );
+                            $jsn = json_encode($arr);
+                            print_r($jsn);
                         
+                } else {
+                    header("HTTP/1.1 401 Unauthorized");
+                    $arr = array(
+                            'errorCode' => "-1",
+                            'error' => 'Admin token not valide'
+                        );
+                    $jsn = json_encode($arr);
+                    print_r($jsn);
                 }
+            }
                 
             } else if (isTokenValid($db, $authToken)) {
                 switch ($_GET['action']) {
@@ -237,9 +247,11 @@ function generateAdminToken($db)
 
 function isTokenValid($db, $authToken)
 {
+    $now = date("Y-m-d h:i");
     $collection = $db->selectCollection(USER_TOKEN_COLLECTION);
     $result     = $collection->findOne(array(
-        'token' => $authToken
+        'token' => $authToken,
+        'endAvailability' => array('$gte' => $new MongoDate(strtotime($now)))
     ));
     $err        = $db->lastError();
     if (is_null($err["err"]) === TRUE) {
@@ -253,9 +265,11 @@ function isTokenValid($db, $authToken)
 function isValidAndAdminToken($db, $adminAuthToken)
 {
     $collection = $db->selectCollection(USER_TOKEN_COLLECTION);
+    $now = date("Y-m-d h:i");
     $result     = $collection->findOne(array(
         'token' => $adminAuthToken,
-        'isAdmin' => true
+        'isAdmin' => true,
+        'endAvailability' => array('$gte' => $new MongoDate(strtotime($now)))
     ));
     $err        = $db->lastError();
     if (is_null($err["err"]) === TRUE) {

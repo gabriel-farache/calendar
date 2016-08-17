@@ -1,8 +1,8 @@
 
 'use strict';
 angular.module('calendarApp')
-  .controller('adminConsoleController', ['$scope', '$cookieStore', '$timeout', '$sce', 'databaseService', 'sharedService', 'authenticationService', 'globalizationService', 
-    function ($scope, $cookieStore, $timeout, $sce, databaseService, sharedService, authenticationService, globalizationService) {
+  .controller('adminConsoleController', ['$scope', '$cookies', '$timeout', '$sce', 'databaseService', 'sharedService', 'authenticationService', 'globalizationService', 
+    function ($scope, $cookies, $timeout, $sce, databaseService, sharedService, authenticationService, globalizationService) {
         $scope.adminToken = '';
         $scope.adminTokenEndTime = '';
         $scope.error = undefined;
@@ -16,7 +16,7 @@ angular.module('calendarApp')
             $scope.authToken = message.token;
         });
 
-        var globalsCookies = $cookieStore.get('globals');
+        var globalsCookies = $cookies.get('globals');
         if(globalsCookies !== undefined) {
             $scope.authToken = globalsCookies.token;
         }
@@ -24,7 +24,7 @@ angular.module('calendarApp')
         this.generateAdminToken = function() {
             $scope.error = undefined;
             $scope.dataLoading = true;
-            var globalsCookies = $cookieStore.get('globals');
+            var globalsCookies = $cookies.get('globals');
             if(globalsCookies !== undefined) {
                 databaseService.generateAdminToken(globalsCookies.token).
                 then(function (response) {

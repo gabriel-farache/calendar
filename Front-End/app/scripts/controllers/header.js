@@ -2,14 +2,14 @@
 
 angular
     .module('calendarApp')
-    .controller('headerController', ['$scope', '$cookieStore', '$location', 'sharedService', 'authenticationService', 'globalizationService',
-    function HeaderController($scope, $cookieStore, $location, sharedService, authenticationService, globalizationService) {
+    .controller('headerController', ['$scope', '$cookies', '$location', 'sharedService', 'authenticationService', 'globalizationService',
+    function HeaderController($scope, $cookies, $location, sharedService, authenticationService, globalizationService) {
         $scope.guestName = 'Visiteur';
         $scope.username = $scope.guestName;
         $scope.isAdmin = false;
         $scope.isLoaded = globalizationService.isLoaded;
 
-    	var globalsCookies = $cookieStore.get('globals');
+    	var globalsCookies = $cookies.get('globals');
       	if(globalsCookies !== undefined) {
         	$scope.isAdmin = globalsCookies.isAdmin;
         	$scope.username = globalsCookies.username;

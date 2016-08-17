@@ -8,8 +8,8 @@
  * Controller of the calendarApp
  */
 angular.module('calendarApp')
-  .controller('calendarController', ['$scope', '$http', '$window', '$cookieStore', '$timeout', '$interval', 'moment', 'databaseService', 'sharedService', 'authenticationService', 'emailService', 'globalizationService', 'commonService',
-  function ($scope, $http, $window, $cookieStore, $timeout, $interval, moment, databaseService, sharedService, authenticationService, emailService, globalizationService, commonService) {
+  .controller('calendarController', ['$scope', '$http', '$window', '$cookies', '$timeout', '$interval', 'moment', 'databaseService', 'sharedService', 'authenticationService', 'emailService', 'globalizationService', 'commonService',
+  function ($scope, $http, $window, $cookies, $timeout, $interval, moment, databaseService, sharedService, authenticationService, emailService, globalizationService, commonService) {
     $scope.callerName = 'Calendar';
     $scope.guestName = 'Visiteur';
     $scope.colorOfValidatedBooking = '#4caf50';
@@ -83,7 +83,7 @@ angular.module('calendarApp')
     var interval = $interval(function () { $scope.initWeekBookings();}, $scope.intervalRefreshCalendarTime);
     $scope.$on('$destroy', function () { $interval.cancel(interval); });
     this.initCalendar = function () {
-      var globalsCookies = $cookieStore.get('globals');
+      var globalsCookies = $cookies.get('globals');
       if(globalsCookies !== undefined) {
         $scope.authToken = globalsCookies.token;
         $scope.username = globalsCookies.username;

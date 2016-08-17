@@ -8,8 +8,8 @@
  * Controller of the calendarApp
  */
 angular.module('calendarApp')
-  .controller('freeSlotController', ['$scope', '$http', '$cookieStore', '$timeout', 'moment', 'databaseService', 'sharedService', 'authenticationService',
-  function ($scope, $http, $cookieStore, $timeout, moment, databaseService, sharedService, authenticationService) {
+  .controller('freeSlotController', ['$scope', '$http', '$cookies', '$timeout', 'moment', 'databaseService', 'sharedService', 'authenticationService',
+  function ($scope, $http, $cookies, $timeout, moment, databaseService, sharedService, authenticationService) {
 	moment.locale('fr');
   $scope.availableRooms = undefined;
 	$scope.dataLoading = false;
@@ -49,7 +49,7 @@ angular.module('calendarApp')
       });
 
 	this.initSearch = function() {
-    var globalsCookies = $cookieStore.get('globals');
+    var globalsCookies = $cookies.get('globals');
       if(globalsCookies !== undefined) {
         $scope.authToken = globalsCookies.token;
         $scope.username = globalsCookies.username;

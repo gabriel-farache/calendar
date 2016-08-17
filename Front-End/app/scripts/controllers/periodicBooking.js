@@ -2,8 +2,8 @@
 
 angular
     .module('calendarApp')
-    .controller('periodicBookingController', ['$scope', '$cookieStore', '$timeout', '$location', 'moment', 'sharedService', 'databaseService', 'globalizationService', 'emailService', 'authenticationService', 'commonService',
-    function PeriodicBookingController($scope, $cookieStore, $timeout, $location, moment, sharedService, databaseService, globalizationService, emailService, authenticationService, commonService) {
+    .controller('periodicBookingController', ['$scope', '$cookies', '$timeout', '$location', 'moment', 'sharedService', 'databaseService', 'globalizationService', 'emailService', 'authenticationService', 'commonService',
+    function PeriodicBookingController($scope, $cookies, $timeout, $location, moment, sharedService, databaseService, globalizationService, emailService, authenticationService, commonService) {
         moment.locale('fr');
         $scope.callerName = 'PeriodicBooking';
         $scope.dataLoading = false;
@@ -66,7 +66,7 @@ angular
             $scope.authToken = message.token;
         });
 
-        var globalsCookies = $cookieStore.get('globals');
+        var globalsCookies = $cookies.get('globals');
         if(globalsCookies !== undefined) {
             $scope.authToken = globalsCookies.token;
             $scope.isAdmin = globalsCookies.isAdmin;
