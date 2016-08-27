@@ -20,13 +20,13 @@
                 style="margin-left: 2px;margin-bottom:5px;padding:0px;width:100%;" align="center">
                 <tr>
                     <td >
-                        <button class="btn btn-default" style="padding:3px;" ng-click="calendarCtrl.initWeekData(calendarCtrl.date.month()-1)">&lt;</button>
+                        <button class="btn btn-default" style="padding:3px;" ng-click="calendarCtrl.initMonthData(calendarCtrl.date.month()-1, calendarCtrl.date.month(calendarCtrl.date.month()-1).year())">&lt;</button>
                     </td>
                     <td colspan="5" style="text-align:center;padding:2px;">
                         {{calendarCtrl.dateDisplay.format("MMMM YYYY")}}
                     </td>
                     <td colspan="2">
-                        <button class="btn btn-default" style="padding:3px;" ng-click="calendarCtrl.initWeekData(calendarCtrl.date.month()+1)">&gt;</button>
+                        <button class="btn btn-default" style="padding:3px;" ng-click="calendarCtrl.initMonthData(calendarCtrl.date.month()+1, calendarCtrl.date.month(calendarCtrl.date.month()+1).year())">&gt;</button>
                     </td>
                 </tr>
                 <tr>
@@ -177,7 +177,7 @@
                 ng-repeat="(building, buildingRooms) in buildingsRooms track by $index" 
                 ng-class="{active: building === currentBuilding}">
                 <a class="dropdown-toggle" style="padding:5px;margin:0px;display:inline;" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" >
-                {{building}}<span class="caret"style="padding:1px;"></span>
+                {{building}}<span class="caret"style="padding:0px;"></span>
                 </a>
                 <ul class="dropdown-menu" >
                     <li ng-repeat="room in buildingRooms.buildingRooms track by $index" 
@@ -192,7 +192,7 @@
         </ul>
         <p>
             {{weekStartEndDates}}
-            <button class="btn btn-default" style="padding:3px;" ng-click="calendarCtrl.initWeekData(calendarCtrl.todayMonth, calendarCtrl.todayYear)">
+            <button class="btn btn-default" style="padding:3px;" ng-click="calendarCtrl.initWeeks()">
             {{'TODAY_LABEL' | i18n}}
             </button>
             {{'SELECTED_ROOM_LABEL' | i18n}} <b>{{currentRoom}}</b>

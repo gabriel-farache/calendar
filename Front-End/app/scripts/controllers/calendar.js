@@ -95,7 +95,7 @@ angular.module('calendarApp')
       this.initRooms();
       this.initBookers();
       this.initCalendarDays();
-      this.initWeek();
+      this.initWeeks();
     };
 
     this.initRooms = function() {
@@ -156,12 +156,12 @@ angular.module('calendarApp')
       }
     };
 
-    this.initWeek = function() {
-      this.initWeekData(this.todayMonth, this.todayYear);
+    this.initWeeks = function() {
+      this.initMonthData(this.todayMonth, this.todayYear);
       this.setWeek(this.currIndexOfWeeksArray);
     };
 
-    this.initWeekData = function (newMonth, newYear) {
+    this.initMonthData = function (newMonth, newYear) {
       var date = this.date.month(newMonth);
       this.dateDisplay.month(newMonth);
       date.year(newYear);
@@ -184,7 +184,7 @@ angular.module('calendarApp')
                               'monthDays': monthDays,
                               'year': date.year()};
         this.monthWeeks.push(monthWeek);
-        if(this.todayWeek === weekNumber){
+        if(this.todayWeek === weekNumber && this.todayYear === date.year()){
           this.currIndexOfWeeksArray = i;
         }
       }
@@ -194,9 +194,9 @@ angular.module('calendarApp')
       var weekData = this.monthWeeks[indexOfWeeksArray];
       var newWeekDate = moment().isoWeek(weekData.week).year(weekData.year);
       var currentWeekDate = moment().isoWeek($scope.week).year($scope.year);
-
+      //if we go to next month, re-init the data
       if(newWeekDate.month() !== currentWeekDate.month()){
-        this.initWeekData(newWeekDate.month());
+        this.initMonthData(newWeekDate.month(), newWeekDate.year());
         $scope.week = newWeekDate.isoWeek();
         $scope.year = newWeekDate.year();
         this.initCalendarDays();
