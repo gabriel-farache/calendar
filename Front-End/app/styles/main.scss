@@ -43,6 +43,7 @@ html, body{
     height:100%;
     margin:0;
     padding:0;
+    background-color: #FAFAFA;
 }
 table.fixed { table-layout:fixed; }
 table.fixed td { overflow: hidden; }
@@ -147,14 +148,35 @@ span{
     display:inline-block
 }
 
+.navbar-default {
+    background-color: #eeeeee;
+    border-color: #e7e7e7;
+}
 
 .nav.nav-pills li a {
   border-radius: 0; /* avoid curved divisor corner */
 }
 
+.nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
+    color: #fff;
+    background-color: #039be5;
+}
+
+.nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
+    background-color: #eeeeee;
+    border-color: #039be5;
+}
+
+.dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus {
+    color: #fff;
+    text-decoration: none;
+    outline: 0;
+    background-color: #039be5;
+}
+
 /* Custom page header */
 .header {
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid #eeeeee;
   margin-bottom: 10px;
 
   /* Make the masthead heading the same height as the navigation */
