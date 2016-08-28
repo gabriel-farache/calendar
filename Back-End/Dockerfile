@@ -31,6 +31,7 @@ RUN chmod a+x generateCertificates.sh
 
 # Expose apache.
 EXPOSE 443
+EXPOSE 80
 
 ADD ./httpd.conf /etc/apache2/sites-enabled/000-default.conf
 

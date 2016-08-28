@@ -142,6 +142,7 @@ try {
                             $jsn = json_encode($arr);
                             print_r($jsn);
                         
+                    }
                 } else {
                     header("HTTP/1.1 401 Unauthorized");
                     $arr = array(
@@ -150,9 +151,7 @@ try {
                         );
                     $jsn = json_encode($arr);
                     print_r($jsn);
-                }
-            }
-                
+                }                
             } else if (isTokenValid($db, $authToken)) {
                 switch ($_GET['action']) {
                     case 'add_booking':
@@ -251,7 +250,7 @@ function isTokenValid($db, $authToken)
     $collection = $db->selectCollection(USER_TOKEN_COLLECTION);
     $result     = $collection->findOne(array(
         'token' => $authToken,
-        'endAvailability' => array('$gte' => $new MongoDate(strtotime($now)))
+        'endAvailability' => array('$gte' => new MongoDate(strtotime($now)))
     ));
     $err        = $db->lastError();
     if (is_null($err["err"]) === TRUE) {
@@ -269,7 +268,7 @@ function isValidAndAdminToken($db, $adminAuthToken)
     $result     = $collection->findOne(array(
         'token' => $adminAuthToken,
         'isAdmin' => true,
-        'endAvailability' => array('$gte' => $new MongoDate(strtotime($now)))
+        'endAvailability' => array('$gte' => new MongoDate(strtotime($now)))
     ));
     $err        = $db->lastError();
     if (is_null($err["err"]) === TRUE) {
