@@ -40,13 +40,13 @@ fi
 
 echo $conf > database.conf;
 
-echo "root=$SMTP_ROOT
-mailhub=$SMTP_MAILHUB
-UseSTARTTLS=$SMTP_TLS
-AuthUser=$SMTP_USER
-AuthPass=$SMTP_PASS
-rewriteDomain=$SMTP_DOMAIN
-FromLineOverride=$SMTP_OVERRIDE
-hostname=$SMTP_HOSTNAME" > /etc/ssmtp/ssmtp.conf;
+echo "root=$ENV_SMTP_ROOT
+mailhub=$ENV_SMTP_MAILHUB
+UseSTARTTLS=$ENV_SMTP_TLS
+AuthUser=$ENV_SMTP_USER
+AuthPass=$ENV_SMTP_PASS
+rewriteDomain=$ENV_SMTP_DOMAIN
+FromLineOverride=$ENV_SMTP_OVERRIDE
+hostname=$ENV_SMTP_HOSTNAME" > /etc/ssmtp/ssmtp.conf;
 
 echo "root:$ENV_SMTP_ROOT:$ENV_SMTP_MAILHUB" > /etc/ssmtp/revaliases
