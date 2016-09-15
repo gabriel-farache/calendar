@@ -59,15 +59,18 @@ function CommonService(databaseService, emailService, globalizationService, shar
         var cc = '';
         var scheduleStart = (booking.scheduleStart+'h').replace('.5h', 'h30');
         var scheduleEnd = (booking.scheduleEnd+'h').replace('.5h', 'h30');
+        var room = booking.room;
         var subject = globalizationService.getLocalizedString(I18N_VALIDATION_EMAIL_SUBJECT);
         var body = globalizationService.getLocalizedString(I18N_VALIDATION_EMAIL_BODY);
         subject = subject.replace('<BOOKING_DAY>', booking.day)
                 .replace('<BOOKING_SCHEDULE_START>', scheduleStart)
-                .replace('<BOOKING_SCHEDULE_END>', scheduleEnd);
+                .replace('<BOOKING_SCHEDULE_END>', scheduleEnd)
+                .replace('<BOOKING_ROOM>', room);
 
          body = body.replace('<BOOKING_DAY>', booking.day)
                 .replace('<BOOKING_SCHEDULE_START>', scheduleStart)
-                .replace('<BOOKING_SCHEDULE_END>', scheduleEnd);
+                .replace('<BOOKING_SCHEDULE_END>', scheduleEnd)
+                .replace('<BOOKING_ROOM>', room);
 
         emailService.sendEmail(from, to, cc, subject, body, authToken);
 
@@ -101,15 +104,18 @@ function CommonService(databaseService, emailService, globalizationService, shar
         var cc = '';
         var scheduleStart = (bookingCancelled.scheduleStart+'h').replace('.5h', 'h30');
         var scheduleEnd = (bookingCancelled.scheduleEnd+'h').replace('.5h', 'h30');
+        var room = bookingCancelled.room;
         var subject = globalizationService.getLocalizedString(I18N_CANCEL_EMAIL_SUBJECT);
         var body = globalizationService.getLocalizedString(I18N_CANCEL_EMAIL_BODY);
         subject = subject.replace('<BOOKING_DAY>', bookingCancelled.day)
             .replace('<BOOKING_SCHEDULE_START>', scheduleStart)
-            .replace('<BOOKING_SCHEDULE_END>', scheduleEnd);
+            .replace('<BOOKING_SCHEDULE_END>', scheduleEnd)
+            .replace('<BOOKING_ROOM>', room);
 
         body = body.replace('<BOOKING_DAY>', bookingCancelled.day)
             .replace('<BOOKING_SCHEDULE_START>', scheduleStart)
-            .replace('<BOOKING_SCHEDULE_END>', scheduleEnd);
+            .replace('<BOOKING_SCHEDULE_END>', scheduleEnd)
+            .replace('<BOOKING_ROOM>', room);
 
         emailService.sendEmail(from, to, cc, subject, body, authToken);
     }

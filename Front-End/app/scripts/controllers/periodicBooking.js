@@ -353,17 +353,20 @@ angular
                 var cc = '';
                 var periodicBookingScheduleStart = (periodicBooking.periodicBookingScheduleStart+'h').replace('.5h', 'h30');
                 var periodicBookingScheduleEnd = (periodicBooking.periodicBookingScheduleEnd+'h').replace('.5h', 'h30');
+                var room = periodicBooking.room;
                 var subject = globalizationService.getLocalizedString('VALIDATION_PERIODIC_BOOKING_EMAIL_SUBJECT');
                 var body = globalizationService.getLocalizedString('VALIDATION_PERIODIC_BOOKING_EMAIL_BODY');
                 subject = subject.replace('<BOOKING_DAY>', periodicBooking.periodicBookingStartingDay)
                     .replace('<BOOKING_SCHEDULE_START>', periodicBookingScheduleStart)
                     .replace('<BOOKING_SCHEDULE_END>', periodicBookingScheduleEnd)
-                    .replace('<BOOKING_WEEK_DURATION>', periodicBooking.periodicBookingWeeksDuration);
+                    .replace('<BOOKING_WEEK_DURATION>', periodicBooking.periodicBookingWeeksDuration)
+                    .replace('<BOOKING_ROOM>', room);
 
                 body = body.replace('<BOOKING_DAY>', periodicBooking.periodicBookingStartingDay)
                     .replace('<BOOKING_SCHEDULE_START>', periodicBookingScheduleStart)
                     .replace('<BOOKING_SCHEDULE_END>', periodicBookingScheduleEnd)
-                    .replace('<BOOKING_WEEK_DURATION>', periodicBooking.periodicBookingWeeksDuration);
+                    .replace('<BOOKING_WEEK_DURATION>', periodicBooking.periodicBookingWeeksDuration)
+                    .replace('<BOOKING_ROOM>', room);
 
                 emailService.sendEmail(from, to, cc, subject, body, $scope.authToken);
 

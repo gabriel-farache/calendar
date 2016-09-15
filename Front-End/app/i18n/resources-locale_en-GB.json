@@ -116,15 +116,13 @@
    "USER_EMAIL_ERROR" : "You must fill the email address field",
    "USER_PASSWORD_ERROR" : "You must fill the password field",
 
-   "VALIDATION_EMAIL_SUBJECT": "Booking validated - The <BOOKING_DAY> from <BOOKING_SCHEDULE_START> to <BOOKING_SCHEDULE_END>",
-   "VALIDATION_EMAIL_BODY": "Dear, <br>We are pleased to inform you that you booking of the <BOOKING_DAY> from <BOOKING_SCHEDULE_START> to <BOOKING_SCHEDULE_END> has been validated.<br>Kind regards,<br>The mayor. ",
+   "VALIDATION_EMAIL_SUBJECT": "Booking validated - The <BOOKING_DAY> from <BOOKING_SCHEDULE_START> to <BOOKING_SCHEDULE_END>, room <BOOKING_ROOM>",
+   "VALIDATION_EMAIL_BODY": "Dear, <br>We are pleased to inform you that your booking of the <BOOKING_DAY> from <BOOKING_SCHEDULE_START> to <BOOKING_SCHEDULE_END> for the room <BOOKING_ROOM> has been validated.<br>Kind regards,<br>The mayor. ",
 
-   "CANCEL_EMAIL_SUBJECT": "Booking cancelled - The <BOOKING_DAY> from <BOOKING_SCHEDULE_START> to <BOOKING_SCHEDULE_END>",
-   "CANCEL_EMAIL_BODY": "Dear, <br>We are regretfully informing you that you booking of the <BOOKING_DAY> from <BOOKING_SCHEDULE_START> to <BOOKING_SCHEDULE_END> has been cancelled.<br>Kind regards,<br>The mayor. ",
+   "CANCEL_EMAIL_SUBJECT": "Booking cancelled - The <BOOKING_DAY> from <BOOKING_SCHEDULE_START> to <BOOKING_SCHEDULE_END>, room <BOOKING_ROOM>",
+   "CANCEL_EMAIL_BODY": "Dear, <br>We are regretfully informing you that your booking of the <BOOKING_DAY> from <BOOKING_SCHEDULE_START> to <BOOKING_SCHEDULE_END> for the room <BOOKING_ROOM> has been cancelled.<br>Kind regards,<br>The mayor. ",
 
-
-
-   "VALIDATION_PERIODIC_BOOKING_EMAIL_SUBJECT" : "Réservation périodique validée - les <BOOKING_DAY> de <BOOKING_SCHEDULE_START> à <BOOKING_SCHEDULE_END> pendant <BOOKING_WEEK_DURATION> semaines",
-   "VALIDATION_PERIODIC_EMAIL_BODY": "Bonjour, <br>Nous avons le plaisir de vous informer que votre réservation périodique des <BOOKING_DAY> de <BOOKING_SCHEDULE_START> à <BOOKING_SCHEDULE_END>  pendant <BOOKING_WEEK_DURATION> semaines est validée.<br>Cordialement,<br>La Mairie. "
+   "VALIDATION_PERIODIC_BOOKING_EMAIL_SUBJECT" : "Periodic booking validated - The <BOOKING_DAY>s from <BOOKING_SCHEDULE_START> to <BOOKING_SCHEDULE_END>, room <BOOKING_ROOM>, for <BOOKING_WEEK_DURATION> weeks",
+   "VALIDATION_PERIODIC_EMAIL_BODY": "Dear, <br>We are pleased to inform you that your periodic booking of the <BOOKING_DAY>s from <BOOKING_SCHEDULE_START> to <BOOKING_SCHEDULE_END> for the room room <BOOKING_ROOM> for <BOOKING_WEEK_DURATION> weeks has been validated.<br>Kind regards,<br>The mayor."
 
 }]
