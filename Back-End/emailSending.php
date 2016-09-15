@@ -38,7 +38,7 @@ if(isValidAndAdminToken($adminAuthToken)){
 
 function isValidAndAdminToken($adminAuthToken)
 {
-    $dbConfFile = file_get_contents("databaseLocal.conf");
+    $dbConfFile = file_get_contents("database.conf");
     $dbConf = json_decode($dbConfFile, true);
     $host     = $dbConf['host'];
     $port     = $dbConf['port'];
