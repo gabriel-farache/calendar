@@ -38,13 +38,18 @@ if(isValidAndAdminToken($adminAuthToken)){
 
 function isValidAndAdminToken($adminAuthToken)
 {
-    $host     = "localhost";
-    $port     = 27017;
-    $user     = "root";
-    $pass     = "root";
-    $database = "calendar";
+    $dbConfFile = file_get_contents("databaseLocal.conf");
+    $dbConf = json_decode($dbConfFile, true);
+    $host     = $dbConf['host'];
+    $port     = $dbConf['port'];
+    $user     = $dbConf['user'];
+    $pass     = $dbConf['pass'];
+    $database = $dbConf['database'];
+    $replicaSet = $dbConf['replicaSet'];
+    $connectionString = "mongodb://" . $user . ":" .$pass . "@" . $host . ":" . $port . "/" . $database;// . "?replicaSet=" . $replicaSet;
     
-    $connection = new MongoClient("mongodb://" . $host . ":" . $port . "/?replicaSet=rs0");
+    
+    $connection = new MongoClient($connectionString);
     $db         = $connection->selectDB($database);
     $collection = $db->UserToken;
     $result     = $collection->findOne(array(

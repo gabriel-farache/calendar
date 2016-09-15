@@ -15,7 +15,8 @@ function authenticate($db)
 
     if (is_null($err["err"]) === TRUE && is_null($user) !== TRUE) {
         $isAdmin = $user['isAdmin'];
-        return (createAuthenticationToken($db, $isAdmin));
+        $userEmail = $user['email'];
+        return (createAuthenticationToken($db, $isAdmin, $userEmail));
     } else {
         if (is_null($user) === TRUE) {
             $jsn = handleMongoErr("HTTP/1.1 401 Unauthorized", "The user ".$username." does not exist or wrong password", $err);
@@ -27,10 +28,10 @@ function authenticate($db)
     
 }
 
-function createAuthenticationToken($db, $isAdmin)
+function createAuthenticationToken($db, $isAdmin, $userEmail)
 {
     date_default_timezone_set('Europe/Paris');
-    $endAvailability = date("Y-m-d h:i", strtotime('+2 hours'));
+    $endAvailability = date("Y-m-d h:i", strtotime('+4 hours'));
     $token           = md5(uniqid(rand(), true));
     $collection      = $db->selectCollection(USER_TOKEN_COLLECTION);
     $newAuthToken    = array(
@@ -45,6 +46,7 @@ function createAuthenticationToken($db, $isAdmin)
             'token' => $token,
             'endAvailability' => $endAvailability,
             'isAdmin' => $isAdmin,
+            'userEmail' => $userEmail,
             'msg' => "User Logged Successfully!!!",
             'error' => ''
         );

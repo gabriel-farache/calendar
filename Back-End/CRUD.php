@@ -47,7 +47,7 @@ try {
     $database = "calendar";
     $replicaSet = "rs0";
     */
-    $dbConfFile = file_get_contents("database.conf");
+    $dbConfFile = file_get_contents("databaseLocal.conf");
     $dbConf = json_decode($dbConfFile, true);
     $host     = $dbConf['host'];
     $port     = $dbConf['port'];
@@ -134,22 +134,12 @@ try {
                             validate_periodic_booking($GLOBALS['db']);
                             break;
                         default:
-                            header("HTTP/1.1 401 Unauthorized");
-                            $arr = array(
-                                'errorCode' => "-1",
-                                'error' => 'Not a valid admin action.'
-                            );
-                            $jsn = json_encode($arr);
+                            $jsn = handleCommonErr("HTTP/1.1 401 Unauthorized", "Unauthorized", 'Not a valid admin action.');
                             print_r($jsn);
                         
                     }
                 } else {
-                    header("HTTP/1.1 401 Unauthorized");
-                    $arr = array(
-                            'errorCode' => "-1",
-                            'error' => 'Admin token not valide'
-                        );
-                    $jsn = json_encode($arr);
+                    $jsn = handleCommonErr("HTTP/1.1 401 Unauthorized", "Unauthorized", 'Admin token not valid');
                     print_r($jsn);
                 }                
             } else if (isTokenValid($db, $authToken)) {
@@ -185,12 +175,7 @@ try {
                 }
                 
             } else {
-                header("HTTP/1.1 401 Unauthorized");
-                $arr = array(
-                    'errorCode' => "-1",
-                    'error' => 'The token: "' . $authToken . '" is not valid, please authenticate again.'
-                );
-                $jsn = json_encode($arr);
+                $jsn = handleCommonErr("HTTP/1.1 401 Unauthorized", "Unauthorized", 'The token: "' . $authToken . '" is not valid, please authenticate again.');
                 print_r($jsn);
             }
     }
@@ -227,19 +212,10 @@ function generateAdminToken($db)
             );
             $jsn = json_encode($arr);
         } else {
-            header("HTTP/1.1 401 Unauthorized");
-            $arr = array(
-                'msg' => "",
-                'error' => 'Error when inserting token: ' . $adminToken . ' adminTokenEndTime: ' . $adminTokenEndTime . '<br>' . $qryToken . '<br>' . $err
-            );
-            $jsn = json_encode($arr);
+            $jsn = handleCommonErr("HTTP/1.1 401 Unauthorized", $err, 'Error when inserting token: ' . $adminToken . ' adminTokenEndTime: ' . $adminTokenEndTime . '<br>' . $qryToken . '<br>');
         }
     } else {
-        header("HTTP/1.1 401 Unauthorized");
-        $arr = array(
-            'error' => "Vous n'êtes pas administrateur."
-        );
-        $jsn = json_encode($arr);
+        $jsn = handleCommonErr("HTTP/1.1 401 Unauthorized", "Unauthorized", 'You are not an administrator');
     }
     print_r($jsn);
 }
