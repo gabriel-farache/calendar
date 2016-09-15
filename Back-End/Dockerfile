@@ -7,19 +7,19 @@ WORKDIR /pechbusque-calendar/back-end
 # Copy this repo into place.
 ADD . /pechbusque-calendar/back-end
 
-RUN apt-get update -y && apt-get install -y libssl-dev openssl ssmtp && \
+RUN apt-get update -y && apt-get install -y libssl-dev openssl ssmtp rsyslog && \
     pecl install mongo && \
     apt-get purge -y --auto-remove libssl-dev && \
     docker-php-ext-enable mongo && \
     echo "extension=mongo.so" >> /usr/local/etc/php/conf.d/ext-mongo.ini && \
     echo extension=mongo.so >> /usr/local/etc/php/php.ini &&\
-    echo sendmail_path=/usr/sbin/ssmtp -t >> /usr/local/etc/php/php.ini &&\
-   
+    echo sendmail_path=/usr/sbin/ssmtp -t >> /usr/local/etc/php/php.ini 
 
 # Enable apache mods.
 RUN a2enmod rewrite
 RUN a2enmod headers
 RUN a2enmod ssl
+RUN service rsyslog restart  
 
 # Manually set up the apache environment variables
 ENV APACHE_RUN_USER www-data

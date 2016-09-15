@@ -44,51 +44,52 @@ smtp=`cat ssmtp.conf`;
 
 if [ ! -z "$ENV_SMTP_ROOT" ]
 then
-    conf=${conf//SMTP_ROOT/$ENV_SMTP_ROOT};
+    smtp=${smtp//SMTP_ROOT/$ENV_SMTP_ROOT};
 else
     echo "No ENV_SMTP_ROOT";
 fi
 if [ ! -z "$ENV_SMTP_MAILHUB" ]
 then
-    conf=${conf//SMTP_MAILHUB/$ENV_SMTP_MAILHUB};
+    smtp=${smtp//SMTP_MAILHUB/$ENV_SMTP_MAILHUB};
 else
     echo "No ENV_SMTP_MAILHUB";
 fi
 if [ ! -z "$ENV_SMTP_TLS" ]
 then
-    conf=${conf//SMTP_TLS/$ENV_SMTP_TLS};
+    smtp=${smtp//SMTP_TLS/$ENV_SMTP_TLS};
 else
     echo "No ENV_SMTP_TLS";
 fi
 if [ ! -z "$ENV_SMTP_USER" ]
 then
-    conf=${conf//SMTP_USER/$ENV_SMTP_USER};
+    smtp=${smtp//SMTP_USER/$ENV_SMTP_USER};
 else
     echo "No ENV_SMTP_USER";
 fi
 if [ ! -z "$ENV_SMTP_PASS" ]
 then
-    conf=${conf//SMTP_PASSWORD/$ENV_SMTP_PASS};
+    smtp=${smtp//SMTP_PASSWORD/$ENV_SMTP_PASS};
 else
     echo "No ENV_SMTP_PASS";
 fi
 if [ ! -z "$ENV_SMTP_DOMAIN" ]
 then
-    conf=${conf//SMTP_DOMAIN/$ENV_SMTP_DOMAIN};
+    smtp=${smtp//SMTP_DOMAIN/$ENV_SMTP_DOMAIN};
 else
     echo "No ENV_SMTP_DOMAIN";
 fi
 if [ ! -z "$ENV_SMTP_OVERRIDE" ]
 then
-    conf=${conf//SMTP_OVERRIDE/$ENV_SMTP_OVERRIDE};
+    smtp=${smtp//SMTP_OVERRIDE/$ENV_SMTP_OVERRIDE};
 else
     echo "No ENV_SMTP_OVERRIDE";
 fi
 if [ ! -z "$ENV_SMTP_HOSTNAME" ]
 then
-    conf=${conf//SMTP_HOSTNAME/$ENV_SMTP_HOSTNAME};
+    smtp=${smtp//SMTP_HOSTNAME/$ENV_SMTP_HOSTNAME};
 else
     echo "No ENV_SMTP_HOSTNAME";
 fi
 
 echo $smtp > /etc/ssmtp/ssmtp.conf;
+echo "root:$ENV_SMTP_ROOT:$ENV_SMTP_MAILHUB" > /etc/ssmtp/revaliases
