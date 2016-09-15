@@ -97,6 +97,7 @@ angular.module('calendarApp')
         $scope.isAdmin = globalsCookies.isAdmin;
         $scope.userEmail = globalsCookies.userEmail;
       }
+
       if(($scope.userEmail === undefined || $scope.userEmail === '')&&
             $scope.guestName !== $scope.username) {
             $location.path('/userConsole');
