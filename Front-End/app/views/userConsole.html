@@ -28,14 +28,23 @@
                <div class="input-group" style="width:65%;">
                   <label>{{'USER_USERNAME_LABEL' | i18n}}</label><br>
                   <input type="text" style="width:65%;" ng-model="booker.booker" ng-disabled="isUpdating === false" required />
+                  <div ng-show="booker.booker === '' || booker.booker === undefined && isUpdating" style="color:maroon;" role="alert">
+                     {{'USER_USERNAME_ERROR'| i18n}}
+                  </div>
                </div>
                <div class="input-group" style="width:65%;">
                   <label>{{'USER_EMAIL_LABEL' | i18n}}</label><br>
                   <input type="email" style="width:65%;" ng-model="booker.email" ng-disabled="isUpdating === false" required />
+                  <div ng-show="booker.email === '' || booker.email === undefined && isUpdating" style="color:maroon;" role="alert">
+                     {{'USER_EMAIL_ERROR'| i18n}}
+                  </div>
                </div>
                <div class="input-group" style="width:65%;">
                   <label>{{'USER_PASSWORD_LABEL' | i18n}}</label><br>
                   <input type="password" style="width:65%;" ng-model="booker.password" ng-disabled="isUpdating === false" required />
+                  <div ng-show="booker.password === '' || booker.password === undefined && isUpdating" style="color:maroon;" role="alert">
+                     {{'USER_PASSWORD_ERROR'| i18n}}
+                  </div>
                </div>
                <div class="input-group" style="width:65%;">
                   <label>{{'USER_NEW_PASSWORD_LABEL' | i18n}}</label><br>
@@ -43,8 +52,7 @@
                </div>
                <img ng-show="dataLoading === true" src="/images/loading.svg" 
                 alt="..." style="width: 5%; height: 5%"/>
-               <input class="btn btn-success" ng-hide="dataLoading === true || isUpdating === false"
-                      type="submit" value="Valider" style="margin: 3px;" required/>             
+               <input class="btn btn-success" ng-hide="dataLoading === true || isUpdating === false" ng-disabled="userAccountForm.$invalid" type="submit" value="Valider" style="margin: 3px;" required/>             
          </form>
       </div>
 

@@ -1,8 +1,8 @@
 
 'use strict';
 angular.module('calendarApp')
-  .controller('adminConsoleController', ['$scope', '$cookies', '$timeout', '$sce', 'databaseService', 'sharedService', 'authenticationService', 'globalizationService', 
-    function ($scope, $cookies, $timeout, $sce, databaseService, sharedService, authenticationService, globalizationService) {
+  .controller('adminConsoleController', ['$scope', '$cookies','$location', '$timeout', '$sce', 'databaseService', 'sharedService', 'authenticationService', 'globalizationService', 
+    function ($scope, $cookies, $location, $timeout, $sce, databaseService, sharedService, authenticationService, globalizationService) {
         $scope.adminToken = '';
         $scope.adminTokenEndTime = '';
         $scope.error = undefined;
@@ -11,20 +11,30 @@ angular.module('calendarApp')
         $scope.bookers=[];
         $scope.timeoutTime = 5000;
         $scope.size=10;
+        $scope.userEmail = undefined;
+        $scope.guestName = 'Visiteur';
+
         $scope.$on('handleBroadcast', function() {
             var message = sharedService.message;
             $scope.authToken = message.token;
+            $scope.userEmail = message.userEmail;
         });
 
-        var globalsCookies = $cookies.get('globals');
+        var globalsCookies = $cookies.getObject('globals');
         if(globalsCookies !== undefined) {
             $scope.authToken = globalsCookies.token;
+            $scope.userEmail = globalsCookies.userEmail;
+        }
+
+        if(($scope.userEmail === undefined || $scope.userEmail === '')&&
+            $scope.guestName !== $scope.username) {
+            $location.path('/userConsole');
         }
 
         this.generateAdminToken = function() {
             $scope.error = undefined;
             $scope.dataLoading = true;
-            var globalsCookies = $cookies.get('globals');
+            var globalsCookies = $cookies.getObject('globals');
             if(globalsCookies !== undefined) {
                 databaseService.generateAdminToken(globalsCookies.token).
                 then(function (response) {

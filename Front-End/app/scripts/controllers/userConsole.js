@@ -14,7 +14,7 @@ function ($scope, $cookies, $timeout, databaseService, sharedService, authentica
         $scope.booker.booker = message.username;
     });
 
-    var globalsCookies = $cookies.get('globals');
+    var globalsCookies = $cookies.getObject('globals');
     if(globalsCookies !== undefined) {
         $scope.authToken = globalsCookies.token;
         $scope.booker.oldBooker = globalsCookies.username;
@@ -33,12 +33,14 @@ function ($scope, $cookies, $timeout, databaseService, sharedService, authentica
     this.updateBookerSettings = function() {
         $scope.dataLoading = true;
         $scope.booker.password = authenticationService.encodeDecode.encode($scope.booker.password);
+        var hasNewPassword = ($scope.booker.newPassword !== undefined);
 
         if($scope.booker.password !== undefined){
             if($scope.booker.newPassword !== undefined) {
                 $scope.booker.newPassword = authenticationService.encodeDecode.encode($scope.booker.newPassword);
             }
-            if($scope.booker.newPassword !== undefined){
+
+            if(!hasNewPassword || (hasNewPassword && $scope.booker.newPassword !== undefined)){
                 databaseService.updateBookerSettingsDB($scope.booker, $scope.authToken).
                     then(function() {
                         $scope.message = globalizationService.getLocalizedString('USER_UPDATE_SUCCESSFUL_MSG');
@@ -46,7 +48,7 @@ function ($scope, $cookies, $timeout, databaseService, sharedService, authentica
                         $scope.dataLoading = false;
                         $scope.booker.newPassword = undefined;
                         $scope.booker.password = undefined;
-                        authenticationService.SetCredentials($scope.booker.booker, $scope.authToken, $scope.isAdmin);
+                        authenticationService.SetCredentials($scope.booker.booker, $scope.authToken, $scope.isAdmin, $scope.booker.email);
                         $timeout($scope.removeMessage, $scope.timeoutTime);
                         $scope.initUser();
                 },$scope.handleErrorDBCallback);

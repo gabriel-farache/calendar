@@ -1,7 +1,15 @@
 'use strict';
 
-function EmailService($http) {
-  var serverAddr = 'http://localhost/';
+function EmailService($http, DB_CONFIG) {
+  var serverAddr = DB_CONFIG.url;
+
+  if(serverAddr.indexOf('http://') !== 0 && serverAddr.indexOf('https://') !== 0){
+    serverAddr = 'http://' + serverAddr;
+  }
+
+  if(serverAddr.indexOf('/', serverAddr.length - 1) !== 0) {
+    serverAddr = serverAddr + '/';
+  }
 
   function sendEmail(from, to, cc, subject, message, adminAuthToken){
     var URL = serverAddr+'emailSending.php';
@@ -23,4 +31,4 @@ var service = {};
 
 angular.module('calendarApp').factory('emailService', EmailService);
 
-EmailService.$inject = ['$http'];   
+EmailService.$inject = ['$http', 'DB_CONFIG'];   

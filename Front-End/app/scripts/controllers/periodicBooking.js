@@ -19,6 +19,7 @@ angular
         $scope.nbConflicts = [];
         $scope.nbQueriesConflicts = [];
         $scope.nbQueriesPropagate = [];
+        $scope.userEmail = undefined;
 
         this.periodicBookingStartingDay = undefined;
         this.periodicBookingStartingWeek = undefined;
@@ -64,20 +65,32 @@ angular
             $scope.username = message.username;
             $scope.isAdmin = message.isAdmin;
             $scope.authToken = message.token;
+            $scope.userEmail = message.userEmail;
+
+            if(($scope.userEmail === undefined || $scope.userEmail === '')&&
+                $scope.guestName !== $scope.username) {
+                $location.path('/userConsole');
+            }
         });
 
-        var globalsCookies = $cookies.get('globals');
+        var globalsCookies = $cookies.getObject('globals');
         if(globalsCookies !== undefined) {
             $scope.authToken = globalsCookies.token;
             $scope.isAdmin = globalsCookies.isAdmin;
             $scope.username = globalsCookies.username;
+            $scope.userEmail = globalsCookies.userEmail;
         }
+        
 
         this.initPeriodicBooking = function() {
-            this.initCalendar();
-            this.initRooms();
-            $scope.getPeriodicBookings();
-
+            if(($scope.userEmail === undefined || $scope.userEmail === '')&&
+                $scope.guestName !== $scope.username) {
+                $location.path('/userConsole');
+            } else {
+                this.initCalendar();
+                this.initRooms();
+                $scope.getPeriodicBookings();
+            }
         };
 
         this.initRooms = function() {

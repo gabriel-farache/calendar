@@ -10,26 +10,28 @@ function AuthenticationService($http, $cookies, $rootScope, $timeout, databaseSe
 
     }
 
-    function SetCredentials(username, token, isAdmin) {
+    function SetCredentials(username, token, isAdmin, userEmail) {
         var credentials = {
             'token': token,
             'username': username,
-            'isAdmin' : isAdmin
+            'isAdmin' : isAdmin,
+            'userEmail' : userEmail
         };
-        var config = {
-            secure: true
-         };
+        /*var config = {
+            secure: false
+         };*/
         $rootScope.globals = credentials;
         sharedService.prepForBroadcast(credentials);
         $http.defaults.headers.common['Authorization'] = 'Basic ' + token; // jshint ignore:line
-        $cookies.put('globals', $rootScope.globals, config);
+        $cookies.putObject('globals', $rootScope.globals);
     }
 
     function ClearCredentials() {
         var credentials = {
             'token': undefined,
             'username': undefined,
-            'isAdmin' : false
+            'isAdmin' : false,
+            'userEmail' : undefined
         };
         $rootScope.globals = credentials;
         sharedService.prepForBroadcast(credentials);

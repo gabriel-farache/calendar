@@ -76,13 +76,13 @@ module.exports = function (grunt) {
     // The actual grunt server settings
     connect: {
       options: {
-        protocol: 'https',
+        //protocol: 'http',
         port: 9000,
         // Change this to '0.0.0.0' to access the server from outside.
         //hostname: 'localhost',
         hostname: '0.0.0.0',
-        key: grunt.file.read('key.pem').toString(),
-        cert: grunt.file.read('cert.pem').toString(),
+        //key: grunt.file.read('key.pem').toString(),
+        //cert: grunt.file.read('cert.pem').toString(),
 	livereload: 35729
       },
       livereload: {

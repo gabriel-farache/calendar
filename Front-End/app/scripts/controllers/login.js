@@ -27,7 +27,7 @@ angular
           authenticationService.Login($scope.username,encodedPassword).
               then(function (response) {
                       var data = response.data;
-                      authenticationService.SetCredentials($scope.username, data.token, data.isAdmin);
+                      authenticationService.SetCredentials($scope.username, data.token, data.isAdmin, data.userEmail);
                       $location.path('/');
                   },$scope.handleErrorDBCallback);
         } else {
@@ -47,7 +47,7 @@ angular
         authenticationService.ClearCredentials();
       }
       $scope.dataLoading = false;
-      $scope.error = data.error;
+      $scope.error = data.msg;
       $timeout($scope.removeErrorMessage, $scope.timeoutTime); 
     };
 

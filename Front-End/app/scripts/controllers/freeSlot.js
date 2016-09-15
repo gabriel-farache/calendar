@@ -8,15 +8,17 @@
  * Controller of the calendarApp
  */
 angular.module('calendarApp')
-  .controller('freeSlotController', ['$scope', '$http', '$cookies', '$timeout', 'moment', 'databaseService', 'sharedService', 'authenticationService',
-  function ($scope, $http, $cookies, $timeout, moment, databaseService, sharedService, authenticationService) {
+  .controller('freeSlotController', ['$scope', '$http','$location', '$cookies', '$timeout', 'moment', 'databaseService', 'sharedService', 'authenticationService',
+  function ($scope, $http,$location,  $cookies, $timeout, moment, databaseService, sharedService, authenticationService) {
 	moment.locale('fr');
+  $scope.guestName = 'Visiteur';
   $scope.availableRooms = undefined;
 	$scope.dataLoading = false;
   $scope.week = '';
   $scope.year = '';
   $scope.slotsStatuses = [];
   $scope.timeoutTime = 5000;
+  $scope.userEmail = undefined;
 
   this.date = moment();
 	this.scheduleStart = undefined;
@@ -46,14 +48,23 @@ angular.module('calendarApp')
           $scope.username = message.username;
           $scope.isAdmin = message.isAdmin;
           $scope.authToken = message.token;
+
+          if(($scope.userEmail === undefined || $scope.userEmail === '')&&
+            $scope.guestName !== $scope.username) {
+            $location.path('/userConsole');
+          }
       });
 
 	this.initSearch = function() {
-    var globalsCookies = $cookies.get('globals');
+    var globalsCookies = $cookies.getObject('globals');
       if(globalsCookies !== undefined) {
         $scope.authToken = globalsCookies.token;
         $scope.username = globalsCookies.username;
         $scope.isAdmin = globalsCookies.isAdmin;
+      }
+      if(($scope.userEmail === undefined || $scope.userEmail === '')&&
+            $scope.guestName !== $scope.username) {
+            $location.path('/userConsole');
       }
 		this.initCalendar();
 	};

@@ -306,7 +306,7 @@ function DatabaseService($http, DB_CONFIG) {
 
     var service = {};
     service.getBookingDB              = getBookingDB;
-//    service.getAllBookingDB           = getAllBookingDB;
+    service.getAllBookingDB           = getAllBookingDB;
     service.getWeekBookingDB          = getWeekBookingDB;
     service.addBookingDB              = addBookingDB;
     service.deleteBookingDB           = deleteBookingDB;

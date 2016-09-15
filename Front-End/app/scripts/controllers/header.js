@@ -8,11 +8,18 @@ angular
         $scope.username = $scope.guestName;
         $scope.isAdmin = false;
         $scope.isLoaded = globalizationService.isLoaded;
+        $scope.userEmail = undefined;
 
-    	var globalsCookies = $cookies.get('globals');
+    	var globalsCookies = $cookies.getObject('globals');
       	if(globalsCookies !== undefined) {
         	$scope.isAdmin = globalsCookies.isAdmin;
         	$scope.username = globalsCookies.username;
+            $scope.userEmail = globalsCookies.userEmail;
+        }
+
+        if(($scope.userEmail === undefined || $scope.userEmail === '')&&
+            $scope.guestName !== $scope.username) {
+            $location.path('/userConsole');
         }
 
         this.logout = function() {
@@ -27,6 +34,7 @@ angular
             $scope.username = message.username;
             $scope.username = $scope.username === undefined ? $scope.guestName : $scope.username;
             $scope.isAdmin = message.isAdmin;
+            $scope.userEmail = message.userEmail;
         }
 
         function handleI18nLoadedFunction() {

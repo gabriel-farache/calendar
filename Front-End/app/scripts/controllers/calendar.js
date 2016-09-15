@@ -8,8 +8,8 @@
  * Controller of the calendarApp
  */
 angular.module('calendarApp')
-  .controller('calendarController', ['$scope', '$http', '$window', '$cookies', '$timeout', '$interval', 'moment', 'databaseService', 'sharedService', 'authenticationService', 'emailService', 'globalizationService', 'commonService',
-  function ($scope, $http, $window, $cookies, $timeout, $interval, moment, databaseService, sharedService, authenticationService, emailService, globalizationService, commonService) {
+  .controller('calendarController', ['$scope', '$http','$location', '$window', '$cookies', '$timeout', '$interval', 'moment', 'databaseService', 'sharedService', 'authenticationService', 'emailService', 'globalizationService', 'commonService',
+  function ($scope, $http,$location,  $window, $cookies, $timeout, $interval, moment, databaseService, sharedService, authenticationService, emailService, globalizationService, commonService) {
     $scope.callerName = 'Calendar';
     $scope.guestName = 'Visiteur';
     $scope.colorOfValidatedBooking = '#4caf50';
@@ -32,6 +32,7 @@ angular.module('calendarApp')
     $scope.message = undefined;
     $scope.timeoutTime = 10000;
     $scope.intervalRefreshCalendarTime = 60000;
+    $scope.userEmail = undefined;
 
     this.dateDisplay = moment();
     this.date = moment();
@@ -74,6 +75,12 @@ angular.module('calendarApp')
           $scope.isAdmin = message.isAdmin;
           $scope.authToken = message.token;
           $scope.booking.bookedBy = $scope.username === $scope.guestName ? undefined : $scope.username;
+          $scope.userEmail = message.userEmail;
+
+          if(($scope.userEmail === undefined || $scope.userEmail === '')&&
+            $scope.guestName !== $scope.username) {
+            $location.path('/userConsole');
+          }
       });
 
      $scope.$on('newBookingsAddedBroadcast', function() {
@@ -83,19 +90,25 @@ angular.module('calendarApp')
     var interval = $interval(function () { $scope.initWeekBookings();}, $scope.intervalRefreshCalendarTime);
     $scope.$on('$destroy', function () { $interval.cancel(interval); });
     this.initCalendar = function () {
-      var globalsCookies = $cookies.get('globals');
+      var globalsCookies = $cookies.getObject('globals');
       if(globalsCookies !== undefined) {
         $scope.authToken = globalsCookies.token;
         $scope.username = globalsCookies.username;
         $scope.isAdmin = globalsCookies.isAdmin;
+        $scope.userEmail = globalsCookies.userEmail;
       }
-      $scope.booking.bookedBy = $scope.username === $scope.guestName ? undefined : $scope.username;
-      $scope.week = this.date.isoWeek();
-      $scope.year = this.date.year();
-      this.initRooms();
-      this.initBookers();
-      this.initCalendarDays();
-      this.initWeeks();
+      if(($scope.userEmail === undefined || $scope.userEmail === '')&&
+            $scope.guestName !== $scope.username) {
+            $location.path('/userConsole');
+      } else {
+        $scope.booking.bookedBy = $scope.username === $scope.guestName ? undefined : $scope.username;
+        $scope.week = this.date.isoWeek();
+        $scope.year = this.date.year();
+        this.initRooms();
+        this.initBookers();
+        this.initCalendarDays();
+        this.initWeeks();
+      }
     };
 
     this.initRooms = function() {
