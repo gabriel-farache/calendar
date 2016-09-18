@@ -48,6 +48,7 @@ angular.module('calendarApp')
           $scope.username = message.username;
           $scope.isAdmin = message.isAdmin;
           $scope.authToken = message.token;
+          $scope.userEmail = message.userEmail;
 
           if(($scope.userEmail === undefined || $scope.userEmail === '')&&
             $scope.guestName !== $scope.username) {
@@ -61,6 +62,7 @@ angular.module('calendarApp')
         $scope.authToken = globalsCookies.token;
         $scope.username = globalsCookies.username;
         $scope.isAdmin = globalsCookies.isAdmin;
+        $scope.userEmail = globalsCookies.userEmail;
       }
       if(($scope.userEmail === undefined || $scope.userEmail === '')&&
             $scope.guestName !== $scope.username) {
@@ -72,16 +74,16 @@ angular.module('calendarApp')
     this.initCalendar = function () {
       $scope.week = this.date.week();
       $scope.year = this.date.year();
-      this.initWeek();
+      this.initWeeks();
     };
 
 
-    this.initWeek = function() {
-      this.initWeekData(this.todayMonth, this.todayYear);
+    this.initWeeks = function() {
+      this.initMonthData(this.todayMonth, this.todayYear);
       this.setWeek(this.currIndexOfWeeksArray);
     };
 
-    this.initWeekData = function (newMonth, newYear) {
+    this.initMonthData = function (newMonth, newYear) {
       var date = this.date.month(newMonth);
       date.year(newYear);
       var firstMonthWeek = date.startOf('month').week();
@@ -96,6 +98,13 @@ angular.module('calendarApp')
           var month = week.month();
           week.add(1, 'd');
           monthDays.push({'day' :day, 'month': month});
+          if(this.todayDate === day && this.todayMonth === month){
+            this.selectedDay = day;
+            this.selectedWeek = week;
+            this.selectedMonth = month;
+            this.selectedYear = newYear;
+            this.day = this.date.year(newYear).month(month).date(day).format('ddd DD-MM-YYYY');
+          }
         }
         var monthWeek = {'week': weekNumber,
                               'monthDays': monthDays,
@@ -141,7 +150,7 @@ angular.module('calendarApp')
           this.selectedYear !== undefined) {
 
           if(monthDay.month !== this.selectedMonth){
-              this.initWeekData(monthDay.month, year);
+              this.initMonthData(monthDay.month, year);
           }
       }
 

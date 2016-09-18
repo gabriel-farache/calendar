@@ -16,13 +16,13 @@
             style="margin-left: 2px;margin-bottom:5px;padding:0px;width:100%;" align="center">
             <tr>
                 <td >
-                    <button ng-click="freeSlotCtrl.initWeekData(freeSlotCtrl.date.month()-1)">&lt;</button>
+                    <button ng-click="freeSlotCtrl.initMonthData(freeSlotCtrl.date.month()-1, freeSlotCtrl.date.month(freeSlotCtrl.date.month()-1).year())">&lt;</button>
                 </td>
                 <td colspan="5" style="text-align:center;padding:2px;">
                     {{freeSlotCtrl.date.format("MMMM YYYY")}}
                 </td>
                 <td colspan="2">
-                    <button ng-click="freeSlotCtrl.initWeekData(freeSlotCtrl.date.month()+1)">&gt;</button>
+                    <button ng-click="freeSlotCtrl.initMonthData(freeSlotCtrl.date.month()+1, freeSlotCtrl.date.month(freeSlotCtrl.date.month()+1).year())">&gt;</button>
                 </td>
             </tr>
             <tr>
@@ -60,7 +60,7 @@
     
 	    <div id="comonInfo" style="margin-bottom:20px;width:100%;">
 	    	<p>
-	    		<button ng-click="freeSlotCtrl.initWeekData(freeSlotCtrl.todayMonth, freeSlotCtrl.todayYear)">
+	    		<button ng-click="freeSlotCtrl.initWeeks()">
         			{{'TODAY_LABEL' | i18n}}
       			</button>
       		</p>
@@ -87,9 +87,9 @@
 	                </select>
 	            </div>
 	        </div>
-	        <input class="btn btn-success" ng-hide="dataLoading === true" type="submit" value="{{'FREE_SLOT_SEARCH_LABEL' | i18n}}" style="margin-bottom:20px;" required/>                  
+	        <input class="btn btn-success" ng-hide="dataLoading === true" type="submit" value="{{'FREE_SLOT_SEARCH_LABEL' | i18n}}" style="margin-bottom:20px;" ng-disabled="searchFreeSlotForm.$invalid" required/>                  
 	        <img ng-show="dataLoading === true" src="/images/loading.svg" 
-	            alt="..." style="width: 5%; height: 5%"/>
+	            alt="..." style="width: 10%; height: 10%"/>
           <div>
               <div ng-messages="searchFreeSlotForm.$error" style="color:maroon" role="alert">
                  <div ng-message="required">{{'FREE_SLOT_FORM_ERROR' | i18n}}</div>
