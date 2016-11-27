@@ -20,13 +20,13 @@
                 style="margin-left: 2px;margin-bottom:5px;padding:0px;width:100%;" align="center">
                 <tr>
                     <td >
-                        <button class="btn btn-default" style="padding:3px;" ng-click="calendarCtrl.initMonthData(calendarCtrl.date.month()-1, calendarCtrl.date.month(calendarCtrl.date.month()-1).year())">&lt;</button>
+                        <button class="btn btn-default" style="padding:3px;" ng-click="calendarCtrl.setMonthData(calendarCtrl.date.month(), 'sub')">&lt;</button>
                     </td>
                     <td colspan="5" style="text-align:center;padding:2px;">
                         {{calendarCtrl.dateDisplay.format("MMMM YYYY")}}
                     </td>
                     <td colspan="2">
-                        <button class="btn btn-default" style="padding:3px;" ng-click="calendarCtrl.initMonthData(calendarCtrl.date.month()+1, calendarCtrl.date.month(calendarCtrl.date.month()+1).year())">&gt;</button>
+                        <button class="btn btn-default" style="padding:3px;" ng-click="calendarCtrl.setMonthData(calendarCtrl.date.month(), 'add')">&gt;</button> 
                     </td>
                 </tr>
                 <tr>
@@ -53,7 +53,7 @@
                     </th>
                 </tr>
                 <tr ng-repeat="monthWeek in calendarCtrl.monthWeeks track by $index" ng-click="calendarCtrl.setWeek($index)" align="center">
-                    <th ng-class="{selectedClass: week === monthWeek.week  && monthWeek.year===calendarCtrl.todayYear, todayClass:monthWeek.week===calendarCtrl.todayWeek && monthWeek.year===calendarCtrl.todayYear}" ng-repeat="monthDay in monthWeek.monthDays track by $index" 
+                    <th ng-class="{selectedClass: week === monthWeek.week  && monthWeek.year===year, todayClass:monthWeek.week===calendarCtrl.todayWeek && monthWeek.year===calendarCtrl.todayYear}" ng-repeat="monthDay in monthWeek.monthDays track by $index" 
                         style="margin: 5px;padding:2px;font-weight: normal;text-align:center;" >
                         {{monthDay.day}}
                     </th>

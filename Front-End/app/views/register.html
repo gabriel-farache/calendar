@@ -1,17 +1,17 @@
 <div class="col-md-6 col-md-offset-3" ng-init="registerCtrl.initRegisterCtrl()">
     <h2>{{'REGISTER_TITLE' | i18n}}</h2>
     <div class="alert alert-danger" ng-show="error !== undefined" style="padding:2px;margin-bottom:2px;">
-         {{error}}
-         <a style="float: right" ng-click="removeErrorMessage()">x</a>
-   </div>
-   <div class="alert alert-success" ng-show="message !== undefined" style="padding:2px;margin-bottom:2px;">
-         {{message}}
-         <a style="float: right" ng-click="removeMessage()">x</a>
-   </div>
-   <div class="alert alert-success" ng-show="messageAdmin !== undefined" style="padding:2px;margin-bottom:2px;">
-         {{messageAdmin}}
-         <a style="float: right" ng-click="removeMessageAdmin()">x</a>
-   </div>
+        {{error}}
+        <a style="float: right" ng-click="removeErrorMessage()">x</a>
+    </div>
+    <div class="alert alert-success" ng-show="message !== undefined" style="padding:2px;margin-bottom:2px;">
+        {{message}}
+        <a style="float: right" ng-click="removeMessage()">x</a>
+    </div>
+    <div class="alert alert-success" ng-show="messageAdmin !== undefined" style="padding:2px;margin-bottom:2px;">
+        {{messageAdmin}}
+        <a style="float: right" ng-click="removeMessageAdmin()">x</a>
+    </div>
     <form name="form" ng-submit="registerCtrl.register()" role="form">
         <div class="form-group">
             <label for="email">{{'REGISTER_EMAIL_LABEL' | i18n}}</label>
@@ -34,5 +34,4 @@
             <a href="#/login" class="btn btn-link">{{'REGISTER_CANCEL_LABEL' | i18n}}</a>
         </div>
     </form>
-    
 </div>

@@ -17,7 +17,8 @@ angular
     'angularMoment',
     'ngSanitize',
     'localization',
-    'ui.bootstrap.materialPicker'
+    'ui.bootstrap.materialPicker',
+    'ngFileSaver'
   ])
   .directive('trustedHTML', ['$sce', function($sce) {
     return {

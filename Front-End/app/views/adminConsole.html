@@ -15,7 +15,7 @@
        <ul class="nav nav-pills" role="pilllist">
             <li class="active"><a data-toggle="pill" data-target="#adminAuthKeyGenerator">
                 {{'ADMIN_GENERATING_ADMIN_TOKEN_TITLE' | i18n}}</a></li>
-            <li><a data-toggle="pill" data-target="#metrics">
+            <li><a data-toggle="pill" data-target="#metrics" ng-click="adminConsoleCtrl.initMetrics()">
                 {{'ADMIN_METRICS_TITLE' | i18n}}
             </a></li>
             <li><a data-toggle="pill" data-target="#roomManagement" ng-click="initRooms()">
@@ -42,14 +42,55 @@
             </div>
             <div ng-hide="dataLoading === true" id="metrics" class="tab-pane fade">
                 <h2>{{'ADMIN_METRICS_LABEL' | i18n}}</h2>
+                <form id="metricForm" name="metricForm" 
+                ng-submit="adminConsoleCtrl.computeMetrics()" novalidate>
+                    <select id="metricYear" name="metricYear"
+                    ng-model="adminConsoleCtrl.metric.year" ng-change="adminConsoleCtrl.getYearMonthsAvailable()">
+                        <option ng-repeat="year in availableYears track by $index" value="{{year}}">{{year}}
+                    </select>
+                    <select ng-model="adminConsoleCtrl.metric.month"  ng-options="month.display for month in availableYearMonths track by month.value"></select>
+                    <input class="btn btn-success" 
+                        ng-hide="dataLoading === true" 
+                        type="submit" 
+                        ng-disabled="metricForm.$invalid || adminConsoleCtrl.metric.month < 1 || adminConsoleCtrl.metric.year < 1 "
+                        value="{{'ADMIN_METRIC_COMPUTE_LABEL' | i18n}}" 
+                        style="margin: 3px;" required/>                  
+                    <img ng-show="dataLoading === true" src="/images/loading.svg" 
+                        alt="..." style="width: 5%; height: 5%"/>
+                    <table ng-show="metricData !== undefined" class="table table-bordered">
+                        <tr>
+                            <th>{{'ADMIN_METRIC_BOOKER_LABEL' | i18n}}</th>
+                            <th>{{'ADMIN_METRIC_TOTAL_BOOKING_TIME_LABEL' | i18n}}</th>
+                        </tr>
+                        <tr ng-repeat="metric in metricData">
+                            <td>{{metric.booker}}</td>
+                            <td>{{metric.bookingTotalTime}}</td>
+                        </tr>
+
+                    </table>
+                </form>
+                <a ng-click="adminConsoleCtrl.exportMetrics()"
+                    style="float: right;margin-left:5px;">
+                    <button class="btn btn-info">
+                        {{'ADMIN_EXPORT_METRICS_LABEL' | i18n}}
+                    </button>
+                </a>
             </div>
             
             <div ng-hide="dataLoading === true" id="roomManagement" class="tab-pane fade">
                 <ul id="roomList" class="list-group">
+                    <li class="list-group-item">
+                        <span style="width:45%; padding:0px;font-weight:bold;">{{'ADMIN_ROOM_LABEL' | i18n}}</span>
+                        <span style="width:20%; padding:0px;;font-weight:bold;">{{'ADMIN_ROOM_BUILDING_LABEL' | i18n}}</span>
+                    </li>
                     <li class="list-group-item" ng-repeat="room in rooms">
-                        <input type="text" 
-                        style="width:65%"
+                        <input type="text" id="roomName" name="roomName"
+                        style="width:45%"
                         ng-model="room.name" 
+                        ng-disabled="room.isNew === false && room.oldName === undefined" required />
+                        <input type="text" id="roomBuilding" name="roomBuilding"
+                        style="width:20%"
+                        ng-model="room.building" 
                         ng-disabled="room.isNew === false && room.oldName === undefined" required />
                         <a ng-click="adminConsoleCtrl.deleteRoomDB(room)"
                         style="float: right;margin-left:5px;">

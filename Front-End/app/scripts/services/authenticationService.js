@@ -3,19 +3,20 @@
 
 
 function AuthenticationService($http, $cookies, $rootScope, $timeout, databaseService, sharedService) {
-    
+
     function Login(username, password) {
 
         return databaseService.authenticate(username, password);
 
     }
 
-    function SetCredentials(username, token, isAdmin, userEmail) {
+    function SetCredentials(username, token, isAdmin, userEmail, endAvailability) {
         var credentials = {
             'token': token,
             'username': username,
-            'isAdmin' : isAdmin,
-            'userEmail' : userEmail
+            'isAdmin': isAdmin,
+            'userEmail': userEmail,
+            'endAvailability': new Date(endAvailability)
         };
         /*var config = {
             secure: false
@@ -26,12 +27,20 @@ function AuthenticationService($http, $cookies, $rootScope, $timeout, databaseSe
         $cookies.putObject('globals', $rootScope.globals);
     }
 
+    function CheckCookiesValidity() {
+        var globalsCookies = $cookies.getObject('globals');
+        if (globalsCookies.endAvailability >= new Date()) {
+            service.ClearCredentials();
+        }
+    }
+
     function ClearCredentials() {
         var credentials = {
             'token': undefined,
             'username': undefined,
-            'isAdmin' : false,
-            'userEmail' : undefined
+            'isAdmin': false,
+            'userEmail': undefined,
+            'endAvailability': undefined
         };
         $rootScope.globals = credentials;
         sharedService.prepForBroadcast(credentials);
@@ -43,7 +52,7 @@ function AuthenticationService($http, $cookies, $rootScope, $timeout, databaseSe
 
         keyStr: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
 
-        encode: function (input) {
+        encode: function(input) {
             var output = '';
             var chr1, chr2, chr3 = '';
             var enc1, enc2, enc3, enc4 = '';
@@ -77,7 +86,7 @@ function AuthenticationService($http, $cookies, $rootScope, $timeout, databaseSe
             return output;
         },
 
-        decode: function (input) {
+        decode: function(input) {
             var output = '';
             var chr1, chr2, chr3 = '';
             var enc1, enc2, enc3, enc4 = '';
@@ -123,6 +132,7 @@ function AuthenticationService($http, $cookies, $rootScope, $timeout, databaseSe
     service.ClearCredentials = ClearCredentials;
     service.Login = Login;
     service.encodeDecode = Base64;
+    service.CheckCookiesValidity = CheckCookiesValidity;
 
     return service;
 

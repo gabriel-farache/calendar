@@ -35,6 +35,9 @@ module.exports = function(config) {
       'bower_components/vega-lite/vega-lite.js',
       'bower_components/viscompass/compass.js',
       'bower_components/angular-moment/angular-moment.js',
+      'bower_components/blob-polyfill/Blob.js',
+      'bower_components/file-saver.js/FileSaver.js',
+      'bower_components/angular-file-saver/dist/angular-file-saver.bundle.js',
       'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',

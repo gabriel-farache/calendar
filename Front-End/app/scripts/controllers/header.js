@@ -10,6 +10,8 @@ angular
         $scope.isLoaded = globalizationService.isLoaded;
         $scope.userEmail = undefined;
 
+        authenticationService.CheckCookiesValidity();
+
     	var globalsCookies = $cookies.getObject('globals');
       	if(globalsCookies !== undefined) {
         	$scope.isAdmin = globalsCookies.isAdmin;
@@ -18,7 +20,8 @@ angular
         }
 
         if(($scope.userEmail === undefined || $scope.userEmail === '')&&
-            $scope.guestName !== $scope.username) {
+            $scope.guestName !== $scope.username && $scope.username !== undefined) {
+
             $location.path('/userConsole');
         }
 
