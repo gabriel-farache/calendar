@@ -1,6 +1,6 @@
 #!/bin/bash
 
-INSTALL_SAME_HOST = false;
+INSTALL_SAME_HOST = true;
 ENV_BACKEND_URL = 'localhost/'
 ENV_BACKEND_ROOTFILE = 'CRUD.php'
 ENV_BACKEND_ROOTFOLDER = 'mysql/'
@@ -15,7 +15,7 @@ while true; do
     esac
 done
 
-if [ "$INSTALL_SAME_HOST" = false ]
+if [ $INSTALL_SAME_HOST = false ]
 then
     read -p "Back-end host: " ENV_BACKEND_URL
     read -p "Back-end path for entrypoint: " ENV_BACKEND_ROOTFOLDER

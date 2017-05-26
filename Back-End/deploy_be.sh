@@ -27,12 +27,12 @@ while true; do
     esac
 done
 
-if [ "$INSTALL_SAME_HOST" = false ]
+if [ $INSTALL_SAME_HOST = false ]
 then
     read -p "Database host: " ENV_DB_HOST
     read -p "Database port: " ENV_DB_PORT
     read -p "Database name:  " ENV_DB_DB_NAME
-    if [ "$USE_MONGO" = false ]
+    if [ $USE_MONGO = true ]
     then
         read -p "Database replicaset " ENV_DB_REPLICASET
     fi
@@ -87,10 +87,10 @@ hostname=$ENV_SMTP_HOSTNAME" > /etc/ssmtp/ssmtp.conf;
 echo "root:$ENV_SMTP_ROOT:$ENV_SMTP_MAILHUB" > /etc/ssmtp/revaliases
 
 
-if [ "$INSTALL_SAME_HOST" = true ]
+if [ $INSTALL_SAME_HOST = true ]
 then
     echo "=== Installing database ==="
-    if [ "$USE_MONGO" = false ]
+    if [ $USE_MONGO = true ]
     then
         sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
         echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list
