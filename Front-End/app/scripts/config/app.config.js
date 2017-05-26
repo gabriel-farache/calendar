@@ -6,7 +6,7 @@ angular.module('calendarApp').constant('WS_CONF', {
 */
 //angular.module('calendarApp').constant('WS_ADDR', { url: 'http://ec2-52-59-246-193.eu-central-1.compute.amazonaws.com:8080/' });
 angular.module('calendarApp').constant('WS_CONF', {
-                                 url: 'http://localhost:8081/',
+                                 url: 'https://calendar-pechbusque.tk',
                                  rootFile: 'CRUD_mysql.php',
-                                 rootFolder: 'mysql/' });
+                                 rootFolder: '' });
 //angular.module('calendarApp').constant('WS_ADDR', { url: 'https://calendar-pechbusque-db.herokuapp.com/' });

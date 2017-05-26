@@ -29,7 +29,8 @@ function AuthenticationService($http, $cookies, $rootScope, $timeout, databaseSe
 
     function CheckCookiesValidity() {
         var globalsCookies = $cookies.getObject('globals');
-        if (globalsCookies.endAvailability >= new Date()) {
+        if (globalsCookies !== undefined &&
+            globalsCookies.endAvailability >= new Date()) {
             service.ClearCredentials();
         }
     }

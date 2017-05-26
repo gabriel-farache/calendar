@@ -1,6 +1,6 @@
 #!/bin/bash
 
-while getopts "c:n:b:o:p:u:w:d:r:h:f:a:" opt; do
+while getopts "c:n:b:o:p:u:w:d:r:h:f:a:w:v" opt; do
   case $opt in
     c)
       FRONTEND_FQDN=$OPTARG;
@@ -10,6 +10,12 @@ while getopts "c:n:b:o:p:u:w:d:r:h:f:a:" opt; do
       ;;
     b)
       ENV_BACKEND_URL=$OPTARG;
+      ;;
+    w)
+      ENV_BACKEND_ROOTFILE=$OPTARG;
+      ;;
+    v)
+      ENV_BACKEND_ROOTFOLDER=$OPTARG;
       ;;
     o)
       ENV_DB_HOST=$OPTARG;
@@ -84,8 +90,20 @@ then
   else 
     echo "Back end URL: $ENV_BACKEND_URL"
   fi
+  if [ -z "$ENV_BACKEND_ROOTFILE" ]
+  then
+    read -p "Back end URL: " ENV_BACKEND_ROOTFILE
+  else 
+    echo "Back end URL: $ENV_BACKEND_ROOTFILE"
+  fi
+  if [ -z "$ENV_BACKEND_ROOTFOLDER" ]
+  then
+    read -p "Back end URL: " ENV_BACKEND_ROOTFOLDER
+  else 
+    echo "Back end URL: $ENV_BACKEND_ROOTFOLDER"
+  fi
   echo "nohup docker run -e ENV_BACKEND_URL=$ENV_BACKEND_URL -p 9000:9000 -d gabrielfarache/calendar-pechbusque:front-end"
-  nohup docker run -e ENV_BACKEND_URL=$ENV_BACKEND_URL -e CN=$FRONTEND_FQDN -p 9000:9000 -d gabrielfarache/calendar-pechbusque:front-end
+  nohup docker run -e ENV_BACKEND_URL=$ENV_BACKEND_URL -e ENV_BACKEND_ROOTFOLDER=$ENV_BACKEND_ROOTFOLDER -e ENV_BACKEND_ROOTFILE=$ENV_BACKEND_ROOTFILE -e CN=$FRONTEND_FQDN -p 9000:9000 -d gabrielfarache/calendar-pechbusque:front-end
 fi
 
 if [ "$INSTALL_BACK_END" = true ]
