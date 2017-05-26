@@ -20,8 +20,10 @@ done
 WORKING_DIRECTORY=$(pwd)
 if [ "$INSTALL_FRONT_END" = false ]
 then
+
     mkdir --parents /opt/pechbusque-calendar/front-end; mv Front-End/* $_
     cd /opt/pechbusque-calendar/front-end
+    sudo chmod +x /opt/pechbusque-calendar/front-end/deploy_fe.sh
     sh deploy_fe.sh
     cd $WORKING_DIRECTORY
 fi
@@ -30,6 +32,7 @@ if [ "$INSTALL_BACK_END" = false ]
 then
     mkdir --parents /opt/pechbusque-calendar/back-end; mv Back-End/* $_
     cd /opt/pechbusque-calendar/back-end
+    sudo chmod +x /opt/pechbusque-calendar/back-end/deploy_be.sh
     sh deploy_be.sh
     cd $WORKING_DIRECTORY
 fi
