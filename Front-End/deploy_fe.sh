@@ -1,9 +1,9 @@
 #!/bin/bash
 
-INSTALL_SAME_HOST = true;
-ENV_BACKEND_URL = 'localhost/'
-ENV_BACKEND_ROOTFILE = 'CRUD.php'
-ENV_BACKEND_ROOTFOLDER = 'mysql/'
+INSTALL_SAME_HOST=true;
+ENV_BACKEND_URL='localhost/'
+ENV_BACKEND_ROOTFILE='CRUD.php'
+ENV_BACKEND_ROOTFOLDER='mysql/'
 
 echo "=== Configuring back-end ==="
 while true; do

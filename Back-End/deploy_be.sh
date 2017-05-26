@@ -1,12 +1,12 @@
 #!/bin/bash
-INSTALL_SAME_HOST = true
-USE_MONGO = false
-ENV_DB_HOST = 'localhost'
-ENV_DB_PORT = 3306
-ENV_DB_USER = 'root'
-ENV_DB_PASS = 'root'
-ENV_DB_DB_NAME = 'calendar_pechbusque'
-ENV_DB_REPLICASET = ''
+INSTALL_SAME_HOST=true
+USE_MONGO=false
+ENV_DB_HOST='localhost'
+ENV_DB_PORT=3306
+ENV_DB_USER='root'
+ENV_DB_PASS='root'
+ENV_DB_DB_NME='calendar_pechbusque'
+ENV_DB_REPLICASET=''
 
 while true; do    
     read -p "Do you want to use mongo [yn]" yn
