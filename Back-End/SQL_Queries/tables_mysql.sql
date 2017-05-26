@@ -1,5 +1,3 @@
-CREATE DATABASE calendar_pechbusque;
-
 CREATE TABLE Room (
     roomID int(11) NOT NULL AUTO_INCREMENT,
     building VARCHAR(255) NOT NULL,

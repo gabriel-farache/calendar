@@ -40,7 +40,7 @@ try {
     include('register_mysql.inc.php');
     include('periodicBooking_mysql.inc.php');
 
-    $dbConfFile = file_get_contents("database.conf");
+    $dbConfFile = file_get_contents("../conf/database.conf");
     $dbConf = json_decode($dbConfFile, true);
     $host     = $dbConf['host'];
     $port     = $dbConf['port'];
