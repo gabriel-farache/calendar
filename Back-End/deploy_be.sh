@@ -62,7 +62,7 @@ read -p "Email override:  " ENV_SMTP_OVERRIDE
 read -p "Email hostname:  " ENV_SMTP_HOSTNAME
 
 echo "=== Installing & configuring back-end utilities ==="
-sudo apt-get purge `dpkg -l | grep php| awk '{print $2}' |tr "\n" " "`
+sudo apt-get purge -y `dpkg -l | grep php| awk '{print $2}' |tr "\n" " "`
 sudo add-apt-repository -y ppa:ondrej/php
 sudo apt-get update
 sudo apt-get install -y --allow-unauthenticated apache2 php5.6 libssl-dev openssl ssmtp rsyslog
@@ -105,13 +105,13 @@ then
         sudo echo "extension=mongo.so" >> /etc/php5/apache2/php.ini
     else 
 
-        sudo echo "mysql-server-5.7 mysql-server/"+$ENV_DB_PASS+" password root" | sudo debconf-set-selections
-        sudo echo "mysql-server-5.7 mysql-server/"+$ENV_DB_PASS+" password root" | sudo debconf-set-selections
+        sudo echo "mysql-server-5.7 mysql-server/$ENV_DB_PASS password root" | sudo debconf-set-selections
+        sudo echo "mysql-server-5.7 mysql-server/$ENV_DB_PASS password root" | sudo debconf-set-selections
         sudo apt-get install -y --allow-unauthenticated  mysql-server-5.7 php5.6-mysql
-        mysql -u root --password="$ENV_DB_PASS" -h $ENV_DB_HOST -e "CREATE USER '"+$ENV_DB_USER+"'@'%' IDENTIFIED BY '"+$ENV_DB_PASS+"';"
-        mysql -u root --password="$ENV_DB_PASS" -h $ENV_DB_HOST -e "GRANT ALL PRIVILEGES ON *.* TO '"+$ENV_DB_USER+"'@'%' WITH GRANT OPTION;"
-        mysql -u root --password="$ENV_DB_PASS" -h $ENV_DB_HOST -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '"+$ENV_DB_PASS+"';"
-        mysql -u $ENV_DB_USER --password="$ENV_DB_PASS" -h $ENV_DB_HOST -e "CREATE DATABASE "+$ENV_DB_DB_NAME+";"
+        mysql -u root --password="$ENV_DB_PASS" -h $ENV_DB_HOST -e "CREATE USER '$ENV_DB_USER'@'%' IDENTIFIED BY '$ENV_DB_PASS';"
+        mysql -u root --password="$ENV_DB_PASS" -h $ENV_DB_HOST -e "GRANT ALL PRIVILEGES ON *.* TO '$ENV_DB_USER'@'%' WITH GRANT OPTION;"
+        mysql -u root --password="$ENV_DB_PASS" -h $ENV_DB_HOST -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$ENV_DB_PASS';"
+        mysql -u $ENV_DB_USER --password="$ENV_DB_PASS" -h $ENV_DB_HOST -e "CREATE DATABASE $ENV_DB_DB_NAME;"
         mysql -u $ENV_DB_USER --password="$ENV_DB_PASS" $ENV_DB_DB_NAME < SQL_Queries/tables_mysql.sql
         mysql -u $ENV_DB_USER --password="$ENV_DB_PASS" $ENV_DB_DB_NAME < SQL_Queries/poupulateDB_mysql.sql
 
