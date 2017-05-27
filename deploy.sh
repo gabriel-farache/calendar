@@ -24,7 +24,7 @@ then
     cp -r Front-End/* /opt/pechbusque-calendar/front-end/.
     cd /opt/pechbusque-calendar/front-end
     sudo chmod +x /opt/pechbusque-calendar/front-end/deploy_fe.sh
-    nohup bash deploy_fe.sh
+    bash deploy_fe.sh
     cd $WORKING_DIRECTORY
 fi
 

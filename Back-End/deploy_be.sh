@@ -51,21 +51,20 @@ conf=${conf//DB_REPLICASET/\"$ENV_DB_REPLICASET\"};
 echo $conf > conf/database.conf;
 
 echo "=== Configuring Email ==="
-
-read -p "Email SMTP mailhub host: " ENV_SMTP_MAILHUB
-read -p "Email SMTP root address: " ENV_SMTP_ROOT
-read -p "Email SMTP TLS: " ENV_SMTP_TLS
-read -p "Email user: " ENV_SMTP_USER
-read -p "Email password:  " ENV_SMTP_PASS
-read -p "Email rewrite domain:  " ENV_SMTP_DOMAIN
-read -p "Email override:  " ENV_SMTP_OVERRIDE
-read -p "Email hostname:  " ENV_SMTP_HOSTNAME
+read -p "Email SMTP mailhub host (ex: smtp.gmail.com:587): " ENV_SMTP_MAILHUB
+read -p "Email SMTP root address (ex: gabriel.farache@gmail.com): " ENV_SMTP_ROOT
+read -p "Email SMTP TLS (YES/NO): " ENV_SMTP_TLS
+read -p "Email user (ex: gabriel.farache): " ENV_SMTP_USER
+read -p "Email password (ex: toto123):  " ENV_SMTP_PASS
+read -p "Email rewrite domain (ex: pechbusque.fr):  " ENV_SMTP_DOMAIN
+read -p "Email override (YES/NO):  " ENV_SMTP_OVERRIDE
+read -p "Email hostname (ex: gmail.com):  " ENV_SMTP_HOSTNAME
 
 echo "=== Installing & configuring back-end utilities ==="
 sudo apt-get purge -y `dpkg -l | grep php| awk '{print $2}' |tr "\n" " "`
 sudo add-apt-repository -y ppa:ondrej/php
 sudo apt-get update
-sudo apt-get install -y --allow-unauthenticated apache2 php5.6 php5.6-xml libssl-dev openssl ssmtp rsyslog
+sudo apt-get install -y --allow-unauthenticated apache2 php5.6 php5.6-xml php5.6-mysqli libssl-dev openssl ssmtp rsyslog
 sudo apt-get purge -y --auto-remove libssl-dev 
 a2enmod rewrite
 a2enmod headers
@@ -116,7 +115,7 @@ then
         mysql -u $ENV_DB_USER --password="$ENV_DB_PASS" -h $ENV_DB_HOST -e "CREATE DATABASE $ENV_DB_DB_NAME;"
         mysql -u $ENV_DB_USER --password="$ENV_DB_PASS" $ENV_DB_DB_NAME < SQL_Queries/tables_mysql.sql
         mysql -u $ENV_DB_USER --password="$ENV_DB_PASS" $ENV_DB_DB_NAME < SQL_Queries/poupulateDB_mysql.sql
-
+        sudo service apache2 restart
     fi
 fi
 
