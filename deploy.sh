@@ -21,19 +21,19 @@ if [ $INSTALL_FRONT_END = true ]
 then
 
     mkdir --parents /opt/pechbusque-calendar/front-end
-    mv Front-End/* /opt/pechbusque-calendar/front-end/.
+    cp -r Front-End/* /opt/pechbusque-calendar/front-end/.
     cd /opt/pechbusque-calendar/front-end
     sudo chmod +x /opt/pechbusque-calendar/front-end/deploy_fe.sh
-    sh deploy_fe.sh
+    bash deploy_fe.sh
     cd $WORKING_DIRECTORY
 fi
 
 if [ $INSTALL_BACK_END = true ]
 then
     mkdir --parents /opt/pechbusque-calendar/back-end
-    mv Back-End/* /opt/pechbusque-calendar/back-end/.
+    cp -r Back-End/* /opt/pechbusque-calendar/back-end/.
     cd /opt/pechbusque-calendar/back-end
     sudo chmod +x /opt/pechbusque-calendar/back-end/deploy_be.sh
-    sh deploy_be.sh
+    bash deploy_be.sh
     cd $WORKING_DIRECTORY
 fi
