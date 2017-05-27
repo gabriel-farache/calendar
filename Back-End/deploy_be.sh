@@ -5,7 +5,7 @@ ENV_DB_HOST='localhost'
 ENV_DB_PORT=3306
 ENV_DB_USER='root'
 ENV_DB_PASS='root'
-ENV_DB_DB_NME='calendar_pechbusque'
+ENV_DB_DB_NAME='calendar_pechbusque'
 ENV_DB_REPLICASET=''
 
 while true; do    
@@ -65,11 +65,12 @@ echo "=== Installing & configuring back-end utilities ==="
 sudo apt-get purge -y `dpkg -l | grep php| awk '{print $2}' |tr "\n" " "`
 sudo add-apt-repository -y ppa:ondrej/php
 sudo apt-get update
-sudo apt-get install -y --allow-unauthenticated apache2 php5.6 libssl-dev openssl ssmtp rsyslog
+sudo apt-get install -y --allow-unauthenticated apache2 php5.6 php5.6-xml libssl-dev openssl ssmtp rsyslog
 sudo apt-get purge -y --auto-remove libssl-dev 
 a2enmod rewrite
 a2enmod headers
 a2enmod ssl
+a2enmod xml2enc
 export APACHE_RUN_USER=www-data
 export APACHE_RUN_GROUP=www-data
 export APACHE_LOG_DIR=/var/log/apache2

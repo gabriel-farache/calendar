@@ -6,8 +6,6 @@ ENV_BACKEND_ROOTFILE='CRUD.php'
 ENV_BACKEND_ROOTFOLDER='mysql/'
 
 echo "=== Configuring back-end ==="
-
-
 read -p "Back-end host (do not use localhost or 127.0.0.1): " ENV_BACKEND_URL
     
 
