@@ -41,7 +41,7 @@ fi
 read -p "Database user: " ENV_DB_USER
 read -p "Database password: " ENV_DB_PASS
 
-conf=`cat database.conf`;
+conf=`cat conf/database.conf`;
 conf=${conf//DB_HOST/\"$ENV_DB_HOST\"};
 conf=${conf//DB_PORT/\"$ENV_DB_PORT\"};
 conf=${conf//DB_USER/\"$ENV_DB_USER\"};
@@ -104,9 +104,10 @@ then
         pecl install mongo
         sudo echo "extension=mongo.so" >> /etc/php5/apache2/php.ini
     else 
-        sudo debconf-set-selections <<< 'mysql-server mysql-server/'+$ENV_DB_PASS
-        sudo debconf-set-selections <<< 'mysql-server mysql-server/'+$ENV_DB_PASS
-        sudo apt-get install -y --allow-unauthenticated  mysql-server php5.6-mysql
+
+        sudo echo "mysql-server-5.7 mysql-server/"+$ENV_DB_PASS+" password root" | sudo debconf-set-selections
+        sudo echo "mysql-server-5.7 mysql-server/"+$ENV_DB_PASS+" password root" | sudo debconf-set-selections
+        sudo apt-get install -y --allow-unauthenticated  mysql-server-5.7 php5.6-mysql
         mysql -u root --password="$ENV_DB_PASS" -h $ENV_DB_HOST -e "CREATE USER '"+$ENV_DB_USER+"'@'%' IDENTIFIED BY '"+$ENV_DB_PASS+"';"
         mysql -u root --password="$ENV_DB_PASS" -h $ENV_DB_HOST -e "GRANT ALL PRIVILEGES ON *.* TO '"+$ENV_DB_USER+"'@'%' WITH GRANT OPTION;"
         mysql -u root --password="$ENV_DB_PASS" -h $ENV_DB_HOST -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '"+$ENV_DB_PASS+"';"
